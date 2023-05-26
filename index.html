@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -18,40 +18,42 @@
         <header class="header">
             <h1 class="title"><span class="thin">minima</span><span class="bold">LIST</span></h1>
         </header>
-        <hr>
         <main class="main">
             <nav class="nav">
+                <hr class="hr-toggle">
                 <div class="navigation">
-                    <button class="button nav-btn">TASKS</button>
+                    <button class="button nav-btn active">TASKS</button>
                     <button class="button nav-btn">TODAY</button>
                     <button class="button nav-btn">THIS WEEK</button>
                 </div>
-
                 <hr>
-
                 <div class="lists">
-
-
-
-                    LISTS
-                    <button class="button btn-border">New List
+                  
+                    <div class="navigation">
+                        <button class="button nav-btn small"><span>
+                                Przykładowa 1</span>
+                        </button>
+                        <button class="button nav-btn">Nowa 2</button>
+                        <button class="button nav-btn">Testowa 44</button>
+                        <button class="button nav-btn">Wakacje 9</button>
+                    </div>
+                    <button class="button action">New List
                     </button>
                 </div>
             </nav>
-            
             <div class="content">
                 <ul class="tasks">
                     <li>Finish The Odin Project</li>
                     <li>Conquer the Crown of Polish Mountains</li>
                     <li>Get hired as a Front End Developer</li>
-                    <li>Go swimming on Tuesday</li>
+                    <li class="done">Go swimming on Tuesday</li>
                     <li>Bake Neapolitan pizza</li>
                 </ul>
-                <button class="button btn-border">Add Task
+                <button class="button action black-btn">Add Task
                 </button>
             </div>
         </main>
-        <hr>
+        <!-- <hr> -->
         <footer class="footer">footer</footer>
     </div>
 </body>
