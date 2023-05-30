@@ -258,10 +258,6 @@ button.action:hover {
 	border: 3px solid black;
 }
 
-.footer {
-	padding: 2rem;
-}
-
 @media only screen and (min-width: 768px) {
 	.wrapper {
 		margin: 0 2rem;
@@ -296,6 +292,36 @@ button.action:hover {
 	.nav button.action {
 		margin-right: 2rem;
 	}
+}
+
+.footer {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	font-size: 0.875rem;
+	padding: 1rem 0;
+}
+
+.footer span {
+	display: flex;
+	align-items: center;
+	height: 2.125rem;
+	white-space: nowrap;
+}
+
+.footer .emoji {
+	font-size: 1.625rem;
+}
+
+.fa-github {
+	color: white;
+	opacity: 75%;
+	transition: transform 0.3s ease-in-out;
+}
+
+.fa-github:hover {
+	opacity: 100%;
+	transform: rotate(360deg) scale(1.2);
 }
 
 /* .header {
