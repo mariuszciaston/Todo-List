@@ -148,21 +148,77 @@ h2.title {
 	width: 1.5rem;
 	aspect-ratio: 1/1;
 	cursor: pointer;
+	box-sizing: border-box;
 }
 
-.circle:hover .checkMark {
+.circle:hover .checkMark,
+.tasks-list li.done .circle .checkMark {
 	position: absolute;
 	transform: rotate(50deg) translate(-50%, -50%);
 	left: 27%;
 	top: 45%;
 	height: 50%;
 	width: 20%;
+}
+
+.circle:hover .checkMark {
 	border-bottom: 2px solid black;
 	border-right: 2px solid black;
 }
 
+.tasks-list li.done .circle {
+	border: 1px solid grey;
+}
+
+.tasks-list li.done .circle .checkMark {
+	border-bottom: 2px solid grey;
+	border-right: 2px solid grey;
+}
+
+.remove {
+	height: 1.5rem;
+	width: 1.5rem;
+	position: relative;
+	visibility: hidden;
+}
+
+.remove:after {
+	content: '';
+	height: 100%;
+	border-left: 1px solid black;
+	position: absolute;
+	transform: rotate(45deg);
+	left: 50%;
+}
+
+.remove:before {
+	content: '';
+	height: 100%;
+	border-left: 1px solid black;
+	position: absolute;
+	transform: rotate(-45deg);
+	left: 50%;
+}
+
+.remove:hover {
+	cursor: pointer;
+}
+
+.remove:hover:before,
+.remove:hover:after {
+	border-left: 2px solid black;
+}
+
 .tasks-list li:hover {
 	background-color: hsl(0, 0%, 95%);
+}
+
+.tasks-list li:hover .remove {
+	visibility: visible;
+}
+
+.tasks-list li span {
+	flex: 1;
 }
 
 .done {
