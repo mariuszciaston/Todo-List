@@ -20,35 +20,58 @@
         </header>
         <main class="main">
             <nav class="nav">
-                <hr class="hr-toggle">
-                <div class="navigation">
-                    <button class="button nav-btn active">TASKS</button>
-                    <button class="button nav-btn">TODAY</button>
-                    <button class="button nav-btn">THIS WEEK</button>
-                </div>
-                <hr>
-                <div class="lists">
-                  
+
+                <div>
+                    <hr class="hr-toggle">
                     <div class="navigation">
-                        <button class="button nav-btn small"><span>
-                                Przykładowa 1</span>
-                        </button>
-                        <button class="button nav-btn">Nowa 2</button>
-                        <button class="button nav-btn">Testowa 44</button>
-                        <button class="button nav-btn">Wakacje 9</button>
+                        <button class="button nav-btn active">TASKS</button>
+                        <button class="button nav-btn">TODAY</button>
+                        <button class="button nav-btn">THIS WEEK</button>
                     </div>
+                    <hr>
+                    <div class="lists">
+                        <div class="navigation">
+                            <button class="button nav-btn small">Przykładowa 1</button>
+                            <button class="button nav-btn">Nowa 2</button>
+                            <button class="button nav-btn">Testowa 44</button>
+                            <button class="button nav-btn">Wakacje 9</button>
+                        </div>
+                </div>
+            </div>
+
+
                     <button class="button action">New List
                     </button>
-                </div>
             </nav>
             <div class="content">
-                <ul class="tasks">
-                    <li>Finish The Odin Project</li>
-                    <li>Conquer the Crown of Polish Mountains</li>
-                    <li>Get hired as a Front End Developer</li>
-                    <li class="done">Go swimming on Tuesday</li>
-                    <li>Bake Neapolitan pizza</li>
-                </ul>
+                <div class="tasks">
+                    <h2 class="title">TASKS</h2>
+                    <ul class="tasks-list">
+                        
+                    <li>
+                            <div  class="circle">
+                              <div class="checkMark"></div>
+                            </div>
+                          
+                          <span>Finish The Odin Project</span></li>
+
+
+                        <li> <div  class="circle">
+                            <div class="checkMark"></div>
+                          </div> <span>Conquer the Crown of Polish Mountains</span></li>
+                        <li> <div  class="circle">
+                              <div class="checkMark"></div>
+                            </div> <span>Get hired as a Front End Developer</span></li>
+                        <li class="done">
+                            <div  class="circle">
+                              <div class="checkMark"></div>
+                            </div> <span>Go swimming on Tuesday</span></li>
+                        <li> <div  class="circle">
+                              <div class="checkMark"></div>
+                            </div> <span>Bake Neapolitan pizza</spa>
+                        </li>
+                    </ul>
+                </div>
                 <button class="button action black-btn">Add Task
                 </button>
             </div>

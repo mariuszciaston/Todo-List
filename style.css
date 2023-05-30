@@ -9,9 +9,7 @@ html {
 }
 
 body {
-	background-color: white;
 	background-color: black;
-
 	display: flex;
 	justify-content: center;
 }
@@ -31,9 +29,9 @@ body {
 }
 
 h1.title {
-	letter-spacing: 2px;
+	letter-spacing: 4px;
 	font-weight: 300;
-	font-size: 2.25rem;
+	font-size: 2rem;
 	text-align: center;
 }
 
@@ -47,11 +45,13 @@ span.bold {
 hr {
 	width: 100%;
 	padding: 0;
-	margin: 0;
+	margin: 1rem 0;
 	border: 1.5px solid white;
 }
 
 .hr-toggle {
+	margin: 0;
+	margin-bottom: 1rem;
 	display: block;
 }
 
@@ -62,21 +62,29 @@ hr {
 	flex: 1;
 }
 
+.nav {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	padding-bottom: 2rem;
+
+	justify-content: space-between;
+}
+
 .navigation {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
-	align-items: flex-start;
-	padding: 1rem 0;
 }
 
 button.nav-btn {
-	font-size: 2.25rem;
+	font-size: 1.75rem;
+	line-height: 2.5rem;
 	font-weight: 800;
-	line-height: 3rem;
 	text-align: left;
 	color: grey;
 	white-space: nowrap;
+	letter-spacing: 1px;
 }
 
 button.nav-btn:hover,
@@ -93,32 +101,74 @@ button.active {
 }
 
 .content {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 1rem;
 	flex: 1;
 	background-color: white;
 	color: black;
 	border-radius: 25px;
-	padding: 0 2rem;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
+	padding: 2rem 0;
 }
 
-.tasks {
+h2.title {
+	letter-spacing: 1px;
+	font-weight: 800;
+	font-size: 1.75rem;
+	line-height: 2.5rem;
+	margin: 0;
+	padding: 0 2rem;
+}
+
+.tasks-list {
 	list-style-type: none;
 	padding: 0;
 	margin: 1rem 0;
-	font-size: 1.25rem;
+	font-size: 1rem;
 	font-weight: 800;
+	font-weight: 400;
 }
 
-.tasks li {
-	padding: 1rem 0;
+.tasks-list li {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 1rem 2rem;
+}
+
+.circle {
+	appearance: none;
+	-webkit-appearance: none;
+	position: relative;
+	background: white;
+	border: 1px solid black;
+	border-radius: 100%;
+	height: 1.5rem;
+	width: 1.5rem;
+	aspect-ratio: 1/1;
+	cursor: pointer;
+}
+
+.circle:hover .checkMark {
+	position: absolute;
+	transform: rotate(50deg) translate(-50%, -50%);
+	left: 27%;
+	top: 45%;
+	height: 50%;
+	width: 20%;
+	border-bottom: 2px solid black;
+	border-right: 2px solid black;
+}
+
+.tasks-list li:hover {
+	background-color: hsl(0, 0%, 95%);
 }
 
 .done {
 	color: grey;
 	text-decoration: line-through;
-	text-decoration-thickness: 3px;
+	text-decoration-thickness: 2px;
 }
 
 .button {
@@ -130,13 +180,16 @@ button.active {
 
 .action {
 	padding: 1rem 4rem;
-	margin: 2rem 0;
 	border-radius: 10px;
 	border: 3px solid white;
 	color: white;
 	box-sizing: border-box;
 	font-weight: 800;
-	font-size: 1.25rem;
+	font-size: 1rem;
+}
+
+.content button.action {
+	margin: 0 2rem;
 }
 
 button.action:hover {
@@ -179,21 +232,17 @@ button.action:hover {
 		display: inherit;
 		flex: 1;
 		margin: 0;
+		padding: 2rem 0;
 		max-width: 320px;
 	}
 
-	.navigation {
-		width: 320px;
-	}
-
 	.navigation,
-	.lists button.action {
+	.nav button.action {
 		margin-right: 2rem;
 	}
 }
 
-/* 
-.header {
+/* .header {
 	background-color: darkred;
 }
 
