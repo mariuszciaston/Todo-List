@@ -21,14 +21,10 @@ body {
 	flex-direction: column;
 	width: 100%;
 	max-width: 1024px;
-
-	/* transition: 0.5s ease; */
 }
 
 .header,
 .nav {
-	/* transition: height 1s ease, height 1s ease; */
-
 	margin: 0 2rem;
 }
 
@@ -58,24 +54,9 @@ span.bold {
 	color: inherit;
 	background: none;
 	cursor: pointer;
-	/* margin: 24px 8px; */
-	width: 48px;
+	width: 32px;
 	height: 48px;
-	/* border-radius: 50px; */
-	/* transition: 0.5s ease; */
-
-	padding: 8px;
-	/* padding: 0; */
-}
-
-#hamburger:hover {
-	/* background-color: hsl(0, 0%, 25%); */
-}
-
-#hamburger:hover .bar1,
-#hamburger:hover .bar2,
-#hamburger:hover .bar3 {
-	/* background-color: grey; */
+	padding: 0px;
 }
 
 .bar1,
@@ -129,18 +110,18 @@ hr {
 	display: flex;
 	flex-direction: column;
 	gap: 2rem;
-
 	padding-bottom: 2rem;
-
 	justify-content: space-between;
-
-	/* transition: width 1s; */
 	height: auto;
+	opacity: 1;
+	visibility: visible;
 }
 
 .sidebar-toggle {
+	opacity: 0;
 	height: 0;
 	padding: 0;
+	visibility: hidden;
 }
 
 .navigation {
@@ -157,6 +138,7 @@ button.nav-btn {
 	color: grey;
 	white-space: nowrap;
 	letter-spacing: 1px;
+	transition: color 0.5s ease;
 }
 
 button.nav-btn:hover,
@@ -287,7 +269,6 @@ h2.title {
 
 .tasks-list li:hover {
 	background-color: hsl(0, 0%, 95%);
-	transition: 0.5s ease;
 }
 
 .tasks-list li:hover .remove {
@@ -309,8 +290,6 @@ h2.title {
 	color: white;
 	border: none;
 	padding: 0;
-
-	transition: color 0.5s ease;
 }
 
 .action {
@@ -323,6 +302,7 @@ h2.title {
 	font-size: 1rem;
 	white-space: nowrap;
 	min-width: max-content;
+	transition: 0.5s ease, margin 0s;
 }
 
 .content button.action {
@@ -405,7 +385,7 @@ button.action:hover {
 .fa-github {
 	color: white;
 	opacity: 75%;
-	transition: transform 0.3s ease-in-out;
+	transition: transform 0.5s ease-in-out;
 }
 
 .fa-github:hover {
