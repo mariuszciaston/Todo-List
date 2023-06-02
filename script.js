@@ -1,18 +1,18 @@
 const hamburger = document.querySelector('#hamburger');
-const nav = document.querySelector('.nav');
+const main = document.querySelector('.main');
 
 hamburger.addEventListener('click', () => {
-	nav.classList.toggle('sidebar-toggle');
+	main.classList.toggle('sidebar-toggle');
 	hamburger.classList.toggle('change');
 });
 
 function showSidebar() {
-	if (window.matchMedia('(min-width: 768px)').matches) {
+	if (window.matchMedia('(min-width: 800px)').matches) {
+		main.classList.remove('sidebar-toggle');
 		hamburger.classList.add('change');
-		nav.classList.remove('sidebar-toggle');
 	} else {
+		main.classList.add('sidebar-toggle');
 		hamburger.classList.remove('change');
-		nav.classList.add('sidebar-toggle');
 	}
 }
 
