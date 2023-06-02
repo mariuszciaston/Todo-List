@@ -263,6 +263,21 @@ h2.title {
 	border-left: 2px solid black;
 }
 
+.star:before {
+	color: hsl(0, 0%, 33%);
+	content: '\2606';
+	display: block;
+	line-height: 1rem;
+	font-size: 2rem;
+	transform: translateY(-2px);
+}
+
+.star:hover:before {
+	color: #f2b01e;
+	content: '\2605';
+	cursor: pointer;
+}
+
 .tasks-list li {
 	transition: 0.5s ease;
 }
@@ -279,7 +294,7 @@ h2.title {
 	flex: 1;
 }
 
-.done {
+.done :not(.star) {
 	color: grey;
 	text-decoration: line-through;
 	text-decoration-thickness: 2px;
@@ -376,10 +391,6 @@ button.action:hover {
 	align-items: center;
 	height: 2.125rem;
 	white-space: nowrap;
-}
-
-.footer .emoji {
-	font-size: 1.625rem;
 }
 
 .fa-github {
