@@ -387,7 +387,6 @@ button.action:hover {
 
 	.sidebar-toggle {
 		display: grid;
-
 		grid-template-columns: 0 1fr;
 	}
 

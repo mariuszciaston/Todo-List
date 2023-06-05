@@ -1,0 +1,15 @@
+{
+  "name": "minimaLIST",
+  "version": "1.0.0",
+  "description": "Work in progress...",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mariusz Ciastoń",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.85.0",
+    "webpack-cli": "^5.1.3"
+  }
+}
