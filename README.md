@@ -2,4 +2,4 @@
 
 Work in progress...
 
-[Live Demo](https://mariuszciaston.github.io/Todo-List/) :point_left:
+[Live Demo](https://mariuszciaston.github.io/minimaLIST/) :point_left:
