@@ -1,0 +1,410 @@
+html,
+body {
+	height: 100%;
+}
+
+html {
+	font-size: 16px;
+	font-family: 'Open Sans', sans-serif;
+}
+
+body {
+	background-color: black;
+	display: flex;
+	justify-content: center;
+}
+
+.wrapper {
+	background-color: black;
+	color: white;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	max-width: 1024px;
+	transition: 0.5s ease;
+}
+
+.header,
+.nav {
+	margin: 0 2rem;
+}
+
+.header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	transition: 0.5s ease;
+}
+
+h1.title {
+	letter-spacing: 4px;
+	font-weight: 300;
+	font-size: 2rem;
+	text-align: center;
+}
+
+span.thin {
+	font-weight: 300;
+}
+span.bold {
+	font-weight: 800;
+}
+
+#hamburger {
+	border: none;
+	outline: none;
+	color: inherit;
+	background: none;
+	cursor: pointer;
+	width: 32px;
+	height: 48px;
+	padding: 0px;
+}
+
+.bar1,
+.bar2 {
+	margin-bottom: 6px;
+}
+
+.bar1,
+.bar2,
+.bar3 {
+	height: 4px;
+	transition: 0.5s ease;
+	border-radius: 1px;
+	background-color: hsl(0, 0%, 100%);
+}
+
+.change .bar1 {
+	transform: translate(0, 10px) rotate(-45deg);
+}
+
+.change .bar2 {
+	opacity: 0;
+	transform: translate(-48px, 0);
+}
+
+.change .bar3 {
+	transform: translate(0, -10px) rotate(45deg);
+}
+
+hr {
+	width: 100%;
+	padding: 0;
+	margin: 1rem 0;
+	border: 1.5px solid white;
+	border-radius: 1px;
+}
+
+.hr-toggle {
+	margin: 0;
+	margin-bottom: 1rem;
+	display: block;
+}
+
+.main {
+	background-color: black;
+	display: grid;
+	grid-auto-flow: column;
+	grid-template-rows: auto 1fr;
+	flex: 1;
+	transition: 0.5s ease;
+}
+
+.nav {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	padding-bottom: 2rem;
+	justify-content: space-between;
+	height: auto;
+}
+
+.sidebar-toggle {
+	display: grid;
+	grid-template-rows: 0 1fr;
+}
+
+.navigation {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
+button.nav-btn {
+	font-size: 1.75rem;
+	line-height: 2.5rem;
+	font-weight: 800;
+	text-align: left;
+	color: grey;
+	white-space: nowrap;
+	letter-spacing: 1px;
+	transition: color 0.5s ease;
+}
+
+button.nav-btn:hover,
+button.active {
+	cursor: pointer;
+	color: white;
+}
+
+.lists {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	justify-content: space-between;
+}
+
+.content {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	gap: 1rem;
+	flex: 1;
+	background-color: white;
+	color: black;
+	border-radius: 25px;
+	padding: 2rem 0;
+}
+
+h2.title {
+	letter-spacing: 1px;
+	font-weight: 800;
+	font-size: 1.75rem;
+	line-height: 2.5rem;
+	margin: 0;
+	padding: 0 2rem;
+}
+
+.tasks-list {
+	list-style-type: none;
+	padding: 0;
+	margin: 1rem 0;
+	font-size: 1rem;
+	font-weight: 800;
+	font-weight: 400;
+}
+
+.tasks-list li {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 1rem 2rem;
+}
+
+.circle {
+	appearance: none;
+	-webkit-appearance: none;
+	position: relative;
+	background: white;
+	border: 1px solid black;
+	border-radius: 100%;
+	height: 1.5rem;
+	width: 1.5rem;
+	aspect-ratio: 1/1;
+	cursor: pointer;
+	box-sizing: border-box;
+}
+
+.circle:hover .checkMark,
+.tasks-list li.done .circle .checkMark {
+	position: absolute;
+	transform: rotate(50deg) translate(-50%, -50%);
+	left: 27%;
+	top: 45%;
+	height: 50%;
+	width: 20%;
+}
+
+.circle:hover .checkMark {
+	border-bottom: 2px solid black;
+	border-right: 2px solid black;
+}
+
+.tasks-list li.done .circle {
+	border: 1px solid grey;
+}
+
+.tasks-list li.done .circle .checkMark {
+	border-bottom: 2px solid grey;
+	border-right: 2px solid grey;
+}
+
+.remove {
+	height: 1.5rem;
+	width: 1.5rem;
+	position: relative;
+	visibility: hidden;
+}
+
+.remove:after {
+	content: '';
+	height: 100%;
+	border-left: 1px solid black;
+	position: absolute;
+	transform: rotate(45deg);
+	left: 50%;
+}
+
+.remove:before {
+	content: '';
+	height: 100%;
+	border-left: 1px solid black;
+	position: absolute;
+	transform: rotate(-45deg);
+	left: 50%;
+}
+
+.remove:hover {
+	cursor: pointer;
+}
+
+.remove:hover:before,
+.remove:hover:after {
+	border-left: 2px solid black;
+}
+
+.star:before {
+	color: hsl(0, 0%, 33%);
+	content: '\2606';
+	display: block;
+	line-height: 1rem;
+	font-size: 2rem;
+	transform: translateY(-2px);
+}
+
+.star:hover:before {
+	color: #f2b01e;
+	content: '\2605';
+	cursor: pointer;
+}
+
+.tasks-list li {
+	transition: 0.5s ease;
+}
+
+.tasks-list li:hover {
+	background-color: hsl(0, 0%, 95%);
+}
+
+.tasks-list li:hover .remove {
+	visibility: visible;
+}
+
+.tasks-list li span {
+	flex: 1;
+}
+
+.done :not(.star) {
+	color: grey;
+	text-decoration: line-through;
+	text-decoration-thickness: 2px;
+}
+
+.button {
+	background-color: inherit;
+	color: white;
+	border: none;
+	padding: 0;
+}
+
+.action {
+	padding: 1rem 4rem;
+	border-radius: 10px;
+	border: 3px solid white;
+	color: white;
+	box-sizing: border-box;
+	font-weight: 800;
+	font-size: 1rem;
+	white-space: nowrap;
+}
+
+.content button.action {
+	margin: 0 2rem;
+}
+
+button.action:hover {
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+.black-btn {
+	color: black;
+	border: 3px solid black;
+}
+
+.footer {
+	background-color: black;
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	font-size: 0.875rem;
+	padding: 1rem 0;
+}
+
+.footer span {
+	display: flex;
+	align-items: center;
+	height: 2.125rem;
+	white-space: nowrap;
+}
+
+.fa-github {
+	color: white;
+	opacity: 75%;
+	transition: transform 0.5s ease-in-out;
+}
+
+.fa-github:hover {
+	opacity: 100%;
+	transform: rotate(360deg) scale(1.2);
+}
+
+@media only screen and (min-width: 768px) {
+	.wrapper {
+		margin: 0 2rem;
+	}
+
+	.header {
+		margin: 0;
+	}
+
+	h1.title {
+		text-align: right;
+	}
+
+	.hr-toggle {
+		display: none;
+	}
+
+	.main {
+		display: grid;
+		grid-auto-flow: column;
+		grid-template-columns: 320px 1fr;
+		grid-template-rows: none;
+	}
+
+	.sidebar-toggle {
+		display: grid;
+		grid-template-columns: 0 1fr;
+	}
+
+	.nav {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		margin: 0;
+		padding: 2rem 0;
+		width: 320px;
+	}
+
+	.sidebar-toggle .nav {
+		opacity: 1;
+	}
+
+	.navigation,
+	.nav button.action {
+		margin-right: 2rem;
+	}
+}

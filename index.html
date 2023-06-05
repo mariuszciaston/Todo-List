@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>minimaLIST</title>
+    <link rel="stylesheet" href="normalize.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png">
+    <link rel="manifest" href="site.webmanifest">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;800&display=swap" rel="stylesheet">
+    <script src="main.js" defer></script>
+    <script src="https://kit.fontawesome.com/5f5b4189ad.js" crossorigin="anonymous" defer></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <header class="header">
+            <button type="button" id="hamburger">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+            </button>
+            <h1 class="title"><span class="thin">minima</span><span class="bold">LIST</span></h1>
+        </header>
+        <main class="main sidebar-toggle">
+            <nav class="nav">
+                <div>
+                    <hr class="hr-toggle">
+                    <div class="navigation">
+                        <button class="button nav-btn active">TASKS</button>
+                        <button class="button nav-btn">TODAY</button>
+                        <button class="button nav-btn">THIS WEEK</button>
+                    </div>
+                    <hr>
+                    <div class="lists">
+                        <div class="navigation">
+                            <button class="button nav-btn small">Przykładowa 1</button>
+                            <button class="button nav-btn">Nowa 2</button>
+                            <button class="button nav-btn">Testowa 44</button>
+                            <button class="button nav-btn">Wakacje 9</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="button action">New List
+                </button>
+            </nav>
+            <div class="content">
+                <div class="tasks">
+                    <h2 class="title">TASKS</h2>
+                    <ul class="tasks-list">
+                        <li>
+                            <div class="circle">
+                                <div class="checkMark"></div>
+                            </div>
+                            <span>Finish The Odin Project</span>
+                            <div class="date">01.05.2023</div>
+                            <div class="star"></div>
+                            <div class="remove"></div>
+                        </li>
+                        <li>
+                            <div class="circle">
+                                <div class="checkMark"></div>
+                            </div> <span>Conquer the Crown of Polish Mountains</span>
+                            <div class="date">01.05.2023</div>
+                            <div class="star"></div>
+                            <div class="remove"></div>
+                        </li>
+                        <li>
+                            <div class="circle">
+                                <div class="checkMark"></div>
+                            </div> <span>Get hired as a Front End Developer</span>
+                            <div class="date">01.05.2023</div>
+                            <div class="star"></div>
+                            <div class="remove"></div>
+                        </li>
+                        <li class="done">
+                            <div class="circle">
+                                <div class="checkMark"></div>
+                            </div> <span>Go swimming on Tuesday</span>
+                            <div class="date">01.05.2023</div>
+                            <div class="star"></div>
+                            <div class="remove"></div>
+                        </li>
+                        <li>
+                            <div class="circle">
+                                <div class="checkMark"></div>
+                            </div> <span>Bake Neapolitan pizza</span>
+                            <div class="date">01.05.2023</div>
+                            <div class="star"></div>
+                            <div class="remove"></div>
+                        </li>
+                    </ul>
+                </div>
+                <button class="button action black-btn">Add Task
+                </button>
+            </div>
+        </main>
+        <footer class="footer"><span>Mariusz Ciastoń 2023 &nbsp;
+                <a href="https://github.com/mariuszciaston/" target="_blank" rel="noopener"><i class="fab fa-github fa-2x" aria-hidden="true"></i></a>
+            </span></footer>
+    </div>
+</body>
+
+</html>
