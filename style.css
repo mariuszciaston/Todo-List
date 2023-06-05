@@ -94,6 +94,7 @@ hr {
 	padding: 0;
 	margin: 1rem 0;
 	border: 1.5px solid white;
+	border-radius: 1px;
 }
 
 .hr-toggle {
