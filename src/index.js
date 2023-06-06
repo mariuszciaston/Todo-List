@@ -1,43 +1,46 @@
-const logicController = (() => {})();
-
-const displayController = (() => {})();
-
 const addTaskBtn = document.querySelector('#add-task-btn');
+const loadExample = document.querySelector('#load-example-btn');
+
+const addTask = (inputTask) => {
+	const tasksList = document.querySelector('.tasks-list');
+	const task = document.createElement('li');
+	tasksList.prepend(task);
+
+	const circle = document.createElement('div');
+	circle.className = 'circle';
+	task.appendChild(circle);
+
+	const checkMark = document.createElement('div');
+	checkMark.className = 'checkMark';
+	circle.appendChild(checkMark);
+
+	const taskContent = document.createElement('p');
+	taskContent.className = 'task-content';
+	taskContent.textContent = inputTask;
+	task.appendChild(taskContent);
+
+	const date = document.createElement('p');
+	date.className = 'date';
+	date.textContent = 'no date set';
+	task.appendChild(date);
+
+	const star = document.createElement('div');
+	star.className = 'star';
+	task.appendChild(star);
+
+	const remove = document.createElement('div');
+	remove.className = 'remove';
+	task.appendChild(remove);
+};
+
 addTaskBtn.addEventListener('click', () => {
-	// const inputTask = prompt('Please enter task content', '');
+	const inputTask = prompt('Please enter task content', '');
+	addTask(inputTask);
+});
 
-	const addTask = (() => {
-		const tasksList = document.querySelector('.tasks-list');
-		const task = document.createElement('li');
-		tasksList.appendChild(task);
-
-		const circle = document.createElement('div');
-		circle.className = 'circle';
-		task.appendChild(circle);
-
-		const checkMark = document.createElement('div');
-		checkMark.className = 'checkMark';
-		circle.appendChild(checkMark);
-
-		const taskContent = document.createElement('p');
-		taskContent.className = 'task-content';
-		// taskContent.textContent = inputTask;
-		taskContent.textContent = 'Example task';
-		task.appendChild(taskContent);
-
-		const date = document.createElement('p');
-		date.className = 'date';
-		date.textContent = 'no date set';
-		task.appendChild(date);
-
-		const star = document.createElement('div');
-		star.className = 'star';
-		task.appendChild(star);
-
-		const remove = document.createElement('div');
-		remove.className = 'remove';
-		task.appendChild(remove);
-	})();
+loadExample.addEventListener('click', () => {
+	const inputTask = 'Example task';
+	addTask(inputTask);
 });
 
 // Hamburger menu
