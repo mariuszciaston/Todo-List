@@ -1,69 +1,77 @@
-const addTaskBtn = document.querySelector('#add-task-btn');
-const loadExample = document.querySelector('#load-example-btn');
+const displayController = (() => {
+	const addTask = (inputTask) => {
+		if (inputTask) {
+			const tasksList = document.querySelector('.tasks-list');
+			const li = document.createElement('li');
+			const circle = document.createElement('div');
+			const checkMark = document.createElement('div');
+			const taskContent = document.createElement('p');
+			const date = document.createElement('p');
+			const star = document.createElement('div');
+			const remove = document.createElement('div');
 
-const addTask = (inputTask) => {
-	const tasksList = document.querySelector('.tasks-list');
-	const task = document.createElement('li');
-	tasksList.prepend(task);
+			circle.className = 'circle';
+			checkMark.className = 'checkMark';
+			taskContent.className = 'task-content';
+			date.className = 'date';
+			star.className = 'star';
+			remove.className = 'remove';
 
-	const circle = document.createElement('div');
-	circle.className = 'circle';
-	task.appendChild(circle);
+			taskContent.textContent = inputTask;
+			date.textContent = 'no date set';
 
-	const checkMark = document.createElement('div');
-	checkMark.className = 'checkMark';
-	circle.appendChild(checkMark);
+			li.append(circle);
+			circle.append(checkMark);
+			li.append(taskContent);
+			li.append(date);
+			li.append(star);
+			li.append(remove);
+			tasksList.prepend(li);
+		}
+	};
+	const addTaskBtn = document.querySelector('#add-task-btn');
+	addTaskBtn.addEventListener('click', () => {
+		const inputTask = prompt('Please enter task content', '');
+		addTask(inputTask);
+	});
 
-	const taskContent = document.createElement('p');
-	taskContent.className = 'task-content';
-	taskContent.textContent = inputTask;
-	task.appendChild(taskContent);
+	const loadExample = document.querySelector('#load-example-btn');
+	let taskCount = 0;
+	loadExample.addEventListener('click', () => {
+		taskCount += 1;
+		addTask(`Example task ${taskCount}`);
+	});
 
-	const date = document.createElement('p');
-	date.className = 'date';
-	date.textContent = 'no date set';
-	task.appendChild(date);
+	// Hamburger menu
+	const hamburger = document.querySelector('#hamburger');
+	const main = document.querySelector('.main');
 
-	const star = document.createElement('div');
-	star.className = 'star';
-	task.appendChild(star);
+	hamburger.addEventListener('click', () => {
+		main.classList.toggle('sidebar-toggle');
+		hamburger.classList.toggle('change');
+	});
 
-	const remove = document.createElement('div');
-	remove.className = 'remove';
-	task.appendChild(remove);
-};
-
-addTaskBtn.addEventListener('click', () => {
-	const inputTask = prompt('Please enter task content', '');
-	addTask(inputTask);
-});
-
-loadExample.addEventListener('click', () => {
-	const inputTask = 'Example task';
-	addTask(inputTask);
-});
-
-// Hamburger menu
-const hamburger = document.querySelector('#hamburger');
-const main = document.querySelector('.main');
-
-hamburger.addEventListener('click', () => {
-	main.classList.toggle('sidebar-toggle');
-	hamburger.classList.toggle('change');
-});
-
-function showSidebar() {
-	if (window.matchMedia('(min-width: 800px)').matches) {
-		main.classList.remove('sidebar-toggle');
-		hamburger.classList.add('change');
-	} else {
-		main.classList.add('sidebar-toggle');
-		hamburger.classList.remove('change');
+	function showSidebar() {
+		if (window.matchMedia('(min-width: 800px)').matches) {
+			main.classList.remove('sidebar-toggle');
+			hamburger.classList.add('change');
+		} else {
+			main.classList.add('sidebar-toggle');
+			hamburger.classList.remove('change');
+		}
 	}
-}
 
-window.addEventListener('resize', () => {
+	window.addEventListener('resize', () => {
+		showSidebar();
+	});
+
 	showSidebar();
-});
 
-showSidebar();
+	return { addTask };
+})();
+
+displayController.addTask('Finish The Odin Project ');
+displayController.addTask('Conquer the Crown of Polish Mountains');
+displayController.addTask('Get hired as a Front End Developer');
+displayController.addTask('Go swimming on Tuesday');
+displayController.addTask('Bake Neapolitan pizza');
