@@ -1,4 +1,8 @@
 const displayController = (() => {
+	const addTaskBtn = document.querySelector('#add-task-btn');
+	const loadExample = document.querySelector('#load-example-btn');
+	let taskCount = 0;
+
 	const addTask = (inputTask) => {
 		if (inputTask) {
 			const tasksList = document.querySelector('.tasks-list');
@@ -29,14 +33,12 @@ const displayController = (() => {
 			tasksList.prepend(li);
 		}
 	};
-	const addTaskBtn = document.querySelector('#add-task-btn');
+
 	addTaskBtn.addEventListener('click', () => {
 		const inputTask = prompt('Please enter task content', '');
 		addTask(inputTask);
 	});
 
-	const loadExample = document.querySelector('#load-example-btn');
-	let taskCount = 0;
 	loadExample.addEventListener('click', () => {
 		taskCount += 1;
 		addTask(`Example task ${taskCount}`);
@@ -75,3 +77,28 @@ displayController.addTask('Conquer the Crown of Polish Mountains');
 displayController.addTask('Get hired as a Front End Developer');
 displayController.addTask('Go swimming on Tuesday');
 displayController.addTask('Bake Neapolitan pizza');
+
+
+
+const logicController = (() => {
+	const circles = document.querySelectorAll('.tasks-list li .circle');
+	circles.forEach((circle) => {
+		circle.addEventListener('click', () => {
+			circle.parentElement.classList.toggle('done');
+		});
+	});
+
+	const stars = document.querySelectorAll('.tasks-list li .star');
+	stars.forEach((star) => {
+		star.addEventListener('click', () => {
+			star.classList.toggle('yellow');
+		});
+	});
+
+	const removes = document.querySelectorAll('.tasks-list li .remove');
+	removes.forEach((remove) => {
+		remove.addEventListener('click', () => {
+			remove.parentElement.remove();
+		});
+	});
+})();
