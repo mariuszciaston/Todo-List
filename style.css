@@ -239,6 +239,10 @@ h2.title {
 	width: 20%;
 }
 
+.circle .checkMark{
+	pointer-events: none;
+}
+
 .circle:hover .checkMark {
 	border-bottom: 2px solid black;
 	border-right: 2px solid black;
@@ -278,6 +282,12 @@ h2.title {
 }
 
 .star:hover:before {
+	color: #f2b01e;
+	/* content: '\2605'; */
+	cursor: pointer;
+}
+
+.star.yellow:before{
 	color: #f2b01e;
 	content: '\2605';
 	cursor: pointer;
