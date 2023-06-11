@@ -113,6 +113,11 @@ hr {
 	transition: 0.5s ease;
 }
 
+.sidebar-toggle {
+	display: grid;
+	grid-template-columns: 0 1fr;
+}
+
 .nav {
 	display: flex;
 	flex-direction: column;
@@ -122,11 +127,6 @@ hr {
 	height: auto;
 	max-width: calc(100vw - 4rem);
 	width: 100%;
-}
-
-.sidebar-toggle {
-	display: grid;
-	grid-template-columns: 0 1fr;
 }
 
 .navigation {
@@ -346,7 +346,6 @@ h2.title {
 
 .btns {
 	display: flex;
-
 	flex-direction: row;
 	margin: 0 2rem;
 	gap: 2rem;
@@ -362,7 +361,6 @@ h2.title {
 	font-size: 1rem;
 	white-space: nowrap;
 	overflow: hidden;
-
 	max-width: calc(100vw - 4rem);
 	width: 100vw;
 }

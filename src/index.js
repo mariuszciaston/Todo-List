@@ -22,7 +22,7 @@ const displayController = (() => {
 			remove.className = 'remove';
 
 			taskContent.textContent = inputTask;
-			date.textContent = 'no date set';
+			date.textContent = 'no date';
 
 			li.append(circle);
 			circle.append(checkMark);
