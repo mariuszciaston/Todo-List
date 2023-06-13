@@ -111,6 +111,8 @@ hr {
 	grid-template-columns: 100% 1fr;
 	flex: 1;
 	transition: 0.5s ease;
+	width: 100%;
+	overflow: hidden;
 }
 
 .sidebar-toggle {
@@ -170,6 +172,7 @@ button.active {
 	border-radius: 25px;
 	padding: 2rem 0;
 	overflow: hidden;
+	width: 100vw;
 }
 
 .tasks {
@@ -239,7 +242,7 @@ h2.title {
 	width: 20%;
 }
 
-.circle .checkMark{
+.circle .checkMark {
 	pointer-events: none;
 }
 
@@ -283,11 +286,10 @@ h2.title {
 
 .star:hover:before {
 	color: #f2b01e;
-	/* content: '\2605'; */
 	cursor: pointer;
 }
 
-.star.yellow:before{
+.star.yellow:before {
 	color: #f2b01e;
 	content: '\2605';
 	cursor: pointer;
@@ -382,6 +384,10 @@ button.action:hover {
 	border: 3px solid black;
 }
 
+button {
+	touch-action: manipulation;
+}
+
 .footer {
 	background-color: black;
 	display: flex;
@@ -457,5 +463,9 @@ button.action:hover {
 	.navigation,
 	.nav button.action {
 		margin-right: 2rem;
+	}
+
+	.content {
+		width: unset;
 	}
 }
