@@ -265,6 +265,7 @@ h2.title {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	line-height: normal;
 }
 
 .tasks-list li p {
