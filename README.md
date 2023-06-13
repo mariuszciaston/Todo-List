@@ -1,4 +1,6 @@
-# Todo-List
+# minimaLIST
+
+Minimalistic black and white Todo list app
 
 Work in progress...
 
