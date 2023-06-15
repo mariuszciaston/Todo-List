@@ -1,59 +1,29 @@
-const displayController = (() => {
-	const addTaskBtn = document.querySelector('#add-task-btn');
-	const loadExample = document.querySelector('#load-example-btn');
-	let taskCount = 0;
+/* eslint-disable no-alert */
+/* eslint-disable no-use-before-define */
 
-	const addTask = (inputTask) => {
-		if (inputTask) {
-			const tasksList = document.querySelector('.tasks-list');
-			const li = document.createElement('li');
-			const circle = document.createElement('div');
-			const checkMark = document.createElement('div');
-			const taskContent = document.createElement('p');
-			const date = document.createElement('p');
-			const star = document.createElement('div');
-			const remove = document.createElement('div');
+// LOGIC --------------------------------------------------------------
 
-			circle.className = 'circle';
-			checkMark.className = 'checkMark';
-			taskContent.className = 'task-content';
-			date.className = 'date';
-			star.className = 'star';
-			remove.className = 'remove';
+const tasksArray = [];
 
-			taskContent.textContent = inputTask;
-			date.textContent = 'no date';
+function createTask(todo) {
+	if (todo) {
+		tasksArray.push({ isDone: false, todo, date: 'no date', star: false });
+		displayTask();
+	}
+}
 
-			li.append(circle);
-			circle.append(checkMark);
-			li.append(taskContent);
-			li.append(date);
-			li.append(star);
-			li.append(remove);
-			tasksList.prepend(li);
-		}
-	};
+// UI -----------------------------------------------------------------
 
-	addTaskBtn.addEventListener('click', () => {
-		const inputTask = prompt('Please enter task content', '');
-		addTask(inputTask);
-	});
-
-	loadExample.addEventListener('click', () => {
-		taskCount += 1;
-		addTask(`Example task ${taskCount}`);
-	});
-
-	// Hamburger menu
+(function hamburgerMenuControl() {
 	const hamburger = document.querySelector('#hamburger');
 	const main = document.querySelector('.main');
 
-	hamburger.addEventListener('click', () => {
+	const manualToggle = () => {
 		main.classList.toggle('sidebar-toggle');
 		hamburger.classList.toggle('change');
-	});
+	};
 
-	function showSidebar() {
+	const autoToggle = () => {
 		if (window.matchMedia('(min-width: 800px)').matches) {
 			main.classList.remove('sidebar-toggle');
 			hamburger.classList.add('change');
@@ -61,44 +31,57 @@ const displayController = (() => {
 			main.classList.add('sidebar-toggle');
 			hamburger.classList.remove('change');
 		}
-	}
+	};
+	autoToggle();
 
-	window.addEventListener('resize', () => {
-		showSidebar();
-	});
-
-	showSidebar();
-
-	return { addTask };
+	hamburger.addEventListener('click', manualToggle);
+	window.addEventListener('resize', autoToggle);
 })();
 
-displayController.addTask('Finish The Odin Project ');
-displayController.addTask('Conquer the Crown of Polish Mountains');
-displayController.addTask('Get hired as a Front End Developer');
-displayController.addTask('Go swimming on Tuesday');
-displayController.addTask('Bake Neapolitan pizza');
+function displayTask() {
+	const tasksList = document.querySelector('.tasks-list');
+	const li = document.createElement('li');
+	const circle = document.createElement('div');
+	const checkMark = document.createElement('div');
+	const taskContent = document.createElement('p');
+	const date = document.createElement('p');
+	const star = document.createElement('div');
+	const remove = document.createElement('div');
 
+	circle.className = 'circle';
+	checkMark.className = 'checkMark';
+	taskContent.className = 'task-content';
+	date.className = 'date';
+	star.className = 'star';
+	remove.className = 'remove';
 
+	taskContent.textContent = tasksArray[tasksArray.length - 1].todo;
+	date.textContent = tasksArray[tasksArray.length - 1].date;
 
-const logicController = (() => {
-	const circles = document.querySelectorAll('.tasks-list li .circle');
-	circles.forEach((circle) => {
-		circle.addEventListener('click', () => {
-			circle.parentElement.classList.toggle('done');
-		});
-	});
+	li.append(circle);
+	circle.append(checkMark);
+	li.append(taskContent);
+	li.append(date);
+	li.append(star);
+	li.append(remove);
+	tasksList.prepend(li);
+}
 
-	const stars = document.querySelectorAll('.tasks-list li .star');
-	stars.forEach((star) => {
-		star.addEventListener('click', () => {
-			star.classList.toggle('yellow');
-		});
-	});
+const addTaskBtn = document.querySelector('#add-task-btn');
+const loadExampleBtn = document.querySelector('#load-example-btn');
+let taskCount = 0;
 
-	const removes = document.querySelectorAll('.tasks-list li .remove');
-	removes.forEach((remove) => {
-		remove.addEventListener('click', () => {
-			remove.parentElement.remove();
-		});
-	});
-})();
+addTaskBtn.addEventListener('click', () => {
+	createTask(prompt('Please enter task content', ''));
+});
+
+loadExampleBtn.addEventListener('click', () => {
+	taskCount += 1;
+	createTask(`Example task ${taskCount}`);
+});
+
+createTask('Finish The Odin Project ');
+createTask('Conquer the Crown of Polish Mountains');
+createTask('Get hired as a Front End Developer');
+createTask('Go swimming on Tuesday');
+createTask('Bake Neapolitan pizza');
