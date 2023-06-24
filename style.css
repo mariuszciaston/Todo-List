@@ -112,7 +112,6 @@ hr {
 	flex: 1;
 	transition: 0.5s ease;
 	width: 100%;
-	overflow: hidden;
 }
 
 .sidebar-toggle {
@@ -123,12 +122,22 @@ hr {
 .nav {
 	display: flex;
 	flex-direction: column;
-	gap: 2rem;
 	padding-bottom: 2rem;
 	justify-content: space-between;
-	height: auto;
 	max-width: calc(100vw - 4rem);
 	width: 100%;
+	flex: 1;
+}
+
+.lists > .navigation {
+	-webkit-mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
+	mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	overflow: auto;
 }
 
 .navigation {
@@ -157,8 +166,14 @@ button.active {
 .lists {
 	display: flex;
 	flex-direction: column;
-	flex: 1;
 	justify-content: space-between;
+	flex: 1;
+	position: relative;
+}
+
+.lists > .navigation {
+	margin-bottom: 2rem;
+	padding-bottom: 2rem;
 }
 
 .content {
@@ -173,6 +188,7 @@ button.active {
 	padding: 2rem 0;
 	overflow: hidden;
 	width: 100vw;
+	z-index: 1;
 }
 
 .tasks {
@@ -194,7 +210,6 @@ h2.title {
 	padding: 0rem 0 2rem 0;
 	margin: 0 0 1rem 0;
 	font-size: 1rem;
-	font-weight: 800;
 	font-weight: 400;
 	-webkit-mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
 	mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
