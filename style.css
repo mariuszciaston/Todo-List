@@ -262,10 +262,10 @@ h2.title {
 
 .tasks-list li .task-content {
 	flex: 1;
-	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	line-height: normal;
+	min-width: 90px;
 }
 
 .tasks-list li p {
@@ -468,5 +468,11 @@ button {
 
 	.content {
 		width: unset;
+	}
+}
+
+@media (pointer: coarse) {
+	.remove {
+		visibility: visible;
 	}
 }
