@@ -17,7 +17,7 @@ export default class List {
 	}
 
 	deleteTask(taskName) {
-		this.tasks = this.tasks.filter((task) => task !== taskName);
+		this.tasks = this.tasks.filter((task) => task.name !== taskName);
 	}
 
 	getTasks() {

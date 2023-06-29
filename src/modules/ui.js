@@ -1,3 +1,6 @@
+// import List from './list'
+// import Task from './task'
+
 const hamburgerMenuControl = (() => {
 	const hamburger = document.querySelector('#hamburger');
 	const main = document.querySelector('.main');
@@ -23,6 +26,3 @@ const hamburgerMenuControl = (() => {
 })();
 
 export default hamburgerMenuControl;
-
-
-
