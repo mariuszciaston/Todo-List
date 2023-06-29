@@ -7,6 +7,7 @@
  * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
  */
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./src/index.js":
@@ -15,8 +16,7 @@
   \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _modules_ui__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/ui */ \"./src/modules/ui.js\");\n/* harmony import */ var _modules_manage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/manage */ \"./src/modules/manage.js\");\n\n\n\n\nconsole.log(_modules_manage__WEBPACK_IMPORTED_MODULE_1__[\"default\"]);\n\n_modules_manage__WEBPACK_IMPORTED_MODULE_1__[\"default\"].setName('nowa nazwa pierwszej listy');\nconsole.log(_modules_manage__WEBPACK_IMPORTED_MODULE_1__[\"default\"]);\n\nconsole.log(_modules_manage__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getName());\n\n_modules_manage__WEBPACK_IMPORTED_MODULE_1__[\"default\"].addTask('zadanie 1');\nconsole.log(_modules_manage__WEBPACK_IMPORTED_MODULE_1__[\"default\"]);\n\nconsole.log(_modules_manage__WEBPACK_IMPORTED_MODULE_1__[\"default\"].getTasks());\n\n_modules_manage__WEBPACK_IMPORTED_MODULE_1__[\"default\"].deleteTask('zadanie 1');\nconsole.log(_modules_manage__WEBPACK_IMPORTED_MODULE_1__[\"default\"]);\n\n\n//# sourceURL=webpack://minimalist/./src/index.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _modules_ui__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./modules/ui */ \"./src/modules/ui.js\");\n/* harmony import */ var _modules_manage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./modules/manage */ \"./src/modules/manage.js\");\n\n\n\n\n\n//# sourceURL=webpack://minimalist/./src/index.js?");
 
 /***/ }),
 
@@ -26,8 +26,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _mod
   \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ List)\n/* harmony export */ });\nclass List {\n\tconstructor(name) {\n\t\tthis.name = name;\n\t\tthis.tasks = [];\n\t}\n\n\tsetName(name) {\n\t\tthis.name = name;\n\t}\n\n\tgetName() {\n\t\treturn this.name;\n\t}\n\n\taddTask(newTask) {\n\t\tthis.tasks.push(newTask);\n\t}\n\n\tdeleteTask(taskName) {\n        this.tasks = this.tasks.filter((task) => task !== taskName);\n\t}\n\n\tgetTasks() {\n\t\treturn this.tasks;\n\t}\n}\n\n\n\n\n//# sourceURL=webpack://minimalist/./src/modules/list.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ List)\n/* harmony export */ });\nclass List {\n\tconstructor(name) {\n\t\tthis.name = name;\n\t\tthis.tasks = [];\n\t}\n\n\tsetName(name) {\n\t\tthis.name = name;\n\t}\n\n\tgetName() {\n\t\treturn this.name;\n\t}\n\n\taddTask(newTask) {\n\t\tthis.tasks.push(newTask);\n\t}\n\n\tdeleteTask(taskName) {\n\t\tthis.tasks = this.tasks.filter((task) => task.name !== taskName);\n\t}\n\n\tgetTasks() {\n\t\treturn this.tasks;\n\t}\n}\n\n\n//# sourceURL=webpack://minimalist/./src/modules/list.js?");
 
 /***/ }),
 
@@ -37,8 +36,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n/* harmony import */ var _list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./list */ \"./src/modules/list.js\");\n/* harmony import */ var _task__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./task */ \"./src/modules/task.js\");\n/* harmony import */ var _task__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_task__WEBPACK_IMPORTED_MODULE_1__);\n\n\n\n\nlet pierwsza\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (pierwsza = new _list__WEBPACK_IMPORTED_MODULE_0__[\"default\"]('pierwsza lista'));\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n//# sourceURL=webpack://minimalist/./src/modules/manage.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ ListsManager)\n/* harmony export */ });\n/* harmony import */ var _list__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./list */ \"./src/modules/list.js\");\n/* harmony import */ var _task__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./task */ \"./src/modules/task.js\");\n\n\n\nclass ListsManager {\n\tconstructor() {\n\t\tthis.lists = [];\n\t\tthis.lists.push(new _list__WEBPACK_IMPORTED_MODULE_0__[\"default\"]('TASKS'));\n\t\tthis.lists.push(new _list__WEBPACK_IMPORTED_MODULE_0__[\"default\"]('TODAY'));\n\t\tthis.lists.push(new _list__WEBPACK_IMPORTED_MODULE_0__[\"default\"]('THIS WEEK'));\n\t}\n\n\taddList(newList) {\n\t\tconst list = new _list__WEBPACK_IMPORTED_MODULE_0__[\"default\"](newList);\n\t\tthis.lists.push(list);\n\t}\n\n\tdeleteList(listName) {\n\t\tthis.lists = this.lists.filter((list) => list.name !== listName);\n\t}\n\n\tchangeListName(listName, newName) {\n\t\tconst list = this.lists.find((list) => list.name === listName);\n\t\tif (list) {\n\t\t\tlist.setName(newName);\n\t\t}\n\t}\n\n\taddTaskToList(listName, taskName) {\n\t\tconst list = this.lists.find((list) => list.name === listName);\n\t\tif (list) {\n\t\t\tconst task = new _task__WEBPACK_IMPORTED_MODULE_1__[\"default\"](taskName);\n\t\t\tlist.addTask(task);\n\t\t}\n\t}\n\n\tdeleteTaskFromList(listName, taskName) {\n\t\tconst list = this.lists.find((list) => list.name === listName);\n\t\tif (list) {\n\t\t\tlist.deleteTask(taskName);\n\t\t}\n\t}\n\n\tchangeTaskName(listName, taskName, newName) {\n\t\tconst list = this.lists.find((list) => list.name === listName);\n\t\tif (list) {\n\t\t\tconst task = list.tasks.find((task) => task.name === taskName);\n\t\t\tif (task) {\n\t\t\t\ttask.setName(newName);\n\t\t\t}\n\t\t}\n\t}\n\n\ttoggleStarInTask(listName, taskName) {\n\t\tconst list = this.lists.find((list) => list.name === listName);\n\t\tif (list) {\n\t\t\tconst task = list.tasks.find((task) => task.name === taskName);\n\t\t\tif (task) {\n\t\t\t\ttask.toggleStar(task.star);\n\t\t\t}\n\t\t}\n\t}\n\n\ttoggleIsDoneInTask(listName, taskName) {\n\t\tconst list = this.lists.find((list) => list.name === listName);\n\t\tif (list) {\n\t\t\tconst task = list.tasks.find((task) => task.name === taskName);\n\t\t\tif (task) {\n\t\t\t\ttask.toggleIsDone(task.isDone);\n\t\t\t}\n\t\t}\n\t}\n\n\tgetLists() {\n\t\treturn this.lists;\n\t}\n}\n\n// TEST\nconst masterList = new ListsManager();\nmasterList.addList('pierwsza lista');\nmasterList.addList('druga lista');\nmasterList.deleteList('pierwsza lista');\nmasterList.addList('trzecia lista');\n\nmasterList.changeListName('trzecia lista', 'nowa nazwa');\n\nmasterList.addTaskToList('TASKS', 'zadanie 1');\nmasterList.addTaskToList('TASKS', 'zadanie 2');\nmasterList.deleteTaskFromList('TASKS', 'zadanie 1');\n\nmasterList.changeTaskName('TASKS', 'zadanie 2', 'nowa nazwa zadania 2');\n\nmasterList.toggleStarInTask('TASKS', 'nowa nazwa zadania 2');\nmasterList.toggleIsDoneInTask('TASKS', 'nowa nazwa zadania 2');\n\nconsole.table(masterList.getLists());\n\n\n//# sourceURL=webpack://minimalist/./src/modules/manage.js?");
 
 /***/ }),
 
@@ -46,9 +44,9 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /*!*****************************!*\
   !*** ./src/modules/task.js ***!
   \*****************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("\n\n//# sourceURL=webpack://minimalist/./src/modules/task.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (/* binding */ Task)\n/* harmony export */ });\nclass Task {\n\tconstructor(name, date = 'no date', star = false, isDone = false) {\n\t\tthis.name = name;\n\t\tthis.date = date;\n\t\tthis.star = star;\n\t\tthis.isDone = isDone;\n\t}\n\n\tsetName(name) {\n\t\tthis.name = name;\n\t}\n\n\tgetName() {\n\t\treturn this.name;\n\t}\n\n\tsetDate(date) {\n\t\tthis.date = date;\n\t}\n\n\tgetDate() {\n\t\treturn this.date;\n\t}\n\n\ttoggleStar(star) {\n\t\tthis.star = !star;\n\t}\n\n\ttoggleIsDone(isDone) {\n\t\tthis.isDone = !isDone;\n\t}\n}\n\n\n//# sourceURL=webpack://minimalist/./src/modules/task.js?");
 
 /***/ }),
 
@@ -58,8 +56,7 @@ eval("\n\n//# sourceURL=webpack://minimalist/./src/modules/task.js?");
   \***************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\nconst hamburgerMenuControl = (() => {\n\tconst hamburger = document.querySelector('#hamburger');\n\tconst main = document.querySelector('.main');\n\n\tconst manualToggle = () => {\n\t\tmain.classList.toggle('sidebar-toggle');\n\t\thamburger.classList.toggle('change');\n\t};\n\n\tconst autoToggle = () => {\n\t\tif (window.matchMedia('(min-width: 800px)').matches) {\n\t\t\tmain.classList.remove('sidebar-toggle');\n\t\t\thamburger.classList.add('change');\n\t\t} else {\n\t\t\tmain.classList.add('sidebar-toggle');\n\t\t\thamburger.classList.remove('change');\n\t\t}\n\t};\n\tautoToggle();\n\n\thamburger.addEventListener('click', manualToggle);\n\twindow.addEventListener('resize', autoToggle);\n})();\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (hamburgerMenuControl);\n\n\n\n\n\n//# sourceURL=webpack://minimalist/./src/modules/ui.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"default\": () => (__WEBPACK_DEFAULT_EXPORT__)\n/* harmony export */ });\n// import List from './list'\n// import Task from './task'\n\nconst hamburgerMenuControl = (() => {\n\tconst hamburger = document.querySelector('#hamburger');\n\tconst main = document.querySelector('.main');\n\n\tconst manualToggle = () => {\n\t\tmain.classList.toggle('sidebar-toggle');\n\t\thamburger.classList.toggle('change');\n\t};\n\n\tconst autoToggle = () => {\n\t\tif (window.matchMedia('(min-width: 800px)').matches) {\n\t\t\tmain.classList.remove('sidebar-toggle');\n\t\t\thamburger.classList.add('change');\n\t\t} else {\n\t\t\tmain.classList.add('sidebar-toggle');\n\t\t\thamburger.classList.remove('change');\n\t\t}\n\t};\n\tautoToggle();\n\n\thamburger.addEventListener('click', manualToggle);\n\twindow.addEventListener('resize', autoToggle);\n})();\n\n/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (hamburgerMenuControl);\n\n\n//# sourceURL=webpack://minimalist/./src/modules/ui.js?");
 
 /***/ })
 
@@ -90,18 +87,6 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__webpack_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__webpack_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
