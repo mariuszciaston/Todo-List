@@ -81,15 +81,12 @@ masterList.addList('pierwsza lista');
 masterList.addList('druga lista');
 masterList.deleteList('pierwsza lista');
 masterList.addList('trzecia lista');
-
 masterList.changeListName('trzecia lista', 'nowa nazwa');
 
 masterList.addTaskToList('TASKS', 'zadanie 1');
 masterList.addTaskToList('TASKS', 'zadanie 2');
 masterList.deleteTaskFromList('TASKS', 'zadanie 1');
-
 masterList.changeTaskName('TASKS', 'zadanie 2', 'nowa nazwa zadania 2');
-
 masterList.toggleStarInTask('TASKS', 'nowa nazwa zadania 2');
 masterList.toggleIsDoneInTask('TASKS', 'nowa nazwa zadania 2');
 

@@ -1,3 +1,3 @@
-import hamburgerMenuControl from './modules/ui';
+import UI from './modules/ui';
 
-import ListsManager from './modules/manage';
+document.addEventListener('DOMContentLoaded', UI.load);
