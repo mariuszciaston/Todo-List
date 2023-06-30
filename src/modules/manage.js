@@ -19,14 +19,14 @@ export default class ListsManager {
 	}
 
 	changeListName(listName, newName) {
-		const list = this.lists.find((list) => list.name === listName);
+		const list = this.findList(listName);
 		if (list) {
 			list.setName(newName);
 		}
 	}
 
 	addTaskToList(listName, taskName) {
-		const list = this.lists.find((list) => list.name === listName);
+		const list = this.findList(listName);
 		if (list) {
 			const task = new Task(taskName);
 			list.addTask(task);
@@ -34,44 +34,44 @@ export default class ListsManager {
 	}
 
 	deleteTaskFromList(listName, taskName) {
-		const list = this.lists.find((list) => list.name === listName);
+		const list = this.findList(listName);
 		if (list) {
 			list.deleteTask(taskName);
 		}
 	}
 
 	changeTaskName(listName, taskName, newName) {
-		const list = this.lists.find((list) => list.name === listName);
-		if (list) {
-			const task = list.tasks.find((task) => task.name === taskName);
-			if (task) {
-				task.setName(newName);
-			}
+		const task = this.findTaskInList(listName, taskName);
+		if (task) {
+			task.setName(newName);
 		}
 	}
 
 	toggleStarInTask(listName, taskName) {
-		const list = this.lists.find((list) => list.name === listName);
-		if (list) {
-			const task = list.tasks.find((task) => task.name === taskName);
-			if (task) {
-				task.toggleStar(task.star);
-			}
+		const task = this.findTaskInList(listName, taskName);
+		if (task) {
+			task.toggleStar(task.star);
 		}
 	}
 
 	toggleIsDoneInTask(listName, taskName) {
-		const list = this.lists.find((list) => list.name === listName);
-		if (list) {
-			const task = list.tasks.find((task) => task.name === taskName);
-			if (task) {
-				task.toggleIsDone(task.isDone);
-			}
+		const task = this.findTaskInList(listName, taskName);
+		if (task) {
+			task.toggleIsDone(task.isDone);
 		}
 	}
 
 	getLists() {
 		return this.lists;
+	}
+
+	findList(listName) {
+		return this.lists.find((list) => list.name === listName);
+	}
+
+	findTaskInList(listName, taskName) {
+		const list = this.findList(listName);
+		return this.findList(listName) ? list.tasks.find((task) => task.name === taskName) : false;
 	}
 }
 
