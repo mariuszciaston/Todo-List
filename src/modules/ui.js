@@ -1,28 +1,33 @@
 // import List from './list'
 // import Task from './task'
+import ListsManager from './manage';
 
-const hamburgerMenuControl = (() => {
-	const hamburger = document.querySelector('#hamburger');
-	const main = document.querySelector('.main');
+export default class UI {
+	static load() {
+		UI.hamburgerMenuControl();
+	}
 
-	const manualToggle = () => {
-		main.classList.toggle('sidebar-toggle');
-		hamburger.classList.toggle('change');
-	};
+	static hamburgerMenuControl() {
+		const hamburger = document.querySelector('#hamburger');
+		const main = document.querySelector('.main');
 
-	const autoToggle = () => {
-		if (window.matchMedia('(min-width: 800px)').matches) {
-			main.classList.remove('sidebar-toggle');
-			hamburger.classList.add('change');
-		} else {
-			main.classList.add('sidebar-toggle');
-			hamburger.classList.remove('change');
-		}
-	};
-	autoToggle();
+		const manualToggle = () => {
+			main.classList.toggle('sidebar-toggle');
+			hamburger.classList.toggle('change');
+		};
 
-	hamburger.addEventListener('click', manualToggle);
-	window.addEventListener('resize', autoToggle);
-})();
+		const autoToggle = () => {
+			if (window.matchMedia('(min-width: 800px)').matches) {
+				main.classList.remove('sidebar-toggle');
+				hamburger.classList.add('change');
+			} else {
+				main.classList.add('sidebar-toggle');
+				hamburger.classList.remove('change');
+			}
+		};
+		autoToggle();
 
-export default hamburgerMenuControl;
+		hamburger.addEventListener('click', manualToggle);
+		window.addEventListener('resize', autoToggle);
+	}
+}
