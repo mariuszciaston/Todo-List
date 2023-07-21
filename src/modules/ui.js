@@ -12,6 +12,8 @@ masterList.addTaskToList('TASKS', 'Get hired as a Front End Developer');
 masterList.addTaskToList('TASKS', 'Conquer the Crown of Polish Mountains');
 masterList.addTaskToList('TASKS', 'Finish The Odin Project');
 
+masterList.addTaskToList('TODAY', '1234');
+
 masterList.toggleIsDoneInTask('TASKS', 'Finish The Odin Project');
 masterList.toggleStarInTask('TASKS', 'Finish The Odin Project');
 
@@ -22,6 +24,8 @@ export default class UI {
 		UI.hamburgerMenuControl();
 		UI.displayLists();
 		UI.displayTasks();
+
+		UI.selectList();
 	}
 
 	static hamburgerMenuControl() {
@@ -74,8 +78,8 @@ export default class UI {
 
 	static displayTasks() {
 		const navButtons = document.querySelectorAll('.nav-btn');
-
 		const tasksList = document.querySelector('.tasks-list');
+		tasksList.textContent = '';
 
 		navButtons.forEach((button) => {
 			if (button.classList.contains('active')) {
@@ -122,6 +126,24 @@ export default class UI {
 						tasksList.prepend(li);
 					});
 			}
+		});
+	}
+
+	static selectList() {
+		const navButtons = document.querySelectorAll('nav .nav-btn');
+
+		navButtons.forEach((button) => {
+			button.addEventListener('click', (e) => {
+				if (!e.target.classList.contains('active')) {
+					navButtons.forEach((button) => {
+						button.classList.remove('active');
+					});
+
+					e.target.classList.add('active');
+
+					UI.displayTasks();
+				}
+			});
 		});
 	}
 }
