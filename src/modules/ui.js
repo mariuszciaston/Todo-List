@@ -2,9 +2,22 @@
 // import Task from './task'
 import ListsManager from './manage';
 
+// TEST
+const masterList = new ListsManager();
+masterList.addList('Shopping');
+masterList.addList('Movies to watch');
+masterList.addTaskToList('TASKS', 'Bake Neapolitan pizza');
+masterList.addTaskToList('TASKS', 'Go swimming on Tuesday');
+masterList.addTaskToList('TASKS', 'Get hired as a Front End Developer');
+masterList.addTaskToList('TASKS', 'Conquer the Crown of Polish Mountains');
+masterList.addTaskToList('TASKS', 'Finish The Odin Project');
+
+console.table(masterList.getLists());
+
 export default class UI {
 	static load() {
 		UI.hamburgerMenuControl();
+		UI.displayLists();
 	}
 
 	static hamburgerMenuControl() {
@@ -29,5 +42,26 @@ export default class UI {
 
 		hamburger.addEventListener('click', manualToggle);
 		window.addEventListener('resize', autoToggle);
+	}
+
+	static displayLists() {
+		const firstList = document.querySelector('#first-list');
+		const secondList = document.querySelector('#second-list');
+		const listOne = masterList.getLists().slice(0, 3);
+		const listTwo = masterList.getLists().slice(3);
+
+		listOne.forEach((list) => {
+			const button = document.createElement('button');
+			button.className = 'button nav-btn';
+			button.textContent = list.name;
+			firstList.appendChild(button);
+		});
+
+		listTwo.forEach((list) => {
+			const button = document.createElement('button');
+			button.className = 'button nav-btn';
+			button.textContent = list.name;
+			secondList.appendChild(button);
+		});
 	}
 }
