@@ -1,4 +1,4 @@
-// import List from './list'
+import List from './list';
 // import Task from './task'
 import ListsManager from './manage';
 
@@ -12,12 +12,16 @@ masterList.addTaskToList('TASKS', 'Get hired as a Front End Developer');
 masterList.addTaskToList('TASKS', 'Conquer the Crown of Polish Mountains');
 masterList.addTaskToList('TASKS', 'Finish The Odin Project');
 
+masterList.toggleIsDoneInTask('TASKS', 'Finish The Odin Project');
+masterList.toggleStarInTask('TASKS', 'Finish The Odin Project');
+
 console.table(masterList.getLists());
 
 export default class UI {
 	static load() {
 		UI.hamburgerMenuControl();
 		UI.displayLists();
+		UI.displayTasks();
 	}
 
 	static hamburgerMenuControl() {
@@ -53,6 +57,9 @@ export default class UI {
 		listOne.forEach((list) => {
 			const button = document.createElement('button');
 			button.className = 'button nav-btn';
+			if (list.name === 'TASKS') {
+				button.classList.add('active');
+			}
 			button.textContent = list.name;
 			firstList.appendChild(button);
 		});
@@ -62,6 +69,59 @@ export default class UI {
 			button.className = 'button nav-btn';
 			button.textContent = list.name;
 			secondList.appendChild(button);
+		});
+	}
+
+	static displayTasks() {
+		const navButtons = document.querySelectorAll('.nav-btn');
+
+		const tasksList = document.querySelector('.tasks-list');
+
+		navButtons.forEach((button) => {
+			if (button.classList.contains('active')) {
+				masterList
+					.findList(button.textContent)
+					.getTasks()
+					.forEach((task) => {
+						const li = document.createElement('li');
+						const circle = document.createElement('div');
+						const checkMark = document.createElement('div');
+						const taskContent = document.createElement('p');
+						const date = document.createElement('p');
+						const star = document.createElement('div');
+						const remove = document.createElement('div');
+
+						circle.className = 'circle';
+						checkMark.className = 'checkMark';
+						taskContent.className = 'task-content';
+						date.className = 'date';
+						star.className = 'star';
+						remove.className = 'remove';
+
+						if (task.isDone) {
+							li.classList.add('done');
+						} else {
+							li.classList.remove('done');
+						}
+
+						taskContent.textContent = task.name;
+						date.textContent = task.date;
+
+						if (task.star) {
+							star.classList.add('yellow');
+						} else {
+							star.classList.remove('yellow');
+						}
+
+						li.append(circle);
+						circle.append(checkMark);
+						li.append(taskContent);
+						li.append(date);
+						li.append(star);
+						li.append(remove);
+						tasksList.prepend(li);
+					});
+			}
 		});
 	}
 }
