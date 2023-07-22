@@ -26,6 +26,8 @@ export default class UI {
 		UI.displayTasks();
 
 		UI.selectList();
+		UI.addNewList();
+		UI.addNewTask();
 	}
 
 	static hamburgerMenuControl() {
@@ -57,6 +59,8 @@ export default class UI {
 		const secondList = document.querySelector('#second-list');
 		const listOne = masterList.getLists().slice(0, 3);
 		const listTwo = masterList.getLists().slice(3);
+		firstList.textContent = '';
+		secondList.textContent = '';
 
 		listOne.forEach((list) => {
 			const button = document.createElement('button');
@@ -77,7 +81,7 @@ export default class UI {
 	}
 
 	static displayTasks() {
-		const navButtons = document.querySelectorAll('.nav-btn');
+		const navButtons = document.querySelectorAll('nav .nav-btn');
 		const tasksList = document.querySelector('.tasks-list');
 		tasksList.textContent = '';
 
@@ -140,10 +144,55 @@ export default class UI {
 					});
 
 					e.target.classList.add('active');
-
 					UI.displayTasks();
 				}
 			});
+		});
+	}
+
+	static addNewList() {
+		const newListBtn = document.querySelector('#new-list-btn');
+
+		newListBtn.addEventListener('click', () => {
+			const newListName = prompt('Please enter list name', 'example list name');
+
+			if (masterList.findList(newListName)) {
+				alert('List with this name already exists');
+			} else if (newListName === '' || newListName === null) {
+				alert('List name cannot be empty');
+			} else {
+				masterList.addList(newListName);
+				UI.displayLists();
+				UI.selectList();
+			}
+			console.log(masterList.getLists());
+		});
+	}
+
+	static addNewTask() {
+		const navButtons = document.querySelectorAll('nav .nav-btn');
+		let currentList = '';
+
+		navButtons.forEach((button) => {
+			if (button.classList.contains('active')) {
+				currentList = button.textContent;
+				console.log(currentList);
+			}
+			return currentList;
+		});
+
+		const newTask = document.querySelector('#add-task-btn');
+		newTask.addEventListener('click', () => {
+			const newTaskName = prompt('Please enter task name', 'random task');
+
+			if (masterList.findTaskInList(currentList, newTaskName)) {
+				alert('Task with this name already exists');
+			} else if (newTaskName === '' || newTaskName === null) {
+				alert('Task name cannot be empty');
+			} else {
+				masterList.addTaskToList(currentList, newTaskName);
+				UI.displayTasks();
+			}
 		});
 	}
 }
