@@ -27,7 +27,7 @@ export default class UI {
 
 		UI.selectList();
 		UI.addNewList();
-		UI.addNewTask();
+		// UI.addNewTask();
 	}
 
 	static hamburgerMenuControl() {
@@ -139,8 +139,8 @@ export default class UI {
 		navButtons.forEach((button) => {
 			button.addEventListener('click', (e) => {
 				if (!e.target.classList.contains('active')) {
-					navButtons.forEach((button) => {
-						button.classList.remove('active');
+					navButtons.forEach((btn) => {
+						btn.classList.remove('active');
 					});
 
 					e.target.classList.add('active');
@@ -153,46 +153,108 @@ export default class UI {
 	static addNewList() {
 		const newListBtn = document.querySelector('#new-list-btn');
 
+		const secondList = document.querySelector('#second-list');
 		newListBtn.addEventListener('click', () => {
-			const newListName = prompt('Please enter list name', 'example list name');
+			let inputField = secondList.querySelector('input');
+			if (!inputField) {
+				inputField = document.createElement('input');
+				inputField.type = 'text';
+				inputField.className = 'input-field';
+				secondList.append(inputField);
+				inputField.focus();
 
-			if (masterList.findList(newListName)) {
-				alert('List with this name already exists');
-			} else if (newListName === '' || newListName === null) {
-				alert('List name cannot be empty');
-			} else {
-				masterList.addList(newListName);
-				UI.displayLists();
-				UI.selectList();
+				const inputBtns = document.createElement('div');
+				inputBtns.className = 'input-btns';
+				secondList.append(inputBtns);
+
+				const addBtn = document.createElement('button');
+				const cancelBtn = document.createElement('button');
+
+				addBtn.className = 'add-btn action';
+				cancelBtn.className = 'cancel-btn action';
+				addBtn.textContent = 'Add';
+				cancelBtn.textContent = 'Cancel';
+
+				inputBtns.append(addBtn);
+				inputBtns.append(cancelBtn);
+
+				const addBtnPress = () => {
+					if (!masterList.findList(inputField.value) || inputField.value === '') {
+						masterList.addList(inputField.value);
+						inputField.remove();
+						inputBtns.remove();
+						UI.displayLists();
+
+						const navButtons = document.querySelectorAll('nav .nav-btn');
+
+						navButtons.forEach((button) => {
+							if (button.textContent === inputField.value) {
+								button.classList.add('active');
+							} else {
+								button.classList.remove('active');
+							}
+						});
+
+						UI.displayTasks();
+						UI.selectList();
+						UI.addNewList();
+						// UI.addNewTask();
+						console.log(masterList.getLists());
+					} else {
+						alert('List with this name already exists');
+					}
+				};
+
+				addBtn.addEventListener('click', addBtnPress);
+
+				document.addEventListener('keydown', (e) => {
+					if (e.key === 'Enter') {
+						addBtnPress();
+					}
+				});
+
+				const cancelBtnPress = () => {
+					inputField.remove();
+					inputBtns.remove();
+					UI.addNewList();
+					// UI.addNewTask();
+				};
+
+				cancelBtn.addEventListener('click', cancelBtnPress);
+
+				document.addEventListener('keydown', (e) => {
+					if (e.key === 'Escape') {
+						cancelBtnPress();
+					}
+				});
 			}
-			console.log(masterList.getLists());
 		});
 	}
 
-	static addNewTask() {
-		const navButtons = document.querySelectorAll('nav .nav-btn');
-		let currentList = '';
+	// static addNewTask() {
+	// 	const navButtons = document.querySelectorAll('nav .nav-btn');
+	// 	let currentList = '';
 
-		navButtons.forEach((button) => {
-			if (button.classList.contains('active')) {
-				currentList = button.textContent;
-				console.log(currentList);
-			}
-			return currentList;
-		});
+	// 	navButtons.forEach((button) => {
+	// 		if (button.classList.contains('active')) {
+	// 			currentList = button.textContent;
+	// 			// console.log(currentList);
+	// 		}
+	// 		return currentList;
+	// 	});
 
-		const newTask = document.querySelector('#add-task-btn');
-		newTask.addEventListener('click', () => {
-			const newTaskName = prompt('Please enter task name', 'random task');
+	// 	const newTask = document.querySelector('#add-task-btn');
+	// 	newTask.addEventListener('click', () => {
+	// 		const newTaskName = prompt('Please enter task name', 'random task');
 
-			if (masterList.findTaskInList(currentList, newTaskName)) {
-				alert('Task with this name already exists');
-			} else if (newTaskName === '' || newTaskName === null) {
-				alert('Task name cannot be empty');
-			} else {
-				masterList.addTaskToList(currentList, newTaskName);
-				UI.displayTasks();
-			}
-		});
-	}
+	// 		if (masterList.findTaskInList(currentList, newTaskName)) {
+	// 			alert('Task with this name already exists');
+	// 		} else if (newTaskName === '' || newTaskName === null) {
+	// 			alert('Task name cannot be empty');
+	// 		} else {
+	// 			masterList.addTaskToList(currentList, newTaskName);
+	// 			UI.displayTasks();
+	// 		}
+	// 	});
+	// }
 }
