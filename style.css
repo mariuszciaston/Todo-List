@@ -130,24 +130,9 @@ hr {
 	flex-direction: column;
 	padding-bottom: 2rem;
 	justify-content: space-between;
-	/* max-width: calc(100vw - 4rem); */
-	/* width: 100%; */
 	flex: 1;
-
 	width: calc(100vw - 4rem);
 }
-
-
-/* .nav {
-	display: flex;
-	flex-direction: column;
-	flex: 1;
-	margin: 0;
-	padding: 2rem 0;
-	width: 320px;
-} */
-
-
 
 .lists {
 	display: flex;
