@@ -130,10 +130,24 @@ hr {
 	flex-direction: column;
 	padding-bottom: 2rem;
 	justify-content: space-between;
-	max-width: calc(100vw - 4rem);
-	width: 100%;
+	/* max-width: calc(100vw - 4rem); */
+	/* width: 100%; */
 	flex: 1;
+
+	width: calc(100vw - 4rem);
 }
+
+
+/* .nav {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	margin: 0;
+	padding: 2rem 0;
+	width: 320px;
+} */
+
+
 
 .lists {
 	display: flex;
@@ -173,6 +187,54 @@ button.nav-btn {
 	white-space: nowrap;
 	letter-spacing: 1px;
 	transition: color 0.5s ease;
+}
+
+#second-list input {
+	font-size: 1.75rem;
+	line-height: 2.5rem;
+	font-weight: 800;
+	color: grey;
+	white-space: nowrap;
+	letter-spacing: 1px;
+	background-color: hsl(0, 0%, 10%);
+	border: none;
+	outline: 1px white solid;
+	outline: none;
+	padding: 0 0.5rem;
+	background-color: hsl(0, 0%, 100%);
+	color: black;
+}
+
+.input-btns {
+	display: flex;
+	gap: 1rem;
+	/* width: calc(100vw - 4rem); */
+
+}
+
+#second-list .add-btn,
+#second-list .cancel-btn {
+	border: none;
+	line-height: 2.5rem;
+	padding: 0;
+	margin: 0;
+	font-weight: 400;
+	/* width: calc(100vw - 4rem); */
+
+flex: 1;
+}
+
+#second-list .add-btn:hover,
+#second-list .cancel-btn:hover {
+	opacity: 0.75;
+}
+
+#second-list .add-btn {
+	background-color: #15803d;
+}
+
+#second-list .cancel-btn {
+	background-color: #991b1b;
 }
 
 button.nav-btn:hover,
