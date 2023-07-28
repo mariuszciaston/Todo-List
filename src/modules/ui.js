@@ -27,7 +27,7 @@ export default class UI {
 
 		UI.selectList();
 		UI.addNewList();
-		// UI.addNewTask();
+		UI.addNewTask();
 	}
 
 	static hamburgerMenuControl() {
@@ -152,8 +152,8 @@ export default class UI {
 
 	static addNewList() {
 		const newListBtn = document.querySelector('#new-list-btn');
-
 		const secondList = document.querySelector('#second-list');
+
 		newListBtn.addEventListener('click', () => {
 			let inputField = secondList.querySelector('input');
 			if (!inputField) {
@@ -198,10 +198,12 @@ export default class UI {
 						UI.displayTasks();
 						UI.selectList();
 						UI.addNewList();
-						// UI.addNewTask();
+						UI.addNewTask();
 						console.log(masterList.getLists());
-					} else {
-						alert('List with this name already exists or input field is empty');
+					} else if (inputField.value === '') {
+						alert('List name cannot be empty');
+					} else if (masterList.findList(inputField.value)) {
+						alert('List with this name already exists');
 					}
 				};
 
@@ -217,7 +219,7 @@ export default class UI {
 					inputField.remove();
 					inputBtns.remove();
 					UI.addNewList();
-					// UI.addNewTask();
+					UI.addNewTask();
 				};
 
 				cancelBtn.addEventListener('click', cancelBtnPress);
@@ -231,30 +233,24 @@ export default class UI {
 		});
 	}
 
-	// static addNewTask() {
-	// 	const navButtons = document.querySelectorAll('nav .nav-btn');
-	// 	let currentList = '';
+	static addNewTask() {
+		const newTaskBtn = document.querySelector('#add-task-btn');
+		if (!newTaskBtn.hasAttribute('listener')) {
+			newTaskBtn.addEventListener('click', () => {
+				const activeButton = document.querySelector('nav .nav-btn.active');
+				const currentList = activeButton.textContent;
 
-	// 	navButtons.forEach((button) => {
-	// 		if (button.classList.contains('active')) {
-	// 			currentList = button.textContent;
-	// 			// console.log(currentList);
-	// 		}
-	// 		return currentList;
-	// 	});
-
-	// 	const newTask = document.querySelector('#add-task-btn');
-	// 	newTask.addEventListener('click', () => {
-	// 		const newTaskName = prompt('Please enter task name', 'random task');
-
-	// 		if (masterList.findTaskInList(currentList, newTaskName)) {
-	// 			alert('Task with this name already exists');
-	// 		} else if (newTaskName === '' || newTaskName === null) {
-	// 			alert('Task name cannot be empty');
-	// 		} else {
-	// 			masterList.addTaskToList(currentList, newTaskName);
-	// 			UI.displayTasks();
-	// 		}
-	// 	});
-	// }
+				const newTaskName = prompt('Please enter task name', '');
+				if (masterList.findTaskInList(currentList, newTaskName)) {
+					alert('Task with this name already exists');
+				} else if (newTaskName === '') {
+					alert('Task name cannot be empty');
+				} else if (newTaskName !== null) {
+					masterList.addTaskToList(currentList, newTaskName);
+					UI.displayTasks();
+				}
+			});
+			newTaskBtn.setAttribute('listener', 'true');
+		}
+	}
 }
