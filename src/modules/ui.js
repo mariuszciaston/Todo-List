@@ -179,7 +179,7 @@ export default class UI {
 				inputBtns.append(cancelBtn);
 
 				const addBtnPress = () => {
-					if (!masterList.findList(inputField.value) || inputField.value === '') {
+					if (!masterList.findList(inputField.value) && inputField.value !== '') {
 						masterList.addList(inputField.value);
 						inputField.remove();
 						inputBtns.remove();
@@ -201,7 +201,7 @@ export default class UI {
 						// UI.addNewTask();
 						console.log(masterList.getLists());
 					} else {
-						alert('List with this name already exists');
+						alert('List with this name already exists or input field is empty');
 					}
 				};
 
