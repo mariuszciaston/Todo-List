@@ -144,10 +144,8 @@ hr {
 	position: absolute;
 	left: 0;
 	top: 0;
-	right: 0;
 	bottom: 0;
 	overflow-x: hidden;
-	overflow-y: auto;
 	-webkit-mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
 	mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
 	padding-bottom: 2rem;
@@ -160,7 +158,6 @@ hr {
 	justify-content: space-between;
 	position: relative;
 	flex: 1;
-	overflow: auto;
 	min-height: 6rem;
 }
 
@@ -181,7 +178,8 @@ button.nav-btn {
 	transition: color 0.5s ease;
 }
 
-#second-list input {
+#second-list input,
+.tasks-list input {
 	font-size: 1.75rem;
 	line-height: 2.5rem;
 	font-weight: 800;
@@ -193,8 +191,14 @@ button.nav-btn {
 	outline: 1px white solid;
 	outline: none;
 	padding: 0 0.5rem;
-	background-color: hsl(0, 0%, 100%);
+	background-color: white;
 	color: black;
+	border: 1px solid black;
+}
+
+.tasks-list input {
+	font-size: 1rem;
+	font-weight: 400;
 }
 
 .input-btns {
@@ -203,7 +207,9 @@ button.nav-btn {
 }
 
 #second-list .add-btn,
-#second-list .cancel-btn {
+#second-list .cancel-btn,
+.tasks-list .add-btn,
+.tasks-list .cancel-btn {
 	border: none;
 	line-height: 2.5rem;
 	padding: 0;
@@ -212,17 +218,31 @@ button.nav-btn {
 	flex: 1;
 }
 
-#second-list .add-btn:hover,
-#second-list .cancel-btn:hover {
-	opacity: 0.75;
-}
-
-#second-list .add-btn {
+.add-btn {
 	background-color: #15803d;
 }
 
-#second-list .cancel-btn {
+.cancel-btn {
 	background-color: #991b1b;
+}
+
+.add-btn:hover {
+	background-color: #166534;
+}
+
+.cancel-btn:hover {
+	background-color: #7f1d1d;
+}
+
+.input-container {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	width: calc(100vw - 4rem);
+}
+
+.tasks-list > .input-container {
+	padding: 1rem 2rem;
 }
 
 button.nav-btn:hover,
@@ -241,7 +261,6 @@ button.active {
 	color: black;
 	border-radius: 25px;
 	padding: 2rem 0;
-	overflow: hidden;
 	width: 100vw;
 	z-index: 1;
 }
@@ -276,7 +295,7 @@ h2.title {
 	top: 0;
 	right: 0;
 	bottom: 0;
-	overflow: auto;
+	overflow-x: hidden;
 }
 
 .tasks-list li {
@@ -420,6 +439,10 @@ h2.title {
 	padding: 0;
 }
 
+button:hover {
+	cursor: pointer;
+}
+
 .btns {
 	display: flex;
 	flex-direction: row;
@@ -448,8 +471,9 @@ h2.title {
 	flex: 1;
 }
 
-button.action:hover {
-	cursor: pointer;
+#new-list-btn:hover,
+#add-task-btn:hover,
+#load-example-btn:hover {
 	opacity: 0.5;
 }
 
@@ -526,6 +550,16 @@ button {
 		padding: 2rem 0;
 		width: 320px;
 	}
+
+	.input-container {
+		width: 100%;
+	}
+
+	.tasks-list > .input-container {
+		padding: 1rem 2rem;
+		width: calc(100% - 4rem);
+	}
+
 	.action {
 		width: unset;
 	}
