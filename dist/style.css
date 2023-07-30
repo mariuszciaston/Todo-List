@@ -99,11 +99,11 @@ hr {
 	border-radius: 1px;
 }
 
-.hr-toggle {
+/* .hr-toggle {
 	margin: 0;
 	margin-bottom: 1rem;
 	display: block;
-}
+} */
 
 .main {
 	background-color: black;
@@ -130,9 +130,28 @@ hr {
 	display: flex;
 	flex-direction: column;
 	padding-bottom: 2rem;
-	justify-content: space-between;
 	flex: 1;
-	width: calc(100vw - 4rem);
+}
+
+.all-lists {
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	position: relative;
+}
+
+.all-lists-inner {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	overflow-x: hidden;
+	overflow-y: auto;
+	-webkit-mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
+	mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
+	padding-bottom: 2rem;
+	margin-bottom: 2rem;
 }
 
 .lists {
@@ -143,19 +162,6 @@ hr {
 	flex: 1;
 	overflow: auto;
 	min-height: 6rem;
-}
-
-.lists > .navigation {
-	-webkit-mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
-	mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
-	position: absolute;
-	left: 0;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	overflow: auto;
-	margin-bottom: 2rem;
-	padding-bottom: 2.5rem;
 }
 
 .lists > .navigation > .button {
@@ -243,6 +249,7 @@ button.active {
 .tasks {
 	flex: 1;
 	position: relative;
+	min-height: 4rem;
 }
 
 h2.title {
@@ -495,9 +502,9 @@ button {
 		text-align: right;
 	}
 
-	.hr-toggle {
+	/* .hr-toggle {
 		display: none;
-	}
+	} */
 
 	.main {
 		display: grid;
