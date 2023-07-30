@@ -1,4 +1,5 @@
-import List from './list';
+/* eslint-disable no-alert */
+// import List from './list';
 // import Task from './task'
 import ListsManager from './manage';
 
@@ -52,10 +53,9 @@ export default class UI {
 
 		if (!hamburger.hasAttribute('listener')) {
 			hamburger.addEventListener('click', manualToggle);
+			window.addEventListener('resize', autoToggle);
 			hamburger.setAttribute('listener', 'true');
 		}
-
-		window.addEventListener('resize', autoToggle);
 	}
 
 	static displayLists() {
@@ -88,6 +88,16 @@ export default class UI {
 		const navButtons = document.querySelectorAll('nav .nav-btn');
 		const tasksList = document.querySelector('.tasks-list');
 		tasksList.textContent = '';
+
+		const tasksTitle = document.querySelector('.content .title');
+
+		(function updateTitle() {
+			navButtons.forEach((button) => {
+				if (button.classList.contains('active')) {
+					tasksTitle.textContent = button.textContent;
+				}
+			});
+		})();
 
 		navButtons.forEach((button) => {
 			if (button.classList.contains('active')) {
@@ -212,40 +222,6 @@ export default class UI {
 						console.log(masterList.findList(inputField.value));
 						console.log(masterList.getLists());
 					}
-
-					// if (!masterList.findList(inputField.value) && inputField.value !== '') {
-					// 	masterList.addList(inputField.value);
-					// 	inputField.remove();
-					// 	inputBtns.remove();
-					// 	UI.displayLists();
-
-					// 	const navButtons = document.querySelectorAll('nav .nav-btn');
-
-					// 	navButtons.forEach((button) => {
-					// 		if (button.textContent === inputField.value) {
-					// 			button.classList.add('active');
-					// 		} else {
-					// 			button.classList.remove('active');
-					// 		}
-					// 	});
-
-					// 	UI.displayTasks();
-					// 	UI.selectList();
-					// 	UI.addNewList();
-					// 	UI.addNewTask();
-
-					// 	console.log(masterList.findList(inputField.value));
-					// 	console.log(masterList.getLists());
-
-					// }
-
-					// else if (inputField.value === '') {
-					// 	alert('List name cannot be empty');
-					// }
-
-					//  else if (masterList.findList(inputField.value)) {
-					// 	alert('List with this name already exists');
-					// }
 				};
 
 				addBtn.addEventListener('click', addBtnPress);
@@ -255,31 +231,6 @@ export default class UI {
 						addBtnPress();
 					}
 				});
-
-				// let enterKeydownListenerAttached = false;
-
-				// if (enterKeydownListenerAttached === false) {
-				// 	document.addEventListener('keydown', (e) => {
-				// 		if (e.key === 'Enter') {
-				// 			addBtnPress();
-				// 		}
-				// 	});
-				// 	enterKeydownListenerAttached = true;
-				// }
-
-				// if (!newTaskBtn.hasAttribute('listener')) {
-
-				// 	newTaskBtn.setAttribute('listener', 'true');
-				// 	}
-
-				// const keydownHandler = (e) => {
-				// 	if (e.key === 'Enter') {
-				// 		addBtnPress();
-				// 	}
-				// };
-
-				// document.removeEventListener('keydown', keydownHandler);
-				// document.addEventListener('keydown', keydownHandler);
 
 				const cancelBtnPress = () => {
 					inputField.remove();

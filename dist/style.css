@@ -194,8 +194,6 @@ button.nav-btn {
 .input-btns {
 	display: flex;
 	gap: 1rem;
-	/* width: calc(100vw - 4rem); */
-
 }
 
 #second-list .add-btn,
@@ -205,9 +203,7 @@ button.nav-btn {
 	padding: 0;
 	margin: 0;
 	font-weight: 400;
-	/* width: calc(100vw - 4rem); */
-
-flex: 1;
+	flex: 1;
 }
 
 #second-list .add-btn:hover,
@@ -256,6 +252,8 @@ h2.title {
 	line-height: 2.5rem;
 	margin: 0;
 	padding: 0 2rem;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
 
 .tasks-list {
