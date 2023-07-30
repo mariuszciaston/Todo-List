@@ -17,7 +17,7 @@ masterList.addTaskToList('TODAY', '1234');
 masterList.toggleIsDoneInTask('TASKS', 'Finish The Odin Project');
 masterList.toggleStarInTask('TASKS', 'Finish The Odin Project');
 
-console.table(masterList.getLists());
+// console.table(masterList.getLists());
 
 export default class UI {
 	static load() {
@@ -36,21 +36,25 @@ export default class UI {
 
 		const manualToggle = () => {
 			main.classList.toggle('sidebar-toggle');
-			hamburger.classList.toggle('change');
+			hamburger.classList.toggle('open');
 		};
 
 		const autoToggle = () => {
 			if (window.matchMedia('(min-width: 800px)').matches) {
 				main.classList.remove('sidebar-toggle');
-				hamburger.classList.add('change');
+				hamburger.classList.add('open');
 			} else {
 				main.classList.add('sidebar-toggle');
-				hamburger.classList.remove('change');
+				hamburger.classList.remove('open');
 			}
 		};
 		autoToggle();
 
-		hamburger.addEventListener('click', manualToggle);
+		if (!hamburger.hasAttribute('listener')) {
+			hamburger.addEventListener('click', manualToggle);
+			hamburger.setAttribute('listener', 'true');
+		}
+
 		window.addEventListener('resize', autoToggle);
 	}
 
@@ -131,6 +135,7 @@ export default class UI {
 					});
 			}
 		});
+		UI.hamburgerMenuControl();
 	}
 
 	static selectList() {
@@ -179,7 +184,11 @@ export default class UI {
 				inputBtns.append(cancelBtn);
 
 				const addBtnPress = () => {
-					if (!masterList.findList(inputField.value) && inputField.value !== '') {
+					if (masterList.findList(inputField.value)) {
+						alert('List with this name already exists');
+					} else if (inputField.value === '') {
+						alert('List name cannot be empty');
+					} else if (!masterList.findList(inputField.value) && inputField.value !== '') {
 						masterList.addList(inputField.value);
 						inputField.remove();
 						inputBtns.remove();
@@ -199,12 +208,44 @@ export default class UI {
 						UI.selectList();
 						UI.addNewList();
 						UI.addNewTask();
+
+						console.log(masterList.findList(inputField.value));
 						console.log(masterList.getLists());
-					} else if (inputField.value === '') {
-						alert('List name cannot be empty');
-					} else if (masterList.findList(inputField.value)) {
-						alert('List with this name already exists');
 					}
+
+					// if (!masterList.findList(inputField.value) && inputField.value !== '') {
+					// 	masterList.addList(inputField.value);
+					// 	inputField.remove();
+					// 	inputBtns.remove();
+					// 	UI.displayLists();
+
+					// 	const navButtons = document.querySelectorAll('nav .nav-btn');
+
+					// 	navButtons.forEach((button) => {
+					// 		if (button.textContent === inputField.value) {
+					// 			button.classList.add('active');
+					// 		} else {
+					// 			button.classList.remove('active');
+					// 		}
+					// 	});
+
+					// 	UI.displayTasks();
+					// 	UI.selectList();
+					// 	UI.addNewList();
+					// 	UI.addNewTask();
+
+					// 	console.log(masterList.findList(inputField.value));
+					// 	console.log(masterList.getLists());
+
+					// }
+
+					// else if (inputField.value === '') {
+					// 	alert('List name cannot be empty');
+					// }
+
+					//  else if (masterList.findList(inputField.value)) {
+					// 	alert('List with this name already exists');
+					// }
 				};
 
 				addBtn.addEventListener('click', addBtnPress);
@@ -214,6 +255,31 @@ export default class UI {
 						addBtnPress();
 					}
 				});
+
+				// let enterKeydownListenerAttached = false;
+
+				// if (enterKeydownListenerAttached === false) {
+				// 	document.addEventListener('keydown', (e) => {
+				// 		if (e.key === 'Enter') {
+				// 			addBtnPress();
+				// 		}
+				// 	});
+				// 	enterKeydownListenerAttached = true;
+				// }
+
+				// if (!newTaskBtn.hasAttribute('listener')) {
+
+				// 	newTaskBtn.setAttribute('listener', 'true');
+				// 	}
+
+				// const keydownHandler = (e) => {
+				// 	if (e.key === 'Enter') {
+				// 		addBtnPress();
+				// 	}
+				// };
+
+				// document.removeEventListener('keydown', keydownHandler);
+				// document.addEventListener('keydown', keydownHandler);
 
 				const cancelBtnPress = () => {
 					inputField.remove();
