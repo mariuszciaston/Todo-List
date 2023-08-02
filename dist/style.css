@@ -22,7 +22,7 @@ body {
 	width: 100%;
 	max-width: 1024px;
 	transition: 0.5s ease;
-	overflow-x: hidden;
+	overflow: hidden;
 }
 
 .header,
@@ -144,12 +144,13 @@ hr {
 	position: absolute;
 	left: 0;
 	top: 0;
+	right: 0;
 	bottom: 0;
-	overflow-x: hidden;
 	-webkit-mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
 	mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
 	padding-bottom: 2rem;
 	margin-bottom: 2rem;
+	overflow-x: hidden;
 }
 
 .lists {
@@ -158,11 +159,9 @@ hr {
 	justify-content: space-between;
 	position: relative;
 	flex: 1;
-	min-height: 6rem;
 }
 
 .lists > .navigation > .button {
-	min-height: 2.5rem;
 	text-overflow: ellipsis;
 	overflow: hidden;
 }
@@ -179,7 +178,7 @@ button.nav-btn {
 }
 
 #second-list input,
-.tasks-list input {
+.tasks input {
 	font-size: 1.75rem;
 	line-height: 2.5rem;
 	font-weight: 800;
@@ -188,7 +187,6 @@ button.nav-btn {
 	letter-spacing: 1px;
 	background-color: hsl(0, 0%, 10%);
 	border: none;
-	outline: 1px white solid;
 	outline: none;
 	padding: 0 0.5rem;
 	background-color: white;
@@ -196,7 +194,7 @@ button.nav-btn {
 	border: 1px solid black;
 }
 
-.tasks-list input {
+.tasks input {
 	font-size: 1rem;
 	font-weight: 400;
 }
@@ -208,8 +206,8 @@ button.nav-btn {
 
 #second-list .add-btn,
 #second-list .cancel-btn,
-.tasks-list .add-btn,
-.tasks-list .cancel-btn {
+.tasks .add-btn,
+.tasks .cancel-btn {
 	border: none;
 	line-height: 2.5rem;
 	padding: 0;
@@ -241,10 +239,6 @@ button.nav-btn {
 	width: calc(100vw - 4rem);
 }
 
-.tasks-list > .input-container {
-	padding: 1rem 2rem;
-}
-
 button.nav-btn:hover,
 button.active {
 	cursor: pointer;
@@ -265,10 +259,31 @@ button.active {
 	z-index: 1;
 }
 
-.tasks {
-	flex: 1;
+.tasks-outer {
 	position: relative;
-	min-height: 4rem;
+	display: flex;
+	flex: 1;
+	min-height: 8rem;
+}
+
+.tasks {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+
+	padding: 0 0 2rem 0;
+	margin: 0 0 1rem 0;
+
+	font-size: 1rem;
+	font-weight: 400;
+	-webkit-mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
+	mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	overflow-x: hidden;
 }
 
 h2.title {
@@ -284,18 +299,12 @@ h2.title {
 
 .tasks-list {
 	list-style-type: none;
-	padding: 0rem 0 2rem 0;
-	margin: 0 0 1rem 0;
-	font-size: 1rem;
-	font-weight: 400;
-	-webkit-mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
-	mask-image: linear-gradient(0deg, transparent 0%, rgba(0, 0, 0, 1) 10%);
-	position: absolute;
-	left: 0;
-	top: 0;
-	right: 0;
-	bottom: 0;
-	overflow-x: hidden;
+	padding: 0;
+	margin: 0;
+}
+
+.tasks .input-container {
+	padding: 0 2rem;
 }
 
 .tasks-list li {
@@ -447,7 +456,7 @@ button:hover {
 	display: flex;
 	flex-direction: row;
 	margin: 0 2rem;
-	gap: 2rem;
+	gap: 1rem;
 }
 
 .action {
@@ -552,11 +561,14 @@ button {
 	}
 
 	.input-container {
-		width: 100%;
+		width: calc(320px - 2rem);
+
+		display: flex;
+		flex: 1;
 	}
 
-	.tasks-list > .input-container {
-		padding: 1rem 2rem;
+	.tasks .input-container {
+		padding: 0 2rem;
 		width: calc(100% - 4rem);
 	}
 
