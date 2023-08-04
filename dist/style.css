@@ -78,16 +78,16 @@ span.bold {
 	background-color: hsl(0, 0%, 100%);
 }
 
-.change .bar1 {
+.open .bar1 {
 	transform: translate(0, 10px) rotate(-45deg);
 }
 
-.change .bar2 {
+.open .bar2 {
 	opacity: 0;
 	transform: translate(-48px, 0);
 }
 
-.change .bar3 {
+.open .bar3 {
 	transform: translate(0, -10px) rotate(45deg);
 }
 
@@ -527,6 +527,7 @@ button {
 @media only screen and (min-width: 768px) {
 	.wrapper {
 		margin: 0 2rem;
+		overflow: visible;
 	}
 
 	.header {
