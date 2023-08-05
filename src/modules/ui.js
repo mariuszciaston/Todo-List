@@ -69,7 +69,7 @@ export default class UI {
 		listOne.forEach((list) => {
 			const button = document.createElement('button');
 			button.className = 'button nav-btn';
-			if (list.name === 'TASKS') {
+			if (list.name === 'THIS WEEK') {
 				button.classList.add('active');
 			}
 			button.textContent = list.name;
@@ -170,17 +170,21 @@ export default class UI {
 		const secondList = document.querySelector('#second-list');
 
 		newListBtn.addEventListener('click', () => {
-			let inputField = secondList.querySelector('input');
-			if (!inputField) {
-				inputField = document.createElement('input');
-				inputField.type = 'text';
-				inputField.className = 'input-field';
-				secondList.append(inputField);
-				inputField.focus();
+			let listInputField = secondList.querySelector('input');
+			if (!listInputField) {
+				const inputContainer = document.createElement('div');
+				inputContainer.className = 'input-container';
+				secondList.append(inputContainer);
+
+				listInputField = document.createElement('input');
+				listInputField.type = 'text';
+				listInputField.className = 'input-field';
+				inputContainer.append(listInputField);
+				listInputField.focus();
 
 				const inputBtns = document.createElement('div');
 				inputBtns.className = 'input-btns';
-				secondList.append(inputBtns);
+				inputContainer.append(inputBtns);
 
 				const addBtn = document.createElement('button');
 				const cancelBtn = document.createElement('button');
@@ -194,55 +198,46 @@ export default class UI {
 				inputBtns.append(cancelBtn);
 
 				const addBtnPress = () => {
-					if (masterList.findList(inputField.value)) {
-						alert('List with this name already exists');
-					} else if (inputField.value === '') {
-						alert('List name cannot be empty');
-					} else if (!masterList.findList(inputField.value) && inputField.value !== '') {
-						masterList.addList(inputField.value);
-						inputField.remove();
-						inputBtns.remove();
-						UI.displayLists();
+					listInputField = secondList.querySelector('input');
+					if (listInputField) {
+						if (masterList.findList(listInputField.value)) {
+							alert('List with this name already exists');
+						} else if (listInputField.value === '' || listInputField.value === null) {
+							alert('List name cannot be empty');
+						} else if (!masterList.findList(listInputField.value) && listInputField.value !== '') {
+							masterList.addList(listInputField.value);
+							inputContainer.remove();
+							UI.displayLists();
 
-						const navButtons = document.querySelectorAll('nav .nav-btn');
-
-						navButtons.forEach((button) => {
-							if (button.textContent === inputField.value) {
-								button.classList.add('active');
-							} else {
-								button.classList.remove('active');
-							}
-						});
-
-						UI.displayTasks();
-						UI.selectList();
-						UI.addNewList();
-						UI.addNewTask();
-
-						console.log(masterList.findList(inputField.value));
-						console.log(masterList.getLists());
+							const navButtons = document.querySelectorAll('nav .nav-btn');
+							navButtons.forEach((button) => {
+								if (button.textContent === listInputField.value) {
+									button.classList.add('active');
+								} else {
+									button.classList.remove('active');
+								}
+							});
+							UI.displayTasks();
+							UI.selectList();
+							UI.addNewList();
+							UI.addNewTask();
+						}
 					}
 				};
 
-				addBtn.addEventListener('click', addBtnPress);
-
-				document.addEventListener('keydown', (e) => {
-					if (e.key === 'Enter') {
-						addBtnPress();
-					}
-				});
-
 				const cancelBtnPress = () => {
-					inputField.remove();
-					inputBtns.remove();
+					inputContainer.remove();
 					UI.addNewList();
 					UI.addNewTask();
 				};
 
+				addBtn.addEventListener('click', addBtnPress);
 				cancelBtn.addEventListener('click', cancelBtnPress);
 
 				document.addEventListener('keydown', (e) => {
-					if (e.key === 'Escape') {
+					if (e.key === 'Enter') {
+						addBtnPress();
+					} else if (e.key === 'Escape') {
 						cancelBtnPress();
 					}
 				});
@@ -252,22 +247,70 @@ export default class UI {
 
 	static addNewTask() {
 		const newTaskBtn = document.querySelector('#add-task-btn');
-		if (!newTaskBtn.hasAttribute('listener')) {
-			newTaskBtn.addEventListener('click', () => {
-				const activeButton = document.querySelector('nav .nav-btn.active');
-				const currentList = activeButton.textContent;
+		const tasksList = document.querySelector('.tasks');
 
-				const newTaskName = prompt('Please enter task name', '');
-				if (masterList.findTaskInList(currentList, newTaskName)) {
-					alert('Task with this name already exists');
-				} else if (newTaskName === '') {
-					alert('Task name cannot be empty');
-				} else if (newTaskName !== null) {
-					masterList.addTaskToList(currentList, newTaskName);
-					UI.displayTasks();
-				}
-			});
-			newTaskBtn.setAttribute('listener', 'true');
-		}
+		newTaskBtn.addEventListener('click', () => {
+			let taskInputField = tasksList.querySelector('input');
+			if (!taskInputField) {
+				const inputContainer = document.createElement('div');
+				inputContainer.className = 'input-container';
+				tasksList.append(inputContainer);
+
+				taskInputField = document.createElement('input');
+				taskInputField.type = 'text';
+				taskInputField.className = 'input-field';
+				inputContainer.append(taskInputField);
+				taskInputField.focus();
+
+				const inputBtns = document.createElement('div');
+				inputBtns.className = 'input-btns';
+				inputContainer.append(inputBtns);
+
+				const addBtn = document.createElement('button');
+				const cancelBtn = document.createElement('button');
+
+				addBtn.className = 'add-btn action';
+				cancelBtn.className = 'cancel-btn action';
+				addBtn.textContent = 'Add';
+				cancelBtn.textContent = 'Cancel';
+
+				inputBtns.append(addBtn);
+				inputBtns.append(cancelBtn);
+
+				const addBtnPress = () => {
+					const activeButton = document.querySelector('nav .nav-btn.active');
+					const currentList = activeButton.textContent;
+
+					taskInputField = tasksList.querySelector('input');
+					if (taskInputField) {
+						if (masterList.findTaskInList(currentList, taskInputField.value)) {
+							alert('Task with this name already exists');
+						} else if (taskInputField.value === '') {
+							alert('Task name cannot be empty');
+						} else if (taskInputField.value !== null) {
+							masterList.addTaskToList(currentList, taskInputField.value);
+							inputContainer.remove();
+							UI.displayTasks();
+						}
+					}
+				};
+				const cancelBtnPress = () => {
+					inputContainer.remove();
+					UI.addNewList();
+					UI.addNewTask();
+				};
+
+				addBtn.addEventListener('click', addBtnPress);
+				cancelBtn.addEventListener('click', cancelBtnPress);
+
+				document.addEventListener('keydown', (e) => {
+					if (e.key === 'Enter') {
+						addBtnPress();
+					} else if (e.key === 'Escape') {
+						cancelBtnPress();
+					}
+				});
+			}
+		});
 	}
 }
