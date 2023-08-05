@@ -21,41 +21,27 @@ masterList.toggleStarInTask('TASKS', 'Finish The Odin Project');
 // console.table(masterList.getLists());
 
 export default class UI {
-	static load() {
-		UI.hamburgerMenuControl();
-		UI.displayLists();
-		UI.displayTasks();
-
-		UI.selectList();
-		UI.addNewList();
-		UI.addNewTask();
-	}
-
-	static hamburgerMenuControl() {
+	static getElements = () => {
 		const hamburger = document.querySelector('#hamburger');
 		const main = document.querySelector('.main');
+		return { hamburger, main };
+	};
 
-		const manualToggle = () => {
-			main.classList.toggle('sidebar-toggle');
-			hamburger.classList.toggle('open');
-		};
-
-		const autoToggle = () => {
-			if (window.matchMedia('(min-width: 800px)').matches) {
-				main.classList.remove('sidebar-toggle');
-				hamburger.classList.add('open');
-			} else {
-				main.classList.add('sidebar-toggle');
-				hamburger.classList.remove('open');
-			}
-		};
-		autoToggle();
-
-		if (!hamburger.hasAttribute('listener')) {
-			hamburger.addEventListener('click', manualToggle);
-			window.addEventListener('resize', autoToggle);
-			hamburger.setAttribute('listener', 'true');
+	static hamburgerAutoToggle() {
+		const { hamburger, main } = UI.getElements();
+		if (window.matchMedia('(min-width: 800px)').matches) {
+			hamburger.classList.add('open');
+			main.classList.remove('sidebar-toggle');
+		} else {
+			hamburger.classList.remove('open');
+			main.classList.add('sidebar-toggle');
 		}
+	}
+
+	static hamburgerManualToggle() {
+		const { hamburger, main } = UI.getElements();
+		hamburger.classList.toggle('open');
+		main.classList.toggle('sidebar-toggle');
 	}
 
 	static displayLists() {
@@ -145,7 +131,6 @@ export default class UI {
 					});
 			}
 		});
-		UI.hamburgerMenuControl();
 	}
 
 	static selectList() {
@@ -302,15 +287,39 @@ export default class UI {
 
 				addBtn.addEventListener('click', addBtnPress);
 				cancelBtn.addEventListener('click', cancelBtnPress);
-
-				document.addEventListener('keydown', (e) => {
-					if (e.key === 'Enter') {
-						addBtnPress();
-					} else if (e.key === 'Escape') {
-						cancelBtnPress();
-					}
-				});
 			}
 		});
 	}
+
+	static attachEventListeners() {
+		const { hamburger } = UI.getElements();
+		hamburger.addEventListener('click', UI.hamburgerManualToggle);
+		window.addEventListener('resize', UI.hamburgerAutoToggle);
+	}
+
+	static loadUserInterface() {
+		UI.getElements();
+
+		UI.hamburgerAutoToggle();
+		UI.displayLists();
+		UI.displayTasks();
+		UI.selectList();
+		UI.addNewList();
+		UI.addNewTask();
+
+		UI.attachEventListeners();
+	}
 }
+
+document.addEventListener('keydown', (e) => {
+	const inputContainer = document.querySelector('.input-container');
+	if (inputContainer) {
+		if (e.key === 'Enter') {
+			const addBtn = inputContainer.querySelector('.add-btn');
+			addBtn.click();
+		} else if (e.key === 'Escape') {
+			const cancelBtn = inputContainer.querySelector('.cancel-btn');
+			cancelBtn.click();
+		}
+	}
+});
