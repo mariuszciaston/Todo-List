@@ -25,9 +25,12 @@ body {
 	overflow: hidden;
 }
 
-.header,
-.nav {
+.header {
 	margin: 0 2rem;
+}
+
+.nav {
+	margin: 0 0 0 2rem;
 }
 
 .header {
@@ -99,12 +102,6 @@ hr {
 	border-radius: 1px;
 }
 
-/* .hr-toggle {
-	margin: 0;
-	margin-bottom: 1rem;
-	display: block;
-} */
-
 .main {
 	background-color: black;
 	display: grid;
@@ -164,6 +161,7 @@ hr {
 .lists > .navigation > .button {
 	text-overflow: ellipsis;
 	overflow: hidden;
+	min-width: 320px;
 }
 
 button.nav-btn {
@@ -537,10 +535,6 @@ button {
 	h1.title {
 		text-align: right;
 	}
-
-	/* .hr-toggle {
-		display: none;
-	} */
 
 	.main {
 		display: grid;
