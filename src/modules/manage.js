@@ -54,10 +54,24 @@ export default class ListsManager {
 		}
 	}
 
+	addStarInTask(listName, taskName) {
+		const task = this.findTaskInList(listName, taskName);
+		if (task) {
+			task.addStar(task.star);
+		}
+	}
+
 	toggleIsDoneInTask(listName, taskName) {
 		const task = this.findTaskInList(listName, taskName);
 		if (task) {
 			task.toggleIsDone(task.isDone);
+		}
+	}
+
+	addIsDoneInTask(listName, taskName) {
+		const task = this.findTaskInList(listName, taskName);
+		if (task) {
+			task.addIsDone(task.isDone);
 		}
 	}
 

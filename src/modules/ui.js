@@ -3,28 +3,14 @@
 // import Task from './task'
 import ListsManager from './manage';
 
-// TEST
 const masterList = new ListsManager();
-masterList.addList('Shopping');
-masterList.addList('Movies to watch');
-masterList.addTaskToList('TASKS', 'Bake Neapolitan pizza');
-masterList.addTaskToList('TASKS', 'Go swimming on Tuesday');
-masterList.addTaskToList('TASKS', 'Get hired as a Front End Developer');
-masterList.addTaskToList('TASKS', 'Conquer the Crown of Polish Mountains');
-masterList.addTaskToList('TASKS', 'Finish The Odin Project');
-
-masterList.addTaskToList('TODAY', '1234');
-
-masterList.toggleIsDoneInTask('TASKS', 'Finish The Odin Project');
-masterList.toggleStarInTask('TASKS', 'Finish The Odin Project');
-
-// console.table(masterList.getLists());
 
 export default class UI {
 	static getElements = () => {
 		const hamburger = document.querySelector('#hamburger');
 		const main = document.querySelector('.main');
-		return { hamburger, main };
+		const loadExampleBtn = document.querySelector('#load-example-btn');
+		return { hamburger, main, loadExampleBtn };
 	};
 
 	static hamburgerAutoToggle() {
@@ -44,6 +30,8 @@ export default class UI {
 		main.classList.toggle('sidebar-toggle');
 	}
 
+	// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 	static displayLists() {
 		const firstList = document.querySelector('#first-list');
 		const secondList = document.querySelector('#second-list');
@@ -55,7 +43,7 @@ export default class UI {
 		listOne.forEach((list) => {
 			const button = document.createElement('button');
 			button.className = 'button nav-btn';
-			if (list.name === 'THIS WEEK') {
+			if (list.name === 'TASKS') {
 				button.classList.add('active');
 			}
 			button.textContent = list.name;
@@ -218,14 +206,6 @@ export default class UI {
 
 				addBtn.addEventListener('click', addBtnPress);
 				cancelBtn.addEventListener('click', cancelBtnPress);
-
-				document.addEventListener('keydown', (e) => {
-					if (e.key === 'Enter') {
-						addBtnPress();
-					} else if (e.key === 'Escape') {
-						cancelBtnPress();
-					}
-				});
 			}
 		});
 	}
@@ -291,10 +271,121 @@ export default class UI {
 		});
 	}
 
+	static loadExampleContent = () => {
+		const lists = ['Shopping', 'Movies to watch', 'Places to visit', 'Great ideas!'];
+		const tasks = [
+			'Bake Neapolitan pizza',
+			'Go swimming on Tuesday',
+			'Get hired as a Front End Developer',
+			'Conquer the Crown of Polish Mountains',
+			'Finish The Odin Project',
+		];
+		const shopping = [
+			'Apples',
+			'Bananas',
+			'Strawberries',
+			'Avocados',
+			'Bell Peppers',
+			'Carrots',
+			'Broccoli',
+			'Garlic',
+			'Lemons/Limes',
+			'Onion',
+			'Basil',
+			'Potatoes',
+			'Spinach',
+			'Tomatoes',
+		];
+
+		const placesToVisit = ['Amsterdam', 'Berlin', 'Madrid', 'Rome', 'London', 'Paris', 'Prague', 'Stockholm', 'Vienna'];
+
+		const moviesToWatch = [
+			'1. 2001: A Space Odyssey (1968)',
+			'2. Blade Runner (1982)',
+			'3. Star Wars: Episode IV - A New Hope (1977)',
+			'4. Alien (1979)',
+			'5. Star Wars: Episode V - The Empire Strikes Back (1980)',
+			'6. Planet of the Apes (1968)',
+			'7. Star Trek II: The Wrath of Khan (1982)',
+			'8. The Matrix (1999)',
+			'9. The Thing (1982)',
+			'10. Jurassic Park (1993)',
+			'11. Aliens (1986)',
+			'12. E.T. the Extra-Terrestrial (1982)',
+			'13. A Clockwork Orange (1971)',
+			'14. The Day the Earth Stood Still (1951)',
+			'15. Invasion of the Body Snatchers (1956)',
+			'16. Metropolis (1927)',
+			'17. Terminator 2: Judgement Day (1991)',
+			'18. Forbidden Planet (1956)',
+			'19. Close Encounters of the Third Kind (1977)',
+			'20. Back to the Future (1985)',
+			'21. Brazil (1985)',
+			'22. Starship Troopers (1997)',
+			'23. Ex Machina (2014)',
+			'24. Wall-E (2008)',
+			'25. Inception (2010)',
+		];
+
+		const greatIdeas = [
+			'1) Travel to a country where you don’t speak the language',
+			'2) Go on a solo trip',
+			'3) Visit a “Dark Sky” site',
+			'4) Live abroad for a year',
+			'5) Take a pottery class',
+			'6) Plant a vegetable garden',
+			'7) Start a book club',
+			'8) Write a book',
+			'9) Teach a class',
+			'10) Become a mentor',
+			'11) Climb a mountain',
+			'12) Run a marathon',
+			'13) Start your own business',
+			'14) Plant a tree and watch it grow',
+			'15) Become a volunteer',
+			'16) Adopt a pet',
+			'17) Try skydiving',
+			'18) Take a hot air balloon ride',
+			'19) Learn to meditate',
+			'20) Join a dance class',
+			'21) Write a Letter to Your Future Self',
+			'22) Do Something—anything!—You’ve never done',
+		];
+
+		lists.forEach((list) => {
+			if (!masterList.findList(list)) {
+				masterList.addList(list);
+			}
+		});
+
+		const loadTasks = (listName, tasksArray) => {
+			tasksArray.forEach((task) => {
+				if (!masterList.findTaskInList(listName, task)) {
+					masterList.addTaskToList(listName, task);
+				}
+			});
+		};
+
+		loadTasks('TASKS', tasks);
+		loadTasks('Shopping', shopping);
+		loadTasks('Places to visit', placesToVisit);
+		loadTasks('Movies to watch', moviesToWatch);
+		loadTasks('Great ideas!', greatIdeas);
+
+		masterList.addStarInTask('TASKS', 'Conquer the Crown of Polish Mountains');
+		masterList.addIsDoneInTask('TASKS', 'Go swimming on Tuesday');
+
+		UI.displayLists();
+		UI.displayTasks();
+		UI.selectList();
+	};
+
 	static attachEventListeners() {
-		const { hamburger } = UI.getElements();
+		const { hamburger, loadExampleBtn } = UI.getElements();
 		hamburger.addEventListener('click', UI.hamburgerManualToggle);
 		window.addEventListener('resize', UI.hamburgerAutoToggle);
+
+		loadExampleBtn.addEventListener('click', UI.loadExampleContent);
 	}
 
 	static loadUserInterface() {

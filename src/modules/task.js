@@ -26,7 +26,15 @@ export default class Task {
 		this.star = !star;
 	}
 
+	addStar() {
+		this.star = true;
+	}
+
 	toggleIsDone(isDone) {
 		this.isDone = !isDone;
+	}
+
+	addIsDone() {
+		this.isDone = true;
 	}
 }
