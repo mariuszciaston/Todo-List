@@ -1,6 +1,4 @@
 /* eslint-disable no-alert */
-// import List from './list';
-// import Task from './task'
 import ListsManager from './manage';
 
 const masterList = new ListsManager();
@@ -29,8 +27,6 @@ export default class UI {
 		hamburger.classList.toggle('open');
 		main.classList.toggle('sidebar-toggle');
 	}
-
-	// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 	static displayLists() {
 		const firstList = document.querySelector('#first-list');
@@ -380,12 +376,25 @@ export default class UI {
 		UI.selectList();
 	};
 
+	static handleKeyboard = (e) => {
+		const inputContainer = document.querySelector('.input-container');
+		if (inputContainer) {
+			if (e.key === 'Enter') {
+				const addBtn = inputContainer.querySelector('.add-btn');
+				addBtn.click();
+			} else if (e.key === 'Escape') {
+				const cancelBtn = inputContainer.querySelector('.cancel-btn');
+				cancelBtn.click();
+			}
+		}
+	};
+
 	static attachEventListeners() {
 		const { hamburger, loadExampleBtn } = UI.getElements();
 		hamburger.addEventListener('click', UI.hamburgerManualToggle);
 		window.addEventListener('resize', UI.hamburgerAutoToggle);
-
 		loadExampleBtn.addEventListener('click', UI.loadExampleContent);
+		window.addEventListener('keydown', UI.handleKeyboard);
 	}
 
 	static loadUserInterface() {
@@ -402,15 +411,4 @@ export default class UI {
 	}
 }
 
-document.addEventListener('keydown', (e) => {
-	const inputContainer = document.querySelector('.input-container');
-	if (inputContainer) {
-		if (e.key === 'Enter') {
-			const addBtn = inputContainer.querySelector('.add-btn');
-			addBtn.click();
-		} else if (e.key === 'Escape') {
-			const cancelBtn = inputContainer.querySelector('.cancel-btn');
-			cancelBtn.click();
-		}
-	}
-});
+UI.loadExampleContent();
