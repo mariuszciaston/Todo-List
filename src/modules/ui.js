@@ -8,7 +8,8 @@ export default class UI {
 		const hamburger = document.querySelector('#hamburger');
 		const main = document.querySelector('.main');
 		const loadExampleBtn = document.querySelector('#load-example-btn');
-		return { hamburger, main, loadExampleBtn };
+		const navButtons = document.querySelectorAll('nav .nav-btn');
+		return { hamburger, main, loadExampleBtn, navButtons };
 	};
 
 	static hamburgerAutoToggle() {
@@ -36,41 +37,34 @@ export default class UI {
 		firstList.textContent = '';
 		secondList.textContent = '';
 
-		listOne.forEach((list) => {
+		const createList = (list) => {
 			const button = document.createElement('button');
 			button.className = 'button nav-btn';
 			if (list.name === 'TASKS') {
 				button.classList.add('active');
 			}
 			button.textContent = list.name;
-			firstList.appendChild(button);
+			return button;
+		};
+
+		listOne.forEach((list) => {
+			firstList.appendChild(createList(list));
 		});
 
 		listTwo.forEach((list) => {
-			const button = document.createElement('button');
-			button.className = 'button nav-btn';
-			button.textContent = list.name;
-			secondList.appendChild(button);
+			secondList.appendChild(createList(list));
 		});
 	}
 
 	static displayTasks() {
-		const navButtons = document.querySelectorAll('nav .nav-btn');
+		const { navButtons } = UI.getElements();
+		const tasksTitle = document.querySelector('.content .title');
 		const tasksList = document.querySelector('.tasks-list');
 		tasksList.textContent = '';
 
-		const tasksTitle = document.querySelector('.content .title');
-
-		(function updateTitle() {
-			navButtons.forEach((button) => {
-				if (button.classList.contains('active')) {
-					tasksTitle.textContent = button.textContent;
-				}
-			});
-		})();
-
 		navButtons.forEach((button) => {
 			if (button.classList.contains('active')) {
+				tasksTitle.textContent = button.textContent;
 				masterList
 					.findList(button.textContent)
 					.getTasks()
@@ -118,8 +112,7 @@ export default class UI {
 	}
 
 	static selectList() {
-		const navButtons = document.querySelectorAll('nav .nav-btn');
-
+		const { navButtons } = UI.getElements();
 		navButtons.forEach((button) => {
 			button.addEventListener('click', (e) => {
 				if (!e.target.classList.contains('active')) {
@@ -177,8 +170,7 @@ export default class UI {
 							masterList.addList(listInputField.value);
 							inputContainer.remove();
 							UI.displayLists();
-
-							const navButtons = document.querySelectorAll('nav .nav-btn');
+							const { navButtons } = UI.getElements();
 							navButtons.forEach((button) => {
 								if (button.textContent === listInputField.value) {
 									button.classList.add('active');
@@ -408,7 +400,7 @@ export default class UI {
 		UI.addNewTask();
 
 		UI.attachEventListeners();
+
+		UI.loadExampleContent();
 	}
 }
-
-UI.loadExampleContent();
