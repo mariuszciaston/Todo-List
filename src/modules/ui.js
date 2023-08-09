@@ -171,9 +171,9 @@ export default class UI {
 		if (whereToAdd.id === 'second-list') {
 			if (this.masterList.findList(listName)) {
 				alert('List with this name already exists');
-			} else if (listName === '' || listName === null) {
+			} else if (listName === '' || listName.match(/^\s+$/)) {
 				alert('List name cannot be empty');
-			} else if (!this.masterList.findList(listName) && listName !== '') {
+			} else {
 				this.masterList.addList(listName);
 				inputContainer.remove();
 				this.displayLists();
@@ -186,9 +186,9 @@ export default class UI {
 		if (whereToAdd.className === 'tasks') {
 			if (this.masterList.findTaskInList(this.getActiveList(), listName)) {
 				alert('Task with this name already exists');
-			} else if (listName === '' || listName === null) {
+			} else if (listName === '' || listName.match(/^\s+$/)) {
 				alert('Task name cannot be empty');
-			} else if (listName !== null) {
+			} else {
 				this.masterList.addTaskToList(this.getActiveList(), listName);
 				inputContainer.remove();
 				this.displayTasks();
@@ -208,14 +208,11 @@ export default class UI {
 
 				const inputField = whereToAdd.querySelector('input');
 				inputField.focus();
-
 				inputContainer = whereToAdd.querySelector('.input-container');
-
 				const addBtn = whereToAdd.querySelector('.add-btn');
 				const cancelBtn = whereToAdd.querySelector('.cancel-btn');
 
 				addBtn.addEventListener('click', () => this.addBtnPress(inputField, inputContainer, whereToAdd));
-
 				cancelBtn.addEventListener('click', () => this.cancelBtnPress(inputContainer));
 			}
 		});
@@ -372,9 +369,7 @@ export default class UI {
 		UI.selectList();
 		UI.addNewList();
 		UI.addNewTask();
-
 		UI.attachEventListeners();
-
 		UI.loadExampleContent();
 	}
 }
