@@ -457,6 +457,19 @@ button:hover {
 	flex-direction: row;
 	margin: 0 2rem;
 	gap: 1rem;
+	flex-wrap: wrap-reverse;
+}
+
+.btns .primary {
+	display: flex;
+	flex: 1 0 100%;
+}
+
+.btns .secondary {
+	display: flex;
+	flex: 1 0;
+	gap: 1rem;
+	flex-wrap: wrap-reverse;
 }
 
 .action {
@@ -481,8 +494,7 @@ button:hover {
 }
 
 #new-list-btn:hover,
-#add-task-btn:hover,
-#load-example-btn:hover {
+.black-btn:hover {
 	opacity: 0.5;
 }
 
@@ -583,6 +595,21 @@ button {
 
 	.content {
 		width: unset;
+	}
+
+	.btns .primary {
+		flex: 1 0;
+	}
+	.btns .secondary {
+		flex-wrap: nowrap;
+	}
+
+	.btns .primary .button {
+		min-width: 152px;
+	}
+
+	.btns .secondary .button {
+		min-width: 152px;
 	}
 }
 
