@@ -358,13 +358,22 @@ export default class UI {
 		}
 	};
 
+	static clearAllContent = () => {
+		this.masterList = new ListsManager();
+		this.displayLists();
+		this.displayTasks();
+		this.selectList();
+	};
+
 	static attachEventListeners() {
-		const loadExampleBtn = document.querySelector('#load-example-btn');
 		const hamburger = document.querySelector('#hamburger');
+		const loadExampleBtn = document.querySelector('#load-example-btn');
+		const clearAllBtn = document.querySelector('#clear-all-btn');
 
 		hamburger.addEventListener('click', this.hamburgerManualToggle);
 		window.addEventListener('resize', this.hamburgerAutoToggle);
 		loadExampleBtn.addEventListener('click', this.loadExampleContent);
+		clearAllBtn.addEventListener('click', this.clearAllContent);
 		window.addEventListener('keydown', this.handleKeyboard);
 	}
 
