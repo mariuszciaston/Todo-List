@@ -49,73 +49,74 @@ export default class UI {
 		this.setActiveList('TASKS');
 	}
 
-	static displayTasks() {
-		const navButtons = document.querySelectorAll('nav .nav-btn');
+	static createTask(task) {
+		const li = document.createElement('li');
+		const circle = document.createElement('div');
+		const checkMark = document.createElement('div');
+		const taskContent = document.createElement('p');
+		const date = document.createElement('p');
+		const star = document.createElement('div');
+		const remove = document.createElement('div');
 
+		circle.className = 'circle';
+		checkMark.className = 'checkMark';
+		taskContent.className = 'task-content';
+		date.className = 'date';
+		star.className = 'star';
+		remove.className = 'remove';
+
+		if (task.isDone) {
+			li.classList.add('done');
+		} else {
+			li.classList.remove('done');
+		}
+
+		taskContent.textContent = task.name;
+		date.textContent = task.date;
+
+		if (task.star) {
+			star.classList.add('yellow');
+		} else {
+			star.classList.remove('yellow');
+		}
+
+		li.append(circle);
+		circle.append(checkMark);
+		li.append(taskContent);
+		li.append(date);
+		li.append(star);
+		li.append(remove);
+
+		return li;
+	}
+
+	static displayTasks() {
 		const tasksTitle = document.querySelector('.content .title');
 		const tasksList = document.querySelector('.tasks-list');
-		tasksList.textContent = '';
+		const currentList = this.getActiveList();
 
-		navButtons.forEach((button) => {
-			if (button.classList.contains('active')) {
-				tasksTitle.textContent = button.textContent;
-				this.masterList
-					.findList(button.textContent)
-					.getTasks()
-					.forEach((task) => {
-						const li = document.createElement('li');
-						const circle = document.createElement('div');
-						const checkMark = document.createElement('div');
-						const taskContent = document.createElement('p');
-						const date = document.createElement('p');
-						const star = document.createElement('div');
-						const remove = document.createElement('div');
-
-						circle.className = 'circle';
-						checkMark.className = 'checkMark';
-						taskContent.className = 'task-content';
-						date.className = 'date';
-						star.className = 'star';
-						remove.className = 'remove';
-
-						if (task.isDone) {
-							li.classList.add('done');
-						} else {
-							li.classList.remove('done');
-						}
-
-						taskContent.textContent = task.name;
-						date.textContent = task.date;
-
-						if (task.star) {
-							star.classList.add('yellow');
-						} else {
-							star.classList.remove('yellow');
-						}
-
-						li.append(circle);
-						circle.append(checkMark);
-						li.append(taskContent);
-						li.append(date);
-						li.append(star);
-						li.append(remove);
-						tasksList.prepend(li);
-					});
-			}
-		});
+		if (currentList) {
+			tasksList.textContent = '';
+			tasksTitle.textContent = currentList;
+			this.masterList
+				.findList(currentList)
+				.getTasks()
+				.forEach((task) => {
+					tasksList.prepend(this.createTask(task));
+				});
+		}
 	}
 
 	static selectList() {
 		const navButtons = document.querySelectorAll('nav .nav-btn');
+		const removeActiveClass = () => navButtons.forEach((btn) => btn.classList.remove('active'));
+		const addActiveClass = (target) => target.classList.add('active');
 
 		navButtons.forEach((button) => {
 			button.addEventListener('click', (e) => {
 				if (!e.target.classList.contains('active')) {
-					navButtons.forEach((btn) => {
-						btn.classList.remove('active');
-					});
-
-					e.target.classList.add('active');
+					removeActiveClass();
+					addActiveClass(e.target);
 					this.displayTasks();
 				}
 			});
@@ -232,6 +233,7 @@ export default class UI {
 
 	static loadExampleContent = () => {
 		const lists = ['Shopping', 'Movies to watch', 'Places to visit', 'Great ideas!'];
+
 		const tasks = [
 			'Bake Neapolitan pizza',
 			'Go swimming on Tuesday',
@@ -239,6 +241,7 @@ export default class UI {
 			'Conquer the Crown of Polish Mountains',
 			'Finish The Odin Project',
 		];
+
 		const shopping = [
 			'Apples',
 			'Bananas',
@@ -311,11 +314,13 @@ export default class UI {
 			'22) Do Something—anything!—You’ve never done',
 		];
 
-		lists.forEach((list) => {
-			if (!this.masterList.findList(list)) {
-				this.masterList.addList(list);
-			}
-		});
+		const loadLists = (listsArray) => {
+			listsArray.forEach((list) => {
+				if (!this.masterList.findList(list)) {
+					this.masterList.addList(list);
+				}
+			});
+		};
 
 		const loadTasks = (listName, tasksArray) => {
 			tasksArray.forEach((task) => {
@@ -325,6 +330,7 @@ export default class UI {
 			});
 		};
 
+		loadLists(lists);
 		loadTasks('TASKS', tasks);
 		loadTasks('Shopping', shopping);
 		loadTasks('Places to visit', placesToVisit);
