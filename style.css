@@ -559,7 +559,6 @@ button {
 
 	.input-container {
 		width: calc(320px - 2rem);
-
 		display: flex;
 		flex: 1;
 	}
