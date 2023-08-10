@@ -166,7 +166,7 @@ export default class UI {
 		return currentList;
 	}
 
-	static addBtnPress(inputField, inputContainer, whereToAdd) {
+	static addBtnPress(inputField, whereToAdd) {
 		const listName = inputField.value;
 
 		if (whereToAdd.id === 'second-list') {
@@ -174,9 +174,10 @@ export default class UI {
 				alert('List with this name already exists');
 			} else if (listName === '' || listName.match(/^\s+$/)) {
 				alert('List name cannot be empty');
+				inputField.focus();
 			} else {
 				this.masterList.addList(listName);
-				inputContainer.remove();
+				this.closeInputContainer();
 				this.displayLists();
 				this.setActiveList(listName);
 				this.displayTasks();
@@ -189,9 +190,10 @@ export default class UI {
 				alert('Task with this name already exists');
 			} else if (listName === '' || listName.match(/^\s+$/)) {
 				alert('Task name cannot be empty');
+				inputField.focus();
 			} else {
 				this.masterList.addTaskToList(this.getActiveList(), listName);
-				inputContainer.remove();
+				this.closeInputContainer();
 				this.displayTasks();
 			}
 		}
@@ -205,16 +207,21 @@ export default class UI {
 		whichBtn.addEventListener('click', () => {
 			let inputContainer = whereToAdd.querySelector('.input-container');
 			if (!inputContainer) {
+				this.closeInputContainer();
 				whereToAdd.append(this.createInputContainer());
 
 				const inputField = whereToAdd.querySelector('input');
 				inputField.focus();
 				inputContainer = whereToAdd.querySelector('.input-container');
+
 				const addBtn = whereToAdd.querySelector('.add-btn');
 				const cancelBtn = whereToAdd.querySelector('.cancel-btn');
 
-				addBtn.addEventListener('click', () => this.addBtnPress(inputField, inputContainer, whereToAdd));
+				addBtn.addEventListener('click', () => this.addBtnPress(inputField, whereToAdd));
 				cancelBtn.addEventListener('click', () => this.cancelBtnPress(inputContainer));
+			} else {
+				const inputField = whereToAdd.querySelector('input');
+				inputField.focus();
 			}
 		});
 	}
@@ -229,6 +236,31 @@ export default class UI {
 		const newTaskBtn = document.querySelector('#add-task-btn');
 		const tasksList = document.querySelector('.tasks');
 		this.addNewElement(newTaskBtn, tasksList);
+	}
+
+	static closeInputContainer() {
+		const inputContainer = document.querySelector('.input-container');
+		if (inputContainer) {
+			inputContainer.remove();
+		}
+	}
+
+	static closeInputContainerOnClick(e) {
+		if (
+			e.target.id !== 'new-list-btn' &&
+			e.target.id !== 'add-task-btn' &&
+			e.target.className !== 'input-container' &&
+			e.target.className !== 'input-field' &&
+			e.target.className !== 'input-btns' &&
+			!e.target.classList.contains('add-btn') &&
+			!e.target.classList.contains('cancel-btn') &&
+			e.target.id !== 'hamburger' &&
+			e.target.className !== 'bar1' &&
+			e.target.className !== 'bar2' &&
+			e.target.className !== 'bar3'
+		) {
+			this.closeInputContainer();
+		}
 	}
 
 	static loadExampleContent = () => {
@@ -375,6 +407,7 @@ export default class UI {
 		loadExampleBtn.addEventListener('click', this.loadExampleContent);
 		clearAllBtn.addEventListener('click', this.clearAllContent);
 		window.addEventListener('keydown', this.handleKeyboard);
+		window.addEventListener('click', this.closeInputContainerOnClick.bind(this));
 	}
 
 	static loadUserInterface() {
