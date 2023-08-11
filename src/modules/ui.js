@@ -246,19 +246,10 @@ export default class UI {
 	}
 
 	static closeInputContainerOnClick(e) {
-		if (
-			e.target.id !== 'new-list-btn' &&
-			e.target.id !== 'add-task-btn' &&
-			e.target.className !== 'input-container' &&
-			e.target.className !== 'input-field' &&
-			e.target.className !== 'input-btns' &&
-			!e.target.classList.contains('add-btn') &&
-			!e.target.classList.contains('cancel-btn') &&
-			e.target.id !== 'hamburger' &&
-			e.target.className !== 'bar1' &&
-			e.target.className !== 'bar2' &&
-			e.target.className !== 'bar3'
-		) {
+		const inputContainer = e.target.closest('.input-container');
+		const hamburger = e.target.closest('#hamburger');
+
+		if (!inputContainer && e.target.id !== 'new-list-btn' && e.target.id !== 'add-task-btn' && !hamburger) {
 			this.closeInputContainer();
 		}
 	}
