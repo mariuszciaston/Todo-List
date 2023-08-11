@@ -122,8 +122,10 @@ export default class UI {
 					addActiveClass(e.target);
 					this.displayTasks();
 				}
+				this.hamburgerAutoToggle();
 			});
 		});
+		this.hamburgerAutoToggle();
 	}
 
 	static createInputContainer() {
@@ -185,7 +187,6 @@ export default class UI {
 				this.setActiveList(listName);
 				this.displayTasks();
 				this.selectList();
-				this.hamburgerAutoToggle();
 			}
 		}
 
@@ -212,7 +213,15 @@ export default class UI {
 			let inputContainer = whereToAdd.querySelector('.input-container');
 			if (!inputContainer) {
 				this.closeInputContainer();
-				whereToAdd.append(this.createInputContainer());
+
+				const secondList = document.querySelector('#second-list');
+				const tasksList = document.querySelector('.tasks');
+
+				if (whereToAdd === secondList) {
+					whereToAdd.append(this.createInputContainer());
+				} else if (whereToAdd === tasksList) {
+					whereToAdd.prepend(this.createInputContainer());
+				}
 
 				const inputField = whereToAdd.querySelector('input');
 				inputField.focus();
@@ -402,7 +411,7 @@ export default class UI {
 		loadExampleBtn.addEventListener('click', this.loadExampleContent);
 		clearAllBtn.addEventListener('click', this.clearAllContent);
 		window.addEventListener('keydown', this.handleKeyboard);
-		window.addEventListener('click', this.closeInputContainerOnClick.bind(this));
+		window.addEventListener('click', this.closeInputContainerOnClick.bind(this), true);
 	}
 
 	static loadUserInterface() {
