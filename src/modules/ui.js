@@ -5,14 +5,17 @@ export default class UI {
 	static masterList = new ListsManager();
 
 	static hamburgerAutoToggle() {
-		const hamburger = document.querySelector('#hamburger');
-		const main = document.querySelector('.main');
-		if (window.matchMedia('(min-width: 800px)').matches) {
-			hamburger.classList.add('open');
-			main.classList.remove('sidebar-toggle');
-		} else {
-			hamburger.classList.remove('open');
-			main.classList.add('sidebar-toggle');
+		const inputContainer = document.querySelector('.input-container');
+		if (!inputContainer) {
+			const hamburger = document.querySelector('#hamburger');
+			const main = document.querySelector('.main');
+			if (window.matchMedia('(min-width: 800px)').matches) {
+				hamburger.classList.add('open');
+				main.classList.remove('sidebar-toggle');
+			} else {
+				hamburger.classList.remove('open');
+				main.classList.add('sidebar-toggle');
+			}
 		}
 	}
 
@@ -182,6 +185,7 @@ export default class UI {
 				this.setActiveList(listName);
 				this.displayTasks();
 				this.selectList();
+				this.hamburgerAutoToggle();
 			}
 		}
 
