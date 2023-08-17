@@ -362,11 +362,22 @@ h2.title {
 }
 
 .tasks-list li .task-content {
+	display: flex;
 	flex: 1;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	line-height: normal;
 	min-width: 90px;
+}
+
+.tasks-list li:has(.task-content .input-field) {
+	padding: 0rem 2rem;
+	min-height: 56px;
+	transition: none;
+}
+
+.task-content .input-field {
+	flex: 1;
 }
 
 .tasks-list li p {

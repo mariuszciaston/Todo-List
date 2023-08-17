@@ -109,6 +109,7 @@ export default class UI {
 					tasksList.prepend(this.createTask(task));
 				});
 		}
+
 		this.addTaskHandlers();
 	}
 
@@ -119,10 +120,38 @@ export default class UI {
 		this.displayTasks();
 	}
 
-	// static editTaskName(e) {
-	// 	const listName = this.getActiveList();
-	// 	const taskName = e.target.parentElement.querySelector('.task-content').textContent;
-	// }
+	static editTaskName(e) {
+		const listName = this.getActiveList();
+		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
+		const task = e.target.parentElement.querySelector('.task-content');
+
+		if (!task.contains(document.querySelector('.input-field'))) {
+			task.textContent = '';
+			const inputField = document.createElement('input');
+			inputField.className = 'input-field';
+			inputField.type = 'text';
+			task.append(inputField);
+			inputField.value = taskName;
+
+			window.addEventListener('click', (c) => {
+				if (inputField && c.target !== task && !inputField.contains(c.target)) {
+					this.masterList.changeTaskName(listName, taskName, inputField.value);
+					this.displayTasks();
+				}
+			});
+
+			window.addEventListener('keydown', (k) => {
+				if (inputField) {
+					if (k.key === 'Enter') {
+						this.masterList.changeTaskName(listName, taskName, inputField.value);
+						this.displayTasks();
+					} else if (k.key === 'Escape') {
+						this.displayTasks();
+					}
+				}
+			});
+		}
+	}
 
 	static toggleStar(e) {
 		const listName = this.getActiveList();
@@ -138,26 +167,18 @@ export default class UI {
 		this.displayTasks();
 	}
 
+	static addEventHandler(selector, event, handler) {
+		const elements = document.querySelectorAll(selector);
+		elements.forEach((element) => {
+			element.addEventListener(event, handler);
+		});
+	}
+
 	static addTaskHandlers() {
-		const circleElements = document.querySelectorAll('.circle');
-		circleElements.forEach((circle) => {
-			circle.addEventListener('click', this.toggleIsDone.bind(this));
-		});
-
-		// const taskNameElements = document.querySelectorAll('.task-content');
-		// taskNameElements.forEach((taskName) => {
-		// 	taskName.addEventListener('click', this.editTaskName.bind(this));
-		// });
-
-		const starElements = document.querySelectorAll('.star');
-		starElements.forEach((star) => {
-			star.addEventListener('click', this.toggleStar.bind(this));
-		});
-
-		const removeElements = document.querySelectorAll('.remove');
-		removeElements.forEach((x) => {
-			x.addEventListener('click', this.removeTask.bind(this));
-		});
+		this.addEventHandler('.circle', 'click', this.toggleIsDone.bind(this));
+		this.addEventHandler('.task-content', 'click', this.editTaskName.bind(this));
+		this.addEventHandler('.star', 'click', this.toggleStar.bind(this));
+		this.addEventHandler('.remove', 'click', this.removeTask.bind(this));
 	}
 
 	static selectList() {
@@ -316,6 +337,18 @@ export default class UI {
 			this.closeInputContainer();
 		}
 	}
+
+	// static closeInputField(listName, taskName, inputField) {
+	// 	// const inputField = document.querySelector('.input-field');
+	// 	if (inputField) {
+	// 		this.masterList.changeTaskName(listName, taskName, inputField.value);
+	// 			this.displayTasks();
+	// 	}
+	// }
+
+	// static closeInputFieldOnClick(e) {
+
+	// }
 
 	static loadExampleContent = () => {
 		const lists = ['Shopping', 'Movies to watch', 'Places to visit', 'Great ideas!'];
