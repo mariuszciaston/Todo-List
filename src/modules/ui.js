@@ -1,5 +1,6 @@
 /* eslint-disable no-alert */
 import ListsManager from './manage';
+// import Task from './task';
 
 export default class UI {
 	static masterList = new ListsManager();
@@ -108,6 +109,55 @@ export default class UI {
 					tasksList.prepend(this.createTask(task));
 				});
 		}
+		this.addTaskHandlers();
+	}
+
+	static toggleIsDone(e) {
+		const listName = this.getActiveList();
+		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
+		this.masterList.toggleIsDoneInTask(listName, taskName);
+		this.displayTasks();
+	}
+
+	// static editTaskName(e) {
+	// 	const listName = this.getActiveList();
+	// 	const taskName = e.target.parentElement.querySelector('.task-content').textContent;
+	// }
+
+	static toggleStar(e) {
+		const listName = this.getActiveList();
+		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
+		this.masterList.toggleStarInTask(listName, taskName);
+		this.displayTasks();
+	}
+
+	static removeTask(e) {
+		const listName = this.getActiveList();
+		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
+		this.masterList.deleteTaskFromList(listName, taskName);
+		this.displayTasks();
+	}
+
+	static addTaskHandlers() {
+		const circleElements = document.querySelectorAll('.circle');
+		circleElements.forEach((circle) => {
+			circle.addEventListener('click', this.toggleIsDone.bind(this));
+		});
+
+		// const taskNameElements = document.querySelectorAll('.task-content');
+		// taskNameElements.forEach((taskName) => {
+		// 	taskName.addEventListener('click', this.editTaskName.bind(this));
+		// });
+
+		const starElements = document.querySelectorAll('.star');
+		starElements.forEach((star) => {
+			star.addEventListener('click', this.toggleStar.bind(this));
+		});
+
+		const removeElements = document.querySelectorAll('.remove');
+		removeElements.forEach((x) => {
+			x.addEventListener('click', this.removeTask.bind(this));
+		});
 	}
 
 	static selectList() {
