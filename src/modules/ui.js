@@ -1,6 +1,5 @@
 /* eslint-disable no-alert */
 import ListsManager from './manage';
-// import Task from './task';
 
 export default class UI {
 	static masterList = new ListsManager();
@@ -133,23 +132,9 @@ export default class UI {
 			task.append(inputField);
 			inputField.value = taskName;
 
-			window.addEventListener('click', (c) => {
-				if (inputField && c.target !== task && !inputField.contains(c.target)) {
-					this.masterList.changeTaskName(listName, taskName, inputField.value);
-					this.displayTasks();
-				}
-			});
+			window.addEventListener('keydown', (k) => this.handleKeyboardTaskNameChange(k, listName, taskName, inputField));
 
-			window.addEventListener('keydown', (k) => {
-				if (inputField) {
-					if (k.key === 'Enter') {
-						this.masterList.changeTaskName(listName, taskName, inputField.value);
-						this.displayTasks();
-					} else if (k.key === 'Escape') {
-						this.displayTasks();
-					}
-				}
-			});
+			window.addEventListener('click', (c) => this.confirmInputFieldOnClick(c, listName, taskName, inputField, task));
 		}
 	}
 
@@ -338,17 +323,36 @@ export default class UI {
 		}
 	}
 
-	// static closeInputField(listName, taskName, inputField) {
-	// 	// const inputField = document.querySelector('.input-field');
-	// 	if (inputField) {
-	// 		this.masterList.changeTaskName(listName, taskName, inputField.value);
-	// 			this.displayTasks();
-	// 	}
-	// }
+	static confirmInputFieldOnClick(c, listName, taskName, inputField, task) {
+		if (inputField && c.target !== task && !inputField.contains(c.target)) {
+			this.masterList.changeTaskName(listName, taskName, inputField.value);
+			this.displayTasks();
+		}
+	}
 
-	// static closeInputFieldOnClick(e) {
+	static handleKeyboardAddCancel = (e) => {
+		const inputContainer = document.querySelector('.input-container');
+		if (inputContainer) {
+			if (e.key === 'Enter') {
+				const addBtn = inputContainer.querySelector('.add-btn');
+				addBtn.click();
+			} else if (e.key === 'Escape') {
+				const cancelBtn = inputContainer.querySelector('.cancel-btn');
+				cancelBtn.click();
+			}
+		}
+	};
 
-	// }
+	static handleKeyboardTaskNameChange = (k, listName, taskName, inputField) => {
+		if (inputField) {
+			if (k.key === 'Enter') {
+				this.masterList.changeTaskName(listName, taskName, inputField.value);
+				this.displayTasks();
+			} else if (k.key === 'Escape') {
+				this.displayTasks();
+			}
+		}
+	};
 
 	static loadExampleContent = () => {
 		const lists = ['Shopping', 'Movies to watch', 'Places to visit', 'Great ideas!'];
@@ -464,19 +468,6 @@ export default class UI {
 		this.selectList();
 	};
 
-	static handleKeyboard = (e) => {
-		const inputContainer = document.querySelector('.input-container');
-		if (inputContainer) {
-			if (e.key === 'Enter') {
-				const addBtn = inputContainer.querySelector('.add-btn');
-				addBtn.click();
-			} else if (e.key === 'Escape') {
-				const cancelBtn = inputContainer.querySelector('.cancel-btn');
-				cancelBtn.click();
-			}
-		}
-	};
-
 	static clearAllContent = () => {
 		this.masterList = new ListsManager();
 		this.displayLists();
@@ -493,7 +484,7 @@ export default class UI {
 		window.addEventListener('resize', this.hamburgerAutoToggle);
 		loadExampleBtn.addEventListener('click', this.loadExampleContent);
 		clearAllBtn.addEventListener('click', this.clearAllContent);
-		window.addEventListener('keydown', this.handleKeyboard);
+		window.addEventListener('keydown', this.handleKeyboardAddCancel);
 		window.addEventListener('click', this.closeInputContainerOnClick.bind(this), true);
 	}
 
