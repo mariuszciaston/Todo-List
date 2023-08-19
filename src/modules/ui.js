@@ -108,7 +108,6 @@ export default class UI {
 					tasksList.prepend(this.createTask(task));
 				});
 		}
-
 		this.addTaskHandlers();
 	}
 
@@ -119,22 +118,55 @@ export default class UI {
 		this.displayTasks();
 	}
 
+	static createInputField(task, taskName) {
+		const inputField = document.createElement('input');
+		inputField.className = 'input-field';
+		inputField.type = 'text';
+		task.append(inputField);
+		inputField.value = taskName;
+		inputField.focus();
+		return inputField;
+	}
+
+	static handleKeyboardTaskNameChange = (k, listName, taskName, inputField) => {
+		if (inputField) {
+			if (k.key === 'Enter') {
+				this.masterList.changeTaskName(listName, taskName, inputField.value);
+				this.displayTasks();
+			} else if (k.key === 'Escape') {
+				this.displayTasks();
+			}
+		}
+	};
+
 	static editTaskName(e) {
 		const listName = this.getActiveList();
-		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
-		const task = e.target.parentElement.querySelector('.task-content');
+		const task = e.target.closest('.task-content');
 
-		if (!task.contains(document.querySelector('.input-field'))) {
+		if (task && !task.contains(document.querySelector('.input-field'))) {
+			const taskName = task.textContent;
 			task.textContent = '';
-			const inputField = document.createElement('input');
-			inputField.className = 'input-field';
-			inputField.type = 'text';
-			task.append(inputField);
-			inputField.value = taskName;
+			const inputField = this.createInputField(task, taskName);
+			let isEscapePressed = false;
 
-			window.addEventListener('keydown', (k) => this.handleKeyboardTaskNameChange(k, listName, taskName, inputField));
+			const handleKeydown = (k) => {
+				if (k.key === 'Escape') {
+					isEscapePressed = true;
+				}
+				this.handleKeyboardTaskNameChange(k, listName, taskName, inputField);
+			};
 
-			window.addEventListener('click', (c) => this.confirmInputFieldOnClick(c, listName, taskName, inputField, task));
+			const handleBlur = () => {
+				setTimeout(() => {
+					if (!isEscapePressed) {
+						this.masterList.changeTaskName(listName, taskName, inputField.value);
+						this.displayTasks();
+					}
+				}, 0);
+			};
+
+			window.addEventListener('keydown', handleKeydown);
+			inputField.addEventListener('blur', handleBlur);
 		}
 	}
 
@@ -323,13 +355,6 @@ export default class UI {
 		}
 	}
 
-	static confirmInputFieldOnClick(c, listName, taskName, inputField, task) {
-		if (inputField && c.target !== task && !inputField.contains(c.target)) {
-			this.masterList.changeTaskName(listName, taskName, inputField.value);
-			this.displayTasks();
-		}
-	}
-
 	static handleKeyboardAddCancel = (e) => {
 		const inputContainer = document.querySelector('.input-container');
 		if (inputContainer) {
@@ -339,17 +364,6 @@ export default class UI {
 			} else if (e.key === 'Escape') {
 				const cancelBtn = inputContainer.querySelector('.cancel-btn');
 				cancelBtn.click();
-			}
-		}
-	};
-
-	static handleKeyboardTaskNameChange = (k, listName, taskName, inputField) => {
-		if (inputField) {
-			if (k.key === 'Enter') {
-				this.masterList.changeTaskName(listName, taskName, inputField.value);
-				this.displayTasks();
-			} else if (k.key === 'Escape') {
-				this.displayTasks();
 			}
 		}
 	};
