@@ -259,25 +259,27 @@ export default class UI {
 		return currentList;
 	}
 
-	static validateListName(listName) {
-		if (this.masterList.findList(listName)) {
-			alert('List with this name already exists');
-			return false;
-		}
-		if (listName === '' || listName.match(/^\s+$/)) {
-			alert('List name cannot be empty');
+	static validateName(name, type) {
+		if (name === '' || name.match(/^\s+$/)) {
+			alert(`${type} name cannot be empty`);
 			return false;
 		}
 		return true;
 	}
 
-	static validateTaskName(listName) {
-		if (this.masterList.findTaskInList(this.getActiveList(), listName)) {
-			alert('Task with this name already exists');
+	static validateListName(listName) {
+		if (!this.validateName(listName, 'List')) return false;
+		if (this.masterList.findList(listName)) {
+			alert('List with this name already exists');
 			return false;
 		}
-		if (listName === '' || listName.match(/^\s+$/)) {
-			alert('Task name cannot be empty');
+		return true;
+	}
+
+	static validateTaskName(taskName) {
+		if (!this.validateName(taskName, 'Task')) return false;
+		if (this.masterList.findTaskInList(this.getActiveList(), taskName)) {
+			alert('Task with this name already exists');
 			return false;
 		}
 		return true;
