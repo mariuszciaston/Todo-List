@@ -187,15 +187,15 @@ export default class UI {
 	static addEventHandler(selector, event, handler) {
 		const elements = document.querySelectorAll(selector);
 		elements.forEach((element) => {
-			element.addEventListener(event, handler);
+			element.addEventListener(event, handler.bind(this));
 		});
 	}
 
 	static addTaskHandlers() {
-		this.addEventHandler('.circle', 'click', this.toggleIsDone.bind(this));
-		this.addEventHandler('.task-content', 'click', this.editTaskName.bind(this));
-		this.addEventHandler('.star', 'click', this.toggleStar.bind(this));
-		this.addEventHandler('.remove', 'click', this.removeTask.bind(this));
+		this.addEventHandler('.circle', 'click', this.toggleIsDone);
+		this.addEventHandler('.task-content', 'click', this.editTaskName);
+		this.addEventHandler('.star', 'click', this.toggleStar);
+		this.addEventHandler('.remove', 'click', this.removeTask);
 	}
 
 	static selectList() {
@@ -259,14 +259,35 @@ export default class UI {
 		return currentList;
 	}
 
+	static validateListName(listName) {
+		if (this.masterList.findList(listName)) {
+			alert('List with this name already exists');
+			return false;
+		}
+		if (listName === '' || listName.match(/^\s+$/)) {
+			alert('List name cannot be empty');
+			return false;
+		}
+		return true;
+	}
+
+	static validateTaskName(listName) {
+		if (this.masterList.findTaskInList(this.getActiveList(), listName)) {
+			alert('Task with this name already exists');
+			return false;
+		}
+		if (listName === '' || listName.match(/^\s+$/)) {
+			alert('Task name cannot be empty');
+			return false;
+		}
+		return true;
+	}
+
 	static addBtnPress(inputField, whereToAdd) {
 		const listName = inputField.value;
 
 		if (whereToAdd.id === 'second-list') {
-			if (this.masterList.findList(listName)) {
-				alert('List with this name already exists');
-			} else if (listName === '' || listName.match(/^\s+$/)) {
-				alert('List name cannot be empty');
+			if (!this.validateListName(listName)) {
 				inputField.focus();
 			} else {
 				this.masterList.addList(listName);
@@ -279,10 +300,7 @@ export default class UI {
 		}
 
 		if (whereToAdd.className === 'tasks') {
-			if (this.masterList.findTaskInList(this.getActiveList(), listName)) {
-				alert('Task with this name already exists');
-			} else if (listName === '' || listName.match(/^\s+$/)) {
-				alert('Task name cannot be empty');
+			if (!this.validateTaskName(listName)) {
 				inputField.focus();
 			} else {
 				this.masterList.addTaskToList(this.getActiveList(), listName);
