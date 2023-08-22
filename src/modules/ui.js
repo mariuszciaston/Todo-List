@@ -128,16 +128,37 @@ export default class UI {
 		return inputField;
 	}
 
-	static handleKeyboardTaskNameChange = (k, listName, taskName, inputField) => {
-		if (inputField) {
-			if (k.key === 'Enter') {
-				this.masterList.changeTaskName(listName, taskName, inputField.value);
-				this.displayTasks();
-			} else if (k.key === 'Escape') {
-				this.displayTasks();
+	static handleInputField(task, taskName, listName) {
+		const inputField = this.createInputField(task, taskName);
+		let isEscapePressed = false;
+
+		const handleKeydown = (k) => {
+			if (k.key === 'Escape') {
+				isEscapePressed = true;
 			}
-		}
-	};
+			if (inputField) {
+				if (k.key === 'Enter') {
+					this.masterList.changeTaskName(listName, taskName, inputField.value);
+					this.displayTasks();
+				} else if (k.key === 'Escape') {
+					this.displayTasks();
+				}
+			}
+		};
+
+		const handleBlur = () => {
+			setTimeout(() => {
+				if (!isEscapePressed) {
+					this.masterList.changeTaskName(listName, taskName, inputField.value);
+					this.displayTasks();
+				}
+				window.removeEventListener('keydown', handleKeydown);
+				inputField.removeEventListener('blur', handleBlur);
+			}, 0);
+		};
+		window.addEventListener('keydown', handleKeydown);
+		inputField.addEventListener('blur', handleBlur);
+	}
 
 	static editTaskName(e) {
 		const listName = this.getActiveList();
@@ -146,27 +167,7 @@ export default class UI {
 		if (task && !task.contains(document.querySelector('.input-field'))) {
 			const taskName = task.textContent;
 			task.textContent = '';
-			const inputField = this.createInputField(task, taskName);
-			let isEscapePressed = false;
-
-			const handleKeydown = (k) => {
-				if (k.key === 'Escape') {
-					isEscapePressed = true;
-				}
-				this.handleKeyboardTaskNameChange(k, listName, taskName, inputField);
-			};
-
-			const handleBlur = () => {
-				setTimeout(() => {
-					if (!isEscapePressed) {
-						this.masterList.changeTaskName(listName, taskName, inputField.value);
-						this.displayTasks();
-					}
-				}, 0);
-			};
-
-			window.addEventListener('keydown', handleKeydown);
-			inputField.addEventListener('blur', handleBlur);
+			this.handleInputField(task, taskName, listName);
 		}
 	}
 
