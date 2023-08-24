@@ -116,6 +116,16 @@ export default class UI {
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 		this.masterList.toggleIsDoneInTask(listName, taskName);
 		this.displayTasks();
+
+		if (!e.target.parentElement.classList.contains('done')) {
+			const done = new Audio('mixkit-game-ball-tap-2073.wav');
+			done.play();
+		}
+
+		if (e.target.parentElement.classList.contains('done')) {
+			const reverseDone = new Audio('mixkit-game-ball-tap-2073-reverse-slow.wav');
+			reverseDone.play();
+		}
 	}
 
 	static createInputField(task, taskName) {
@@ -188,6 +198,11 @@ export default class UI {
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 		this.masterList.toggleStarInTask(listName, taskName);
 		this.displayTasks();
+
+		if (!e.target.classList.contains('yellow')) {
+			const star = new Audio('mixkit-retro-arcade-casino-notification-211.wav');
+			star.play();
+		}
 	}
 
 	static removeTask(e) {
