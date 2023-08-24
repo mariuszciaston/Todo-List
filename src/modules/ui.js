@@ -30,7 +30,17 @@ export default class UI {
 		const button = document.createElement('button');
 		button.className = 'button nav-btn';
 		button.textContent = list.name;
-		return button;
+
+		const remove = document.createElement('div');
+		remove.className = 'remove';
+
+		const btnWrap = document.createElement('div');
+		btnWrap.className = 'btnWrap';
+
+		btnWrap.append(button);
+		btnWrap.append(remove);
+
+		return { button, btnWrap };
 	}
 
 	static displayLists() {
@@ -42,14 +52,37 @@ export default class UI {
 		secondList.textContent = '';
 
 		listOne.forEach((list) => {
-			firstList.appendChild(this.createList(list));
+			const { button } = this.createList(list);
+			firstList.appendChild(button);
 		});
 
 		listTwo.forEach((list) => {
-			secondList.appendChild(this.createList(list));
+			const { btnWrap } = this.createList(list);
+			secondList.appendChild(btnWrap);
 		});
 
 		this.setActiveList('TASKS');
+		this.addListHandler(secondList);
+	}
+
+	static removeList(e) {
+		const listName = e.target.parentElement.querySelector('.nav-btn').textContent;
+		this.masterList.deleteList(listName);
+		this.displayLists();
+		this.displayTasks();
+		this.selectList();
+	}
+
+	static addEventHandler(selector, event, handler, location) {
+		const elements = location.querySelectorAll(selector);
+
+		elements.forEach((element) => {
+			element.addEventListener(event, handler.bind(this));
+		});
+	}
+
+	static addListHandler(secondList) {
+		this.addEventHandler('.remove', 'click', this.removeList, secondList);
 	}
 
 	static createTask(task) {
@@ -108,7 +141,7 @@ export default class UI {
 					tasksList.prepend(this.createTask(task));
 				});
 		}
-		this.addTaskHandlers();
+		this.addTaskHandlers(tasksList);
 	}
 
 	static toggleIsDone(e) {
@@ -212,18 +245,11 @@ export default class UI {
 		this.displayTasks();
 	}
 
-	static addEventHandler(selector, event, handler) {
-		const elements = document.querySelectorAll(selector);
-		elements.forEach((element) => {
-			element.addEventListener(event, handler.bind(this));
-		});
-	}
-
-	static addTaskHandlers() {
-		this.addEventHandler('.circle', 'click', this.toggleIsDone);
-		this.addEventHandler('.task-content', 'click', this.editTaskName);
-		this.addEventHandler('.star', 'click', this.toggleStar);
-		this.addEventHandler('.remove', 'click', this.removeTask);
+	static addTaskHandlers(tasksList) {
+		this.addEventHandler('.circle', 'click', this.toggleIsDone, tasksList);
+		this.addEventHandler('.task-content', 'click', this.editTaskName, tasksList);
+		this.addEventHandler('.star', 'click', this.toggleStar, tasksList);
+		this.addEventHandler('.remove', 'click', this.removeTask, tasksList);
 	}
 
 	static selectList() {
