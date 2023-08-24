@@ -158,10 +158,19 @@ hr {
 	flex: 1;
 }
 
-.lists > .navigation > .button {
+.lists .navigation .btnWrap {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: space-between;
+	min-width: 256px;
+	gap: 0.5rem;
+	margin-right: 2rem;
+}
+
+.lists .navigation .button {
 	text-overflow: ellipsis;
 	overflow: hidden;
-	min-width: 320px;
 }
 
 button.nav-btn {
@@ -409,8 +418,24 @@ h2.title {
 	cursor: pointer;
 }
 
-.tasks-list li:hover .remove {
+.done .star:before {
+	opacity: 0.5;
+	filter: grayscale();
+}
+
+.navigation .btnWrap .remove {
+	flex-basis: 0;
+}
+
+.tasks-list li:hover .remove,
+.navigation .btnWrap:hover .remove {
 	visibility: visible;
+	flex-basis: auto;
+}
+
+.navigation .btnWrap .remove:after,
+.navigation .btnWrap .remove:before {
+	border-left: 1px solid white;
 }
 
 .remove {
@@ -418,6 +443,8 @@ h2.title {
 	width: 1.5rem;
 	position: relative;
 	visibility: hidden;
+
+	flex-shrink: 0;
 }
 
 .remove:after {
@@ -445,6 +472,11 @@ h2.title {
 .remove:hover:before,
 .remove:hover:after {
 	border-left: 2px solid black;
+}
+
+.navigation .btnWrap .remove:hover:after,
+.navigation .btnWrap .remove:hover:before {
+	border-left: 2px solid white;
 }
 
 .done :not(.star) {
@@ -602,6 +634,10 @@ button {
 	.navigation,
 	.nav button.action {
 		margin-right: 2rem;
+	}
+
+	.lists .navigation .btnWrap {
+		margin-right: 0rem;
 	}
 
 	.content {
