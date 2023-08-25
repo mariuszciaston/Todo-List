@@ -65,10 +65,38 @@ export default class UI {
 		this.addListHandler(secondList);
 	}
 
+	static getNextList(e) {
+		let nextList;
+		const parentElementSibling = e.target.parentElement.nextElementSibling;
+		if (parentElementSibling) {
+			const navBtn = parentElementSibling.querySelector('.nav-btn');
+			if (navBtn) {
+				nextList = navBtn.textContent;
+			}
+		}
+		return nextList;
+	}
+
+	static updateActiveList(currentList, listName, nextList) {
+		const lastList = this.masterList.getLists().slice(-1)[0].name;
+
+		if (currentList !== listName) {
+			this.setActiveList(currentList);
+		} else if (nextList) {
+			this.setActiveList(nextList);
+		} else {
+			this.setActiveList(lastList);
+		}
+	}
+
 	static removeList(e) {
 		const listName = e.target.parentElement.querySelector('.nav-btn').textContent;
+		const currentList = this.getActiveList();
+		const nextList = this.getNextList(e);
+
 		this.masterList.deleteList(listName);
 		this.displayLists();
+		this.updateActiveList(currentList, listName, nextList);
 		this.displayTasks();
 		this.selectList();
 	}
