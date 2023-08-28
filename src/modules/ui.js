@@ -43,7 +43,7 @@ export default class UI {
 		return { button, btnWrap };
 	}
 
-	static displayLists() {
+	static displayLists(activeList) {
 		const listOne = this.masterList.getLists().slice(0, 3);
 		const listTwo = this.masterList.getLists().slice(3);
 		const firstList = document.querySelector('#first-list');
@@ -61,8 +61,91 @@ export default class UI {
 			secondList.appendChild(btnWrap);
 		});
 
-		this.setActiveList('TASKS');
-		this.addListHandler(secondList);
+		this.setActiveList(activeList);
+
+		this.addListHandlers(secondList);
+	}
+
+	static handleInputField2(tasksTitle, listName) {
+		const inputField = this.createInputField(tasksTitle, listName);
+		let isEnterPressed2 = false;
+		let isEscapePressed2 = false;
+
+		const handleEnter2 = (k) => {
+			if (inputField) {
+				if (k.key === 'Enter') {
+					isEnterPressed2 = true;
+
+					if (!isEscapePressed2 && this.validateListName(inputField.value)) {
+						this.masterList.changeListName(listName, inputField.value);
+
+						this.setActiveList(inputField.value);
+						this.displayTasks2(inputField);
+						this.selectList();
+					}
+					k.preventDefault();
+				}
+			}
+		};
+
+		const handleEscape2 = (k) => {
+			if (k.key === 'Escape') {
+				isEscapePressed2 = true;
+				const currentList = document.querySelector('nav .nav-btn.active');
+				currentList.value = document.querySelector('nav .nav-btn.active').textContent;
+				this.displayTasks2(currentList);
+				this.selectList();
+				window.removeEventListener('keydown', handleEscape2);
+			}
+		};
+
+		const handleBlur2 = () => {
+			if (!isEnterPressed2 && !isEscapePressed2 && this.validateListName(inputField.value)) {
+				this.masterList.changeListName(listName, inputField.value);
+				this.setActiveList(inputField.value);
+				this.displayTasks2(inputField);
+				this.selectList();
+			} else {
+				const currentList = document.querySelector('nav .nav-btn.active');
+				currentList.value = document.querySelector('nav .nav-btn.active').textContent;
+				this.displayTasks2(currentList);
+				this.selectList();
+			}
+
+			window.removeEventListener('keydown', handleEnter2);
+			window.removeEventListener('keydown', handleEscape2);
+			inputField.removeEventListener('blur', handleBlur2);
+			window.keydownEventAdded = false;
+			inputField.blurEventAdded = false;
+		};
+
+		if (!window.keydownEventAdded) {
+			window.addEventListener('keydown', handleEnter2);
+			window.addEventListener('keydown', handleEscape2);
+			window.keydownEventAdded = true;
+		}
+
+		if (!inputField.blurEventAdded) {
+			inputField.addEventListener('blur', handleBlur2);
+			inputField.blurEventAdded = true;
+		}
+	}
+
+	static editListName(e) {
+		const tasksTitle = e.target;
+		if (tasksTitle.textContent !== 'TASKS' && tasksTitle.textContent !== 'TODAY' && tasksTitle.textContent !== 'THIS WEEK') {
+			const listName = this.getActiveList();
+			tasksTitle.textContent = '';
+			this.handleInputField2(tasksTitle, listName);
+		}
+	}
+
+	static displayTasks2(inputField) {
+		const tasksTitle = document.querySelector('.content .title');
+		const tasksList = document.querySelector('.tasks-list');
+		tasksTitle.textContent = inputField.value;
+		this.displayLists(tasksTitle.textContent);
+		this.addTaskHandlers(tasksList, tasksTitle);
 	}
 
 	static getNextList(e) {
@@ -109,7 +192,7 @@ export default class UI {
 		});
 	}
 
-	static addListHandler(secondList) {
+	static addListHandlers(secondList) {
 		this.addEventHandler('.remove', 'click', this.removeList, secondList);
 	}
 
@@ -169,7 +252,7 @@ export default class UI {
 					tasksList.prepend(this.createTask(task));
 				});
 		}
-		this.addTaskHandlers(tasksList);
+		this.addTaskHandlers(tasksList, tasksTitle);
 	}
 
 	static toggleIsDone(e) {
@@ -376,7 +459,7 @@ export default class UI {
 			} else {
 				this.masterList.addList(listName);
 				this.closeInputContainer();
-				this.displayLists();
+				this.displayLists('TASKS');
 				this.setActiveList(listName);
 				this.displayTasks();
 				this.selectList();
@@ -579,14 +662,17 @@ export default class UI {
 		this.masterList.addStarInTask('TASKS', 'Conquer the Crown of Polish Mountains');
 		this.masterList.addIsDoneInTask('TASKS', 'Go swimming on Tuesday');
 
-		this.displayLists();
+		this.displayLists('TASKS');
+
+		this.displayLists('Places to visit');
+
 		this.displayTasks();
 		this.selectList();
 	};
 
 	static clearAllContent = () => {
 		this.masterList = new ListsManager();
-		this.displayLists();
+		this.displayLists('TASKS');
 		this.displayTasks();
 		this.selectList();
 	};
@@ -602,11 +688,15 @@ export default class UI {
 		clearAllBtn.addEventListener('click', this.clearAllContent);
 		window.addEventListener('keydown', this.handleKeyboardAddCancel);
 		window.addEventListener('click', this.closeInputContainerOnClick.bind(this), true);
+
+		const tasksTitle = document.querySelector('.content .title');
+		tasksTitle.removeEventListener('click', this.editListName.bind(this));
+		tasksTitle.addEventListener('click', this.editListName.bind(this));
 	}
 
 	static loadUserInterface() {
 		UI.hamburgerAutoToggle();
-		UI.displayLists();
+		UI.displayLists('TASKS');
 		UI.displayTasks();
 		UI.selectList();
 		UI.addNewList();
