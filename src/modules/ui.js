@@ -66,6 +66,14 @@ export default class UI {
 		this.addListHandlers(secondList);
 	}
 
+	static displayTasks2(inputField) {
+		const tasksTitle = document.querySelector('.content .title');
+		const tasksList = document.querySelector('.tasks-list');
+		tasksTitle.textContent = inputField.value;
+		this.displayLists(tasksTitle.textContent);
+		this.addTaskHandlers(tasksList, tasksTitle);
+	}
+
 	static handleInputField2(tasksTitle, listName) {
 		const inputField = this.createInputField(tasksTitle, listName);
 		let isEnterPressed2 = false;
@@ -82,8 +90,12 @@ export default class UI {
 						this.setActiveList(inputField.value);
 						this.displayTasks2(inputField);
 						this.selectList();
+					} else if (!isEscapePressed2) {
+						const currentList = document.querySelector('nav .nav-btn.active');
+						currentList.value = document.querySelector('nav .nav-btn.active').textContent;
+						this.displayTasks2(currentList);
+						this.selectList();
 					}
-					k.preventDefault();
 				}
 			}
 		};
@@ -105,7 +117,7 @@ export default class UI {
 				this.setActiveList(inputField.value);
 				this.displayTasks2(inputField);
 				this.selectList();
-			} else {
+			} else if (!isEnterPressed2 && !isEscapePressed2) {
 				const currentList = document.querySelector('nav .nav-btn.active');
 				currentList.value = document.querySelector('nav .nav-btn.active').textContent;
 				this.displayTasks2(currentList);
@@ -138,14 +150,6 @@ export default class UI {
 			tasksTitle.textContent = '';
 			this.handleInputField2(tasksTitle, listName);
 		}
-	}
-
-	static displayTasks2(inputField) {
-		const tasksTitle = document.querySelector('.content .title');
-		const tasksList = document.querySelector('.tasks-list');
-		tasksTitle.textContent = inputField.value;
-		this.displayLists(tasksTitle.textContent);
-		this.addTaskHandlers(tasksList, tasksTitle);
 	}
 
 	static getNextList(e) {
@@ -295,7 +299,6 @@ export default class UI {
 						this.masterList.changeTaskName(listName, taskName, inputField.value);
 						this.displayTasks();
 					}
-					k.preventDefault();
 				}
 			}
 		};
@@ -305,7 +308,6 @@ export default class UI {
 				isEscapePressed = true;
 				this.displayTasks();
 				window.removeEventListener('keydown', handleEscape);
-				k.preventDefault();
 			}
 		};
 
@@ -681,6 +683,7 @@ export default class UI {
 		const hamburger = document.querySelector('#hamburger');
 		const loadExampleBtn = document.querySelector('#load-example-btn');
 		const clearAllBtn = document.querySelector('#clear-all-btn');
+		const tasksTitle = document.querySelector('.content .title');
 
 		hamburger.addEventListener('click', this.hamburgerManualToggle);
 		window.addEventListener('resize', this.hamburgerAutoToggle);
@@ -688,9 +691,6 @@ export default class UI {
 		clearAllBtn.addEventListener('click', this.clearAllContent);
 		window.addEventListener('keydown', this.handleKeyboardAddCancel);
 		window.addEventListener('click', this.closeInputContainerOnClick.bind(this), true);
-
-		const tasksTitle = document.querySelector('.content .title');
-		tasksTitle.removeEventListener('click', this.editListName.bind(this));
 		tasksTitle.addEventListener('click', this.editListName.bind(this));
 	}
 
