@@ -66,90 +66,90 @@ export default class UI {
 		this.addListHandlers(secondList);
 	}
 
-	static displayTasks2(inputField) {
+	static updateListName(inputField) {
 		const tasksTitle = document.querySelector('.content .title');
 		const tasksList = document.querySelector('.tasks-list');
 		tasksTitle.textContent = inputField.value;
+		if (!inputField.value) {
+			tasksTitle.textContent = inputField;
+		}
 		this.displayLists(tasksTitle.textContent);
 		this.addTaskHandlers(tasksList, tasksTitle);
 	}
 
-	static handleInputField2(tasksTitle, listName) {
-		const inputField = this.createInputField(tasksTitle, listName);
-		let isEnterPressed2 = false;
-		let isEscapePressed2 = false;
+	static handleInputField(element, name, listName, isTask) {
+		const inputField = this.createInputField(element, name);
+		let isEnterPressed = false;
+		let isEscapePressed = false;
 
-		const handleEnter2 = (k) => {
-			if (inputField) {
-				if (k.key === 'Enter') {
-					isEnterPressed2 = true;
-
-					if (!isEscapePressed2 && this.validateListName(inputField.value)) {
-						this.masterList.changeListName(listName, inputField.value);
-
-						this.setActiveList(inputField.value);
-						this.displayTasks2(inputField);
-						this.selectList();
-					} else if (!isEscapePressed2) {
-						const currentList = document.querySelector('nav .nav-btn.active');
-						currentList.value = document.querySelector('nav .nav-btn.active').textContent;
-						this.displayTasks2(currentList);
-						this.selectList();
-					}
+		const changeName = () => {
+			if (isTask) {
+				if (this.validateTaskName(inputField.value)) {
+					this.masterList.changeTaskName(listName, name, inputField.value);
+					this.displayTasks();
+				} else {
+					this.displayTasks();
 				}
-			}
-		};
-
-		const handleEscape2 = (k) => {
-			if (k.key === 'Escape') {
-				isEscapePressed2 = true;
-				const currentList = document.querySelector('nav .nav-btn.active');
-				currentList.value = document.querySelector('nav .nav-btn.active').textContent;
-				this.displayTasks2(currentList);
-				this.selectList();
-				window.removeEventListener('keydown', handleEscape2);
-			}
-		};
-
-		const handleBlur2 = () => {
-			if (!isEnterPressed2 && !isEscapePressed2 && this.validateListName(inputField.value)) {
-				this.masterList.changeListName(listName, inputField.value);
+			} else if (this.validateListName(inputField.value)) {
+				this.masterList.changeListName(name, inputField.value);
 				this.setActiveList(inputField.value);
-				this.displayTasks2(inputField);
+				this.updateListName(inputField);
 				this.selectList();
-			} else if (!isEnterPressed2 && !isEscapePressed2) {
-				const currentList = document.querySelector('nav .nav-btn.active');
-				currentList.value = document.querySelector('nav .nav-btn.active').textContent;
-				this.displayTasks2(currentList);
+			} else {
+				this.updateListName(this.getActiveList());
 				this.selectList();
 			}
-
-			window.removeEventListener('keydown', handleEnter2);
-			window.removeEventListener('keydown', handleEscape2);
-			inputField.removeEventListener('blur', handleBlur2);
-			window.keydownEventAdded = false;
-			inputField.blurEventAdded = false;
 		};
 
-		if (!window.keydownEventAdded) {
-			window.addEventListener('keydown', handleEnter2);
-			window.addEventListener('keydown', handleEscape2);
-			window.keydownEventAdded = true;
-		}
+		const handleEnter = (k) => {
+			if (inputField && k.key === 'Enter') {
+				isEnterPressed = true;
+				changeName();
+			}
+		};
 
-		if (!inputField.blurEventAdded) {
-			inputField.addEventListener('blur', handleBlur2);
-			inputField.blurEventAdded = true;
+		const handleEscape = (k) => {
+			if (k.key === 'Escape') {
+				isEscapePressed = true;
+				this.displayTasks();
+				window.removeEventListener('keydown', handleEscape);
+			}
+		};
+
+		const handleBlur = () => {
+			if (!isEnterPressed && !isEscapePressed) {
+				changeName();
+			}
+
+			window.removeEventListener('keydown', handleEnter);
+			window.removeEventListener('keydown', handleEscape);
+			inputField.removeEventListener('blur', handleBlur);
+		};
+		window.addEventListener('keydown', handleEnter);
+		window.addEventListener('keydown', handleEscape);
+		inputField.addEventListener('blur', handleBlur);
+	}
+
+	static editName(e, isTask) {
+		const listName = this.getActiveList();
+		const element = e.target.closest(isTask ? '.task-content' : '.content .title');
+
+		if (element && !element.contains(document.querySelector('.input-field'))) {
+			const name = element.textContent;
+			element.textContent = '';
+
+			this.handleInputField(element, name, listName, isTask);
 		}
 	}
 
 	static editListName(e) {
-		const tasksTitle = e.target;
-		if (tasksTitle.textContent !== 'TASKS' && tasksTitle.textContent !== 'TODAY' && tasksTitle.textContent !== 'THIS WEEK') {
-			const listName = this.getActiveList();
-			tasksTitle.textContent = '';
-			this.handleInputField2(tasksTitle, listName);
+		if (e.target.textContent !== 'TASKS' && e.target.textContent !== 'TODAY' && e.target.textContent !== 'THIS WEEK') {
+			this.editName(e, false);
 		}
+	}
+
+	static editTaskName(e) {
+		this.editName(e, true);
 	}
 
 	static getNextList(e) {
@@ -284,59 +284,6 @@ export default class UI {
 		inputField.value = taskName;
 		inputField.focus();
 		return inputField;
-	}
-
-	static handleInputField(task, taskName, listName) {
-		const inputField = this.createInputField(task, taskName);
-		let isEnterPressed = false;
-		let isEscapePressed = false;
-
-		const handleEnter = (k) => {
-			if (inputField) {
-				if (k.key === 'Enter') {
-					isEnterPressed = true;
-					if (!isEscapePressed && this.validateTaskName(inputField.value)) {
-						this.masterList.changeTaskName(listName, taskName, inputField.value);
-						this.displayTasks();
-					}
-				}
-			}
-		};
-
-		const handleEscape = (k) => {
-			if (k.key === 'Escape') {
-				isEscapePressed = true;
-				this.displayTasks();
-				window.removeEventListener('keydown', handleEscape);
-			}
-		};
-
-		const handleBlur = () => {
-			if (!isEnterPressed && !isEscapePressed && this.validateTaskName(inputField.value)) {
-				this.masterList.changeTaskName(listName, taskName, inputField.value);
-				this.displayTasks();
-			} else {
-				this.displayTasks();
-			}
-			window.removeEventListener('keydown', handleEnter);
-			window.removeEventListener('keydown', handleEscape);
-			inputField.removeEventListener('blur', handleBlur);
-		};
-
-		window.addEventListener('keydown', handleEnter);
-		window.addEventListener('keydown', handleEscape);
-		inputField.addEventListener('blur', handleBlur);
-	}
-
-	static editTaskName(e) {
-		const listName = this.getActiveList();
-		const task = e.target.closest('.task-content');
-
-		if (task && !task.contains(document.querySelector('.input-field'))) {
-			const taskName = task.textContent;
-			task.textContent = '';
-			this.handleInputField(task, taskName, listName);
-		}
 	}
 
 	static toggleStar(e) {
