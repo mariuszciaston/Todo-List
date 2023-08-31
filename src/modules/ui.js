@@ -1,29 +1,63 @@
-/* eslint-disable no-alert */
 import ListsManager from './manage';
 
 export default class UI {
 	static masterList = new ListsManager();
 
+	static lastWidth = window.innerWidth;
+
 	static hamburgerAutoToggle() {
-		const inputContainer = document.querySelector('.input-container');
-		if (!inputContainer) {
-			const hamburger = document.querySelector('#hamburger');
-			const main = document.querySelector('.main');
-			if (window.matchMedia('(min-width: 800px)').matches) {
-				hamburger.classList.add('open');
-				main.classList.remove('sidebar-toggle');
-			} else {
-				hamburger.classList.remove('open');
-				main.classList.add('sidebar-toggle');
+		const hamburger = document.querySelector('#hamburger');
+		const main = document.querySelector('.main');
+		if (window.matchMedia('(min-width: 800px)').matches) {
+			hamburger.classList.add('open');
+			main.classList.remove('sidebar-toggle');
+
+			if (this.lastWidth < 800) {
+				const toggle = new Audio('sound/mixkit-air-woosh-1489-pitch.wav');
+				toggle.play();
+			}
+		} else {
+			hamburger.classList.remove('open');
+			main.classList.add('sidebar-toggle');
+
+			if (this.lastWidth >= 800) {
+				const reverseToggle = new Audio('sound/mixkit-air-woosh-1489-pitch-reverse.wav');
+				reverseToggle.play();
 			}
 		}
+		this.lastWidth = window.innerWidth;
 	}
 
-	static hamburgerManualToggle() {
+	static hamburgerManualToggle(e) {
+		console.log(e.target);
 		const hamburger = document.querySelector('#hamburger');
 		const main = document.querySelector('.main');
 		hamburger.classList.toggle('open');
 		main.classList.toggle('sidebar-toggle');
+
+		if (e.target.closest('#hamburger.open')) {
+			const toggle = new Audio('sound/mixkit-air-woosh-1489-pitch.wav');
+			toggle.play();
+		}
+
+		if (!e.target.closest('#hamburger.open')) {
+			const reverseToggle = new Audio('sound/mixkit-air-woosh-1489-pitch-reverse.wav');
+			reverseToggle.play();
+		}
+	}
+
+	static hamburgerManualClose(e) {
+		const currentList = UI.getActiveList();
+		console.log(currentList);
+		console.log(e.target.textContent);
+		if (e.target.textContent === currentList) {
+			if (e.target.classList.contains('nav-btn')) {
+				if (window.innerWidth < 800) {
+					const reverseToggle = new Audio('sound/mixkit-air-woosh-1489-pitch-reverse.wav');
+					reverseToggle.play();
+				}
+			}
+		}
 	}
 
 	static createList(list) {
@@ -186,6 +220,7 @@ export default class UI {
 		this.updateActiveList(currentList, listName, nextList);
 		this.displayTasks();
 		this.selectList();
+		this.removeSound();
 	}
 
 	static addEventHandler(selector, event, handler, location) {
@@ -264,16 +299,7 @@ export default class UI {
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 		this.masterList.toggleIsDoneInTask(listName, taskName);
 		this.displayTasks();
-
-		if (!e.target.parentElement.classList.contains('done')) {
-			const done = new Audio('mixkit-game-ball-tap-2073.wav');
-			done.play();
-		}
-
-		if (e.target.parentElement.classList.contains('done')) {
-			const reverseDone = new Audio('mixkit-game-ball-tap-2073-reverse-slow.wav');
-			reverseDone.play();
-		}
+		this.isDoneSound(e);
 	}
 
 	static createInputField(task, taskName) {
@@ -292,10 +318,7 @@ export default class UI {
 		this.masterList.toggleStarInTask(listName, taskName);
 		this.displayTasks();
 
-		if (!e.target.classList.contains('yellow')) {
-			const star = new Audio('mixkit-retro-arcade-casino-notification-211.wav');
-			star.play();
-		}
+		this.starSound(e);
 	}
 
 	static removeTask(e) {
@@ -303,6 +326,7 @@ export default class UI {
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 		this.masterList.deleteTaskFromList(listName, taskName);
 		this.displayTasks();
+		this.removeSound();
 	}
 
 	static addTaskHandlers(tasksList) {
@@ -375,7 +399,8 @@ export default class UI {
 
 	static validateName(name, type) {
 		if (name === '' || name.match(/^\s+$/)) {
-			alert(`${type} name cannot be empty`);
+			this.alertSound();
+			console.log(`${type} name cannot be empty`);
 			return false;
 		}
 		return true;
@@ -384,7 +409,8 @@ export default class UI {
 	static validateListName(listName) {
 		if (!this.validateName(listName, 'List')) return false;
 		if (this.masterList.findList(listName)) {
-			alert('List with this name already exists');
+			this.alertSound();
+			console.log('List with this name already exists');
 			return false;
 		}
 		return true;
@@ -393,7 +419,8 @@ export default class UI {
 	static validateTaskName(taskName) {
 		if (!this.validateName(taskName, 'Task')) return false;
 		if (this.masterList.findTaskInList(this.getActiveList(), taskName)) {
-			alert('Task with this name already exists');
+			this.alertSound();
+			console.log('Task with this name already exists');
 			return false;
 		}
 		return true;
@@ -412,6 +439,7 @@ export default class UI {
 				this.setActiveList(listName);
 				this.displayTasks();
 				this.selectList();
+				this.confirmSound();
 			}
 		}
 
@@ -422,12 +450,14 @@ export default class UI {
 				this.masterList.addTaskToList(this.getActiveList(), listName);
 				this.closeInputContainer();
 				this.displayTasks();
+				this.confirmSound();
 			}
 		}
 	}
 
 	static cancelBtnPress(inputContainer) {
 		inputContainer.remove();
+		this.abortSound();
 	}
 
 	static addNewElement(whichBtn, whereToAdd) {
@@ -458,6 +488,7 @@ export default class UI {
 				const inputField = whereToAdd.querySelector('input');
 				inputField.focus();
 			}
+			this.addNewSound();
 		});
 	}
 
@@ -501,6 +532,60 @@ export default class UI {
 			}
 		}
 	};
+
+	static isDoneSound(e) {
+		if (!e.target.parentElement.classList.contains('done')) {
+			const done = new Audio('sound/mixkit-game-ball-tap-2073.wav');
+			done.play();
+		}
+
+		if (e.target.parentElement.classList.contains('done')) {
+			const reverseDone = new Audio('sound/mixkit-game-ball-tap-2073-reverse-slow.wav');
+			reverseDone.play();
+		}
+	}
+
+	static starSound(e) {
+		if (!e.target.classList.contains('yellow')) {
+			const star = new Audio('sound/mixkit-retro-arcade-casino-notification-211.wav');
+			star.play();
+		}
+
+		if (e.target.classList.contains('yellow')) {
+			const reverseStar = new Audio('sound/mixkit-retro-arcade-casino-notification-211-reverse.wav');
+			reverseStar.play();
+		}
+	}
+
+	static removeSound() {
+		const remove = new Audio('sound/Empty-trash-sound-effect-reverse.mp3');
+		remove.play();
+	}
+
+	static loadSound() {
+		const remove = new Audio('sound/mixkit-player-boost-recharging-2040.wav');
+		remove.play();
+	}
+
+	static addNewSound() {
+		const addNew = new Audio('sound/mixkit-repeating-arcade-beep-1084.wav');
+		addNew.play();
+	}
+
+	static alertSound() {
+		const alert = new Audio('sound/mixkit-quick-jump-arcade-game-239.wav');
+		alert.play();
+	}
+
+	static confirmSound() {
+		const confirm = new Audio('sound/mixkit-video-game-lock-2851.wav');
+		confirm.play();
+	}
+
+	static abortSound() {
+		const abort = new Audio('sound/mixkit-video-game-lock-2851-reverse.wav');
+		abort.play();
+	}
 
 	static loadExampleContent = () => {
 		const lists = ['Shopping', 'Movies to watch', 'Places to visit', 'Great ideas!'];
@@ -612,9 +697,6 @@ export default class UI {
 		this.masterList.addIsDoneInTask('TASKS', 'Go swimming on Tuesday');
 
 		this.displayLists('TASKS');
-
-		this.displayLists('Places to visit');
-
 		this.displayTasks();
 		this.selectList();
 	};
@@ -624,17 +706,25 @@ export default class UI {
 		this.displayLists('TASKS');
 		this.displayTasks();
 		this.selectList();
+		this.removeSound();
 	};
 
 	static attachEventListeners() {
 		const hamburger = document.querySelector('#hamburger');
+		const nav = document.querySelector('nav.nav');
 		const loadExampleBtn = document.querySelector('#load-example-btn');
 		const clearAllBtn = document.querySelector('#clear-all-btn');
 		const tasksTitle = document.querySelector('.content .title');
 
 		hamburger.addEventListener('click', this.hamburgerManualToggle);
+		nav.addEventListener('click', this.hamburgerManualClose);
 		window.addEventListener('resize', this.hamburgerAutoToggle);
-		loadExampleBtn.addEventListener('click', this.loadExampleContent);
+
+		loadExampleBtn.addEventListener('click', () => {
+			this.loadExampleContent();
+			this.loadSound();
+		});
+
 		clearAllBtn.addEventListener('click', this.clearAllContent);
 		window.addEventListener('keydown', this.handleKeyboardAddCancel);
 		window.addEventListener('click', this.closeInputContainerOnClick.bind(this), true);
