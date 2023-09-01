@@ -308,6 +308,19 @@ h2.title {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	box-sizing: border-box;
+	height: 2.5rem;
+}
+
+h2.title:hover {
+	border: 1px black solid;
+	padding: 0rem 0.5rem;
+	line-height: normal;
+	cursor: text;
+}
+
+.content .title {
+	display: flex;
 }
 
 .content .title input {
@@ -315,10 +328,35 @@ h2.title {
 	width: calc(100% - 1.1rem);
 }
 
+.content .title:has(input) {
+	box-sizing: border-box;
+}
+
+.content .title:has(input):hover {
+	border: none;
+	padding: 0rem;
+}
+
 .tasks-list {
 	list-style-type: none;
 	padding: 0;
 	margin: 0;
+}
+
+.task-content:hover {
+	display: flex;
+	border: 1px black solid;
+	background-color: white;
+	padding: 0 0.5rem;
+	text-overflow: unset !important;
+	line-height: 2.5rem;
+	cursor: text;
+}
+
+.task-content:has(.input-field) {
+	padding: 0;
+	border: none;
+	height: auto;
 }
 
 .tasks .input-container {
@@ -331,11 +369,13 @@ h2.title {
 	align-items: center;
 	gap: 0.5rem;
 	padding: 1rem 2rem;
-	transition: 0.5s ease;
+	transition: background-color 0.5s ease;
 }
 
 .tasks-list li:hover {
 	background-color: hsl(0, 0%, 95%);
+	padding: 0rem 2rem;
+	min-height: 56px;
 }
 
 .circle {
@@ -381,7 +421,6 @@ h2.title {
 }
 
 .tasks-list li .task-content {
-	display: flex;
 	flex: 1;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -389,7 +428,18 @@ h2.title {
 	min-width: 90px;
 }
 
+.tasks-list li .task-content:hover {
+	line-height: 2.5rem;
+}
+
+.task-content {
+	white-space: nowrap;
+	border: transparent solid;
+	border-width: 1px 0px;
+}
+
 .tasks-list li:has(.task-content .input-field) {
+	display: flex;
 	padding: 0rem 2rem;
 	min-height: 56px;
 	transition: none;
@@ -397,7 +447,7 @@ h2.title {
 
 .task-content .input-field {
 	flex: 1;
-	max-width: calc(100% - 1.1rem);
+	width: calc(100% - 1.1rem);
 }
 
 .tasks-list li p {
