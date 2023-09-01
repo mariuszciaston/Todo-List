@@ -29,7 +29,6 @@ export default class UI {
 	}
 
 	static hamburgerManualToggle(e) {
-		console.log(e.target);
 		const hamburger = document.querySelector('#hamburger');
 		const main = document.querySelector('.main');
 		hamburger.classList.toggle('open');
@@ -40,7 +39,7 @@ export default class UI {
 			toggle.play();
 		}
 
-		if (!e.target.closest('#hamburger.open')) {
+		if (e.target.closest('#hamburger:not(.open)')) {
 			const reverseToggle = new Audio('sound/mixkit-air-woosh-1489-pitch-reverse.wav');
 			reverseToggle.play();
 		}
@@ -48,8 +47,6 @@ export default class UI {
 
 	static hamburgerManualClose(e) {
 		const currentList = UI.getActiveList();
-		console.log(currentList);
-		console.log(e.target.textContent);
 		if (e.target.textContent === currentList) {
 			if (e.target.classList.contains('nav-btn')) {
 				if (window.innerWidth < 800) {
@@ -122,7 +119,7 @@ export default class UI {
 					this.masterList.changeTaskName(listName, name, inputField.value);
 					this.displayTasks();
 				} else {
-					this.displayTasks();
+					// this.displayTasks();
 				}
 			} else if (this.validateListName(inputField.value)) {
 				this.masterList.changeListName(name, inputField.value);
@@ -171,7 +168,6 @@ export default class UI {
 		if (element && !element.contains(document.querySelector('.input-field'))) {
 			const name = element.textContent;
 			element.textContent = '';
-
 			this.handleInputField(element, name, listName, isTask);
 		}
 	}
@@ -397,10 +393,55 @@ export default class UI {
 		return currentList;
 	}
 
+	static emptyTitlePopup() {
+		const content = document.querySelector('.content');
+		content.classList.add('empty');
+
+		const handleAnimationEnd = () => {
+			content.classList.remove('empty');
+			content.removeEventListener('animationend', handleAnimationEnd);
+		};
+
+		content.addEventListener('animationend', handleAnimationEnd);
+	}
+
+	static emptyTaskPopup(name) {
+		const tasksList = document.querySelectorAll('.tasks-list li');
+		tasksList.forEach((task) => {
+			if (task.querySelector('.task-content').textContent === name) {
+				task.classList.add('empty');
+				task.querySelector('.input-field').remove();
+
+				// task.querySelector('.task-content').textContent = name;
+
+				const handleAnimationEnd = () => {
+					task.classList.remove('empty');
+					task.classList.remove('lock');
+					task.removeEventListener('animationend', handleAnimationEnd);
+					this.displayTasks();
+				};
+				task.addEventListener('animationend', handleAnimationEnd);
+			} else {
+				task.classList.add('lock');
+			}
+		});
+	}
+
 	static validateName(name, type) {
 		if (name === '' || name.match(/^\s+$/)) {
 			this.alertSound();
 			console.log(`${type} name cannot be empty`);
+
+			if (type === 'List') {
+				this.emptyTitlePopup();
+			} else if (type === 'Task') {
+				this.emptyTaskPopup(name);
+			}
+
+			const empty = document.querySelector('.empty');
+
+			empty.setAttribute('data-before', `${type} name cannot be empty`);
+
 			return false;
 		}
 		return true;
@@ -409,8 +450,8 @@ export default class UI {
 	static validateListName(listName) {
 		if (!this.validateName(listName, 'List')) return false;
 		if (this.masterList.findList(listName)) {
-			this.alertSound();
-			console.log('List with this name already exists');
+			// this.alertSound();
+			// console.log('List with this name already exists');
 			return false;
 		}
 		return true;
@@ -419,8 +460,8 @@ export default class UI {
 	static validateTaskName(taskName) {
 		if (!this.validateName(taskName, 'Task')) return false;
 		if (this.masterList.findTaskInList(this.getActiveList(), taskName)) {
-			this.alertSound();
-			console.log('Task with this name already exists');
+			// this.alertSound();
+			// console.log('Task with this name already exists');
 			return false;
 		}
 		return true;
@@ -697,6 +738,9 @@ export default class UI {
 		this.masterList.addIsDoneInTask('TASKS', 'Go swimming on Tuesday');
 
 		this.displayLists('TASKS');
+
+		this.displayLists('Shopping');
+
 		this.displayTasks();
 		this.selectList();
 	};
