@@ -397,24 +397,37 @@ export default class UI {
 		const content = document.querySelector('.content');
 		content.classList.add('empty');
 
+		const tasksList = document.querySelectorAll('.tasks-list li');
+		tasksList.forEach((task) => {
+			task.classList.add('lock');
+		});
+
 		const handleAnimationEnd = () => {
 			content.classList.remove('empty');
+
+			tasksList.forEach((task) => {
+				task.classList.remove('lock');
+			});
+
 			content.removeEventListener('animationend', handleAnimationEnd);
+			this.displayTasks();
 		};
 
 		content.addEventListener('animationend', handleAnimationEnd);
 	}
 
-	static emptyTaskPopup(name) {
+	static emptyTaskPopup() {
+		const content = document.querySelector('.content');
+		content.classList.add('lock');
+
 		const tasksList = document.querySelectorAll('.tasks-list li');
 		tasksList.forEach((task) => {
-			if (task.querySelector('.task-content').textContent === name) {
+			if (task.querySelector('.task-content').textContent === '') {
 				task.classList.add('empty');
 				task.querySelector('.input-field').remove();
 
-				// task.querySelector('.task-content').textContent = name;
-
 				const handleAnimationEnd = () => {
+					content.classList.remove('lock');
 					task.classList.remove('empty');
 					task.classList.remove('lock');
 					task.removeEventListener('animationend', handleAnimationEnd);
