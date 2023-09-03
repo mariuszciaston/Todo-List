@@ -548,28 +548,21 @@ h2.title:hover {
 }
 
 .content.empty::before {
-	/* content: "List name cannot be empty"; */
 	content: attr(data-before);
 	background-color: #f87171;
 	position: absolute;
-	/* padding: 2.5rem 2.5rem 1rem 4.5rem; */
 	padding: 1rem 2.5rem 1rem 4.5rem;
-
 	border: solid #f87171;
 	border-width: 3px 0;
 	margin-left: -2.5rem;
-
-	/* margin-top: -2rem; */
 	margin-top: -0.5rem;
-
 	width: 100%;
 	display: flex;
 	flex: 1;
 	font-size: 1rem;
 	font-weight: 400;
-
 	animation-name: popup-disappear;
-	animation-delay: 1s;
+	animation-delay: 0.5s;
 	animation-duration: 0.5s;
 	animation-fill-mode: forwards;
 }
@@ -584,12 +577,13 @@ h2.title:hover {
 	z-index: 1;
 	line-height: 2.5rem;
 	animation-name: popup-disappear;
-	animation-delay: 1s;
+	animation-delay: 0.5s;
 	animation-duration: 0.5s;
 	animation-fill-mode: forwards;
 }
 
-.tasks-list li.lock .task-content {
+.tasks-list li.lock .task-content,
+.content.lock .title {
 	pointer-events: none;
 }
 
