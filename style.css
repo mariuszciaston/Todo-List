@@ -78,7 +78,7 @@ span.bold {
 	height: 4px;
 	transition: 0.5s ease;
 	border-radius: 1px;
-	background-color: hsl(0, 0%, 100%);
+	background-color: white;
 }
 
 .open .bar1 {
@@ -189,7 +189,6 @@ button.nav-btn {
 .content .title input {
 	line-height: 2.5rem;
 	white-space: nowrap;
-	background-color: hsl(0, 0%, 10%);
 	border: none;
 	outline: none;
 	padding: 0 0.5rem;
@@ -316,10 +315,17 @@ h2.title {
 h2.title:hover {
 	border: 1px black solid;
 	padding: 0rem 0.5rem;
-
 	cursor: pointer;
-
 	display: flex;
+	background-color: hsl(0, 0%, 95%);
+}
+
+h2.title.default:hover {
+	display: initial;
+	cursor: initial;
+	padding: 0;
+	border: 1px transparent solid;
+	background-color: initial;
 }
 
 .content .title input {
@@ -331,6 +337,7 @@ h2.title:hover {
 .content .title:has(input) {
 	display: flex;
 	padding: 0;
+	border: 1px black solid;
 }
 
 .content .title:has(input):hover {
@@ -351,6 +358,7 @@ h2.title:hover {
 	text-overflow: unset !important;
 	line-height: 2.5rem;
 	cursor: pointer;
+	background-color: hsl(0, 0%, 95%);
 }
 
 .task-content:has(.input-field) {
@@ -547,7 +555,8 @@ h2.title:hover {
 	text-decoration-thickness: 2px;
 }
 
-.content.empty::before {
+.content.empty::before,
+.content.exists::before {
 	content: attr(data-before);
 	background-color: #f87171;
 	position: absolute;
@@ -567,7 +576,8 @@ h2.title:hover {
 	animation-fill-mode: forwards;
 }
 
-.tasks-list li.empty::before {
+.tasks-list li.empty::before,
+.tasks-list li.exists::before {
 	content: attr(data-before);
 	background-color: #f87171;
 	position: absolute;
