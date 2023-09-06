@@ -119,7 +119,9 @@ export default class UI {
 					this.masterList.changeTaskName(listName, name, inputField.value);
 					this.displayTasks();
 				} else {
-					// this.displayTasks();
+					setTimeout(() => {
+						this.displayTasks();
+					}, 1000);
 				}
 			} else if (this.validateListName(inputField.value)) {
 				this.masterList.changeListName(name, inputField.value);
@@ -276,10 +278,16 @@ export default class UI {
 		const tasksTitle = document.querySelector('.content .title');
 		const tasksList = document.querySelector('.tasks-list');
 		const currentList = this.getActiveList();
-
 		if (currentList) {
 			tasksList.textContent = '';
 			tasksTitle.textContent = currentList;
+
+			if (tasksTitle.textContent === 'TASKS' || tasksTitle.textContent === 'TODAY' || tasksTitle.textContent === 'THIS WEEK') {
+				tasksTitle.classList.add('default');
+			} else {
+				tasksTitle.classList.remove('default');
+			}
+
 			this.masterList
 				.findList(currentList)
 				.getTasks()
@@ -440,21 +448,67 @@ export default class UI {
 		});
 	}
 
+	static existsTitlePopup() {
+		const content = document.querySelector('.content');
+		content.classList.add('exists');
+
+		const tasksList = document.querySelectorAll('.tasks-list li');
+		tasksList.forEach((task) => {
+			task.classList.add('lock');
+		});
+
+		const handleAnimationEnd = () => {
+			content.classList.remove('exists');
+
+			tasksList.forEach((task) => {
+				task.classList.remove('lock');
+			});
+
+			content.removeEventListener('animationend', handleAnimationEnd);
+			this.displayTasks();
+		};
+
+		content.addEventListener('animationend', handleAnimationEnd);
+	}
+
+	static existsTaskPopup() {
+		const content = document.querySelector('.content');
+
+		content.classList.add('lock');
+
+		const tasksList = document.querySelectorAll('.tasks-list li');
+		tasksList.forEach((task) => {
+			if (task.querySelector('.task-content').textContent === '') {
+				task.classList.add('exists');
+				task.querySelector('.input-field').remove();
+
+				const handleAnimationEnd = () => {
+					content.classList.remove('lock');
+					task.classList.remove('exists');
+					task.classList.remove('lock');
+					task.removeEventListener('animationend', handleAnimationEnd);
+					this.displayTasks();
+				};
+				task.addEventListener('animationend', handleAnimationEnd);
+				setTimeout(() => {
+					content.classList.remove('lock');
+				}, 1000);
+			} else {
+				task.classList.add('lock');
+			}
+		});
+	}
+
 	static validateName(name, type) {
 		if (name === '' || name.match(/^\s+$/)) {
-			this.alertSound();
-			console.log(`${type} name cannot be empty`);
-
 			if (type === 'List') {
 				this.emptyTitlePopup();
 			} else if (type === 'Task') {
-				this.emptyTaskPopup(name);
+				this.emptyTaskPopup();
 			}
-
 			const empty = document.querySelector('.empty');
-
 			empty.setAttribute('data-before', `${type} name cannot be empty`);
-
+			this.alertSound();
 			return false;
 		}
 		return true;
@@ -463,8 +517,10 @@ export default class UI {
 	static validateListName(listName) {
 		if (!this.validateName(listName, 'List')) return false;
 		if (this.masterList.findList(listName)) {
-			// this.alertSound();
-			// console.log('List with this name already exists');
+			this.existsTitlePopup();
+			const exists = document.querySelector('.exists');
+			exists.setAttribute('data-before', `List with this name already exists`);
+			this.alertSound();
 			return false;
 		}
 		return true;
@@ -473,8 +529,10 @@ export default class UI {
 	static validateTaskName(taskName) {
 		if (!this.validateName(taskName, 'Task')) return false;
 		if (this.masterList.findTaskInList(this.getActiveList(), taskName)) {
-			// this.alertSound();
-			// console.log('Task with this name already exists');
+			this.existsTaskPopup();
+			const exists = document.querySelector('.exists');
+			exists.setAttribute('data-before', `Task with this name already exists`);
+			this.alertSound();
 			return false;
 		}
 		return true;
