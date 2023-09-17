@@ -6,6 +6,7 @@ body {
 html {
 	font-size: 16px;
 	font-family: 'Open Sans', sans-serif;
+	font-weight: 400;
 }
 
 body {
@@ -121,6 +122,7 @@ hr {
 	display: flex;
 	flex-direction: column;
 	gap: 1rem;
+	position: relative;
 }
 
 .nav {
@@ -228,10 +230,12 @@ button.nav-btn {
 
 .add-btn {
 	background-color: #15803d;
+	border: solid 0.0625rem #15803d !important;
 }
 
 .cancel-btn {
 	background-color: #991b1b;
+	border: solid 0.0625rem #991b1b !important;
 }
 
 .add-btn:hover {
@@ -556,41 +560,50 @@ h2.title.default:hover {
 	text-decoration-thickness: 0.125rem;
 }
 
-.content.empty::before,
-.content.exists::before {
+.content.empty:before,
+.content.exists:before,
+.tasks-list li.empty:before,
+.tasks-list li.exists:before,
+.input-container.empty:before,
+.input-container.exists:before {
 	content: attr(data-before);
-	background-color: #f87171;
-	position: absolute;
-	padding: 1rem 2.5rem 1rem 4.5rem;
-	border: solid #f87171;
-	border-width: 0.1875rem 0;
-	margin-left: -2.5rem;
-	margin-top: -0.5rem;
 	width: 100%;
-	display: flex;
-	flex: 1;
-	font-size: 1rem;
-	font-weight: 400;
+	background-color: hsl(0, 0%, 37.5%);
+	color: white;
+	position: absolute;
+	line-height: 2.5rem;
+	z-index: 1;
 	animation-name: popup-disappear;
 	animation-delay: 0.5s;
 	animation-duration: 0.5s;
 	animation-fill-mode: forwards;
 }
 
-.tasks-list li.empty::before,
-.tasks-list li.exists::before {
-	content: attr(data-before);
-	background-color: #f87171;
-	position: absolute;
-	padding: 0.5rem 4rem;
+.content.empty:before,
+.content.exists:before {
+	padding: 0rem 2rem;
+	border: 0.0625rem solid hsl(0, 0%, 37.5%);
+}
+
+.tasks-list li.empty:before,
+.tasks-list li.exists:before {
 	margin-left: -2rem;
-	width: 100%;
-	z-index: 1;
-	line-height: 2.5rem;
-	animation-name: popup-disappear;
-	animation-delay: 0.5s;
-	animation-duration: 0.5s;
-	animation-fill-mode: forwards;
+	padding: 0rem 4rem;
+	border: 0.0625rem solid hsl(0, 0%, 37.5%);
+}
+
+.content .input-container.empty:before,
+.content .input-container.exists:before {
+	margin-left: -2rem;
+	padding: 0rem 1.5rem 0rem 2.5rem;
+	border: 0.0625rem solid hsl(0, 0%, 37.5%);
+}
+
+#second-list .input-container.empty:before,
+#second-list .input-container.exists:before {
+	margin-left: -2rem;
+	padding: 0rem 1.5rem 0rem 2.5rem;
+	border: 0.0625rem solid hsl(0, 0%, 37.5%);
 }
 
 .tasks-list li.lock .task-content,

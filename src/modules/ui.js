@@ -507,7 +507,9 @@ export default class UI {
 				this.emptyTaskPopup();
 			}
 			const empty = document.querySelector('.empty');
-			empty.setAttribute('data-before', `${type} name cannot be empty`);
+			if (empty) {
+				empty.setAttribute('data-before', `${type} name cannot be empty`);
+			}
 			this.alertSound();
 			return false;
 		}
@@ -515,8 +517,10 @@ export default class UI {
 	}
 
 	static validateListName(listName) {
-		if (!this.validateName(listName, 'List')) return false;
-		if (this.masterList.findList(listName)) {
+		const listNameTrim = listName.trim();
+
+		if (!this.validateName(listNameTrim, 'List')) return false;
+		if (this.masterList.findList(listNameTrim)) {
 			this.existsTitlePopup();
 			const exists = document.querySelector('.exists');
 			exists.setAttribute('data-before', `List with this name already exists`);
@@ -527,11 +531,118 @@ export default class UI {
 	}
 
 	static validateTaskName(taskName) {
-		if (!this.validateName(taskName, 'Task')) return false;
-		if (this.masterList.findTaskInList(this.getActiveList(), taskName)) {
+		const taskNameTrim = taskName.trim();
+
+		if (!this.validateName(taskNameTrim, 'Task')) return false;
+		if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
 			this.existsTaskPopup();
 			const exists = document.querySelector('.exists');
-			exists.setAttribute('data-before', `Task with this name already exists`);
+			if (exists) {
+				exists.setAttribute('data-before', `Task with this name already exists`);
+			}
+
+			this.alertSound();
+			return false;
+		}
+		return true;
+	}
+
+	static emptyTitlePopup2() {
+		const inputContainer = document.querySelector('.input-container');
+		const inputField = document.querySelector('.input-container .input-field');
+		inputContainer.classList.add('empty');
+		inputField.value = '';
+		const handleAnimationEnd = () => {
+			inputContainer.classList.remove('empty');
+			inputContainer.classList.remove('empty');
+			inputContainer.removeEventListener('animationend', handleAnimationEnd);
+			this.displayTasks();
+		};
+		inputContainer.addEventListener('animationend', handleAnimationEnd);
+	}
+
+	static emptyTaskPopup2() {
+		const inputContainer = document.querySelector('.input-container');
+		const inputField = document.querySelector('.input-container .input-field');
+		inputContainer.classList.add('empty');
+		inputField.value = '';
+		const handleAnimationEnd = () => {
+			inputContainer.classList.remove('empty');
+			inputContainer.classList.remove('empty');
+			inputContainer.removeEventListener('animationend', handleAnimationEnd);
+			this.displayTasks();
+		};
+		inputContainer.addEventListener('animationend', handleAnimationEnd);
+	}
+
+	static existsTitlePopup2() {
+		const inputContainer = document.querySelector('.input-container');
+		inputContainer.classList.add('exists');
+		const handleAnimationEnd = () => {
+			inputContainer.classList.remove('exists');
+			inputContainer.classList.remove('exists');
+			inputContainer.removeEventListener('animationend', handleAnimationEnd);
+			this.displayTasks();
+		};
+
+		inputContainer.addEventListener('animationend', handleAnimationEnd);
+	}
+
+	static existsTaskPopup2() {
+		const inputContainer = document.querySelector('.input-container');
+		inputContainer.classList.add('exists');
+		const handleAnimationEnd = () => {
+			inputContainer.classList.remove('exists');
+			inputContainer.classList.remove('exists');
+			inputContainer.removeEventListener('animationend', handleAnimationEnd);
+			this.displayTasks();
+		};
+		inputContainer.addEventListener('animationend', handleAnimationEnd);
+	}
+
+	static validateName2(name, type) {
+		if (name === '' || name.match(/^\s+$/)) {
+			if (type === 'List') {
+				this.emptyTitlePopup2();
+			} else if (type === 'Task') {
+				this.emptyTaskPopup2();
+			}
+			const empty = document.querySelector('.empty');
+			if (empty) {
+				empty.setAttribute('data-before', `${type} name cannot be empty`);
+			}
+			this.alertSound();
+			return false;
+		}
+		return true;
+	}
+
+	static validateListName2(listName) {
+		const listNameTrim = listName.trim();
+		if (!this.validateName2(listNameTrim, 'List')) return false;
+
+		if (this.masterList.findList(listNameTrim)) {
+			this.existsTitlePopup2();
+			const exists = document.querySelector('.exists');
+			exists.setAttribute('data-before', `List with this name already exists`);
+			this.alertSound();
+			return false;
+		}
+
+		return true;
+	}
+
+	static validateTaskName2(taskName) {
+		const taskNameTrim = taskName.trim();
+		if (!this.validateName2(taskNameTrim, 'Task')) return false;
+
+		if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
+			this.existsTaskPopup2();
+			const exists = document.querySelector('.exists');
+			if (exists) {
+				exists.setAttribute('data-before', `Task with this name already exists`);
+			}
+
 			this.alertSound();
 			return false;
 		}
@@ -539,27 +650,30 @@ export default class UI {
 	}
 
 	static addBtnPress(inputField, whereToAdd) {
-		const listName = inputField.value;
+		// const name = inputField.value.trim();
+		const name = inputField.value;
 
 		if (whereToAdd.id === 'second-list') {
-			if (!this.validateListName(listName)) {
+			if (!this.validateListName2(name)) {
 				inputField.focus();
 			} else {
-				this.masterList.addList(listName);
+				this.masterList.addList(name);
 				this.closeInputContainer();
 				this.displayLists('TASKS');
-				this.setActiveList(listName);
+				this.setActiveList(name);
 				this.displayTasks();
 				this.selectList();
 				this.confirmSound();
 			}
 		}
 
+		console.log(this.masterList.getLists());
+
 		if (whereToAdd.className === 'tasks') {
-			if (!this.validateTaskName(listName)) {
+			if (!this.validateTaskName2(name)) {
 				inputField.focus();
 			} else {
-				this.masterList.addTaskToList(this.getActiveList(), listName);
+				this.masterList.addTaskToList(this.getActiveList(), name);
 				this.closeInputContainer();
 				this.displayTasks();
 				this.confirmSound();
@@ -842,7 +956,7 @@ export default class UI {
 
 		clearAllBtn.addEventListener('click', this.clearAllContent);
 		window.addEventListener('keydown', this.handleKeyboardAddCancel);
-		window.addEventListener('click', this.closeInputContainerOnClick.bind(this), true);
+		// window.addEventListener('click', this.closeInputContainerOnClick.bind(this), true);
 		tasksTitle.addEventListener('click', this.editListName.bind(this));
 	}
 
