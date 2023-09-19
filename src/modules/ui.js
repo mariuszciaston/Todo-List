@@ -401,110 +401,48 @@ export default class UI {
 		return currentList;
 	}
 
-	static emptyTitlePopup() {
+	static handlePopup(state, type) {
 		const content = document.querySelector('.content');
-		content.classList.add('empty');
-
-		const tasksList = document.querySelectorAll('.tasks-list li');
-		tasksList.forEach((task) => {
-			task.classList.add('lock');
-		});
-
-		const handleAnimationEnd = () => {
-			content.classList.remove('empty');
-
-			tasksList.forEach((task) => {
-				task.classList.remove('lock');
-			});
-
-			content.removeEventListener('animationend', handleAnimationEnd);
-			this.displayTasks();
-		};
-
-		content.addEventListener('animationend', handleAnimationEnd);
-	}
-
-	static emptyTaskPopup() {
-		const content = document.querySelector('.content');
+		if (type === 'List') {
+			content.classList.add(state);
+		}
 		content.classList.add('lock');
-
 		const tasksList = document.querySelectorAll('.tasks-list li');
 		tasksList.forEach((task) => {
-			if (task.querySelector('.task-content').textContent === '') {
-				task.classList.add('empty');
-				task.querySelector('.input-field').remove();
-
-				const handleAnimationEnd = () => {
-					content.classList.remove('lock');
-					task.classList.remove('empty');
-					task.classList.remove('lock');
-					task.removeEventListener('animationend', handleAnimationEnd);
-					this.displayTasks();
-				};
-				task.addEventListener('animationend', handleAnimationEnd);
+			if (state === 'empty' || state === 'exists') {
+				if (task.querySelector('.task-content').textContent === '') {
+					task.classList.add(state);
+					task.querySelector('.input-field').remove();
+				} else {
+					task.classList.add('lock');
+				}
 			} else {
 				task.classList.add('lock');
 			}
 		});
-	}
-
-	static existsTitlePopup() {
-		const content = document.querySelector('.content');
-		content.classList.add('exists');
-
-		const tasksList = document.querySelectorAll('.tasks-list li');
-		tasksList.forEach((task) => {
-			task.classList.add('lock');
-		});
-
 		const handleAnimationEnd = () => {
-			content.classList.remove('exists');
-
+			content.classList.remove(state);
 			tasksList.forEach((task) => {
+				task.classList.remove(state);
 				task.classList.remove('lock');
+				task.removeEventListener('animationend', handleAnimationEnd);
 			});
-
 			content.removeEventListener('animationend', handleAnimationEnd);
 			this.displayTasks();
 		};
+		setTimeout(() => {
+			content.classList.remove('lock');
+		}, 1000);
 
 		content.addEventListener('animationend', handleAnimationEnd);
-	}
-
-	static existsTaskPopup() {
-		const content = document.querySelector('.content');
-
-		content.classList.add('lock');
-
-		const tasksList = document.querySelectorAll('.tasks-list li');
-		tasksList.forEach((task) => {
-			if (task.querySelector('.task-content').textContent === '') {
-				task.classList.add('exists');
-				task.querySelector('.input-field').remove();
-
-				const handleAnimationEnd = () => {
-					content.classList.remove('lock');
-					task.classList.remove('exists');
-					task.classList.remove('lock');
-					task.removeEventListener('animationend', handleAnimationEnd);
-					this.displayTasks();
-				};
-				task.addEventListener('animationend', handleAnimationEnd);
-				setTimeout(() => {
-					content.classList.remove('lock');
-				}, 1000);
-			} else {
-				task.classList.add('lock');
-			}
-		});
 	}
 
 	static validateName(name, type) {
 		if (name === '' || name.match(/^\s+$/)) {
 			if (type === 'List') {
-				this.emptyTitlePopup();
+				this.handlePopup('empty');
 			} else if (type === 'Task') {
-				this.emptyTaskPopup();
+				this.handlePopup('empty');
 			}
 			const empty = document.querySelector('.empty');
 			if (empty) {
@@ -518,10 +456,9 @@ export default class UI {
 
 	static validateListName(listName) {
 		const listNameTrim = listName.trim();
-
 		if (!this.validateName(listNameTrim, 'List')) return false;
 		if (this.masterList.findList(listNameTrim)) {
-			this.existsTitlePopup();
+			this.handlePopup('exists', 'List');
 			const exists = document.querySelector('.exists');
 			exists.setAttribute('data-before', `List with this name already exists`);
 			this.alertSound();
@@ -532,10 +469,9 @@ export default class UI {
 
 	static validateTaskName(taskName) {
 		const taskNameTrim = taskName.trim();
-
 		if (!this.validateName(taskNameTrim, 'Task')) return false;
 		if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
-			this.existsTaskPopup();
+			this.handlePopup('exists');
 			const exists = document.querySelector('.exists');
 			if (exists) {
 				exists.setAttribute('data-before', `Task with this name already exists`);
@@ -547,65 +483,30 @@ export default class UI {
 		return true;
 	}
 
-	static emptyTitlePopup2() {
+	static handlePopup2(state) {
 		const inputContainer = document.querySelector('.input-container');
-		const inputField = document.querySelector('.input-container .input-field');
-		inputContainer.classList.add('empty');
-		inputField.value = '';
-		const handleAnimationEnd = () => {
-			inputContainer.classList.remove('empty');
-			inputContainer.classList.remove('empty');
-			inputContainer.removeEventListener('animationend', handleAnimationEnd);
-			this.displayTasks();
-		};
-		inputContainer.addEventListener('animationend', handleAnimationEnd);
-	}
+		inputContainer.classList.add(state);
 
-	static emptyTaskPopup2() {
-		const inputContainer = document.querySelector('.input-container');
-		const inputField = document.querySelector('.input-container .input-field');
-		inputContainer.classList.add('empty');
-		inputField.value = '';
 		const handleAnimationEnd = () => {
-			inputContainer.classList.remove('empty');
-			inputContainer.classList.remove('empty');
-			inputContainer.removeEventListener('animationend', handleAnimationEnd);
-			this.displayTasks();
-		};
-		inputContainer.addEventListener('animationend', handleAnimationEnd);
-	}
-
-	static existsTitlePopup2() {
-		const inputContainer = document.querySelector('.input-container');
-		inputContainer.classList.add('exists');
-		const handleAnimationEnd = () => {
-			inputContainer.classList.remove('exists');
-			inputContainer.classList.remove('exists');
+			inputContainer.classList.remove(state);
 			inputContainer.removeEventListener('animationend', handleAnimationEnd);
 			this.displayTasks();
 		};
 
-		inputContainer.addEventListener('animationend', handleAnimationEnd);
-	}
+		if (state === 'empty') {
+			const inputField = document.querySelector('.input-container .input-field');
+			inputField.value = '';
+		}
 
-	static existsTaskPopup2() {
-		const inputContainer = document.querySelector('.input-container');
-		inputContainer.classList.add('exists');
-		const handleAnimationEnd = () => {
-			inputContainer.classList.remove('exists');
-			inputContainer.classList.remove('exists');
-			inputContainer.removeEventListener('animationend', handleAnimationEnd);
-			this.displayTasks();
-		};
 		inputContainer.addEventListener('animationend', handleAnimationEnd);
 	}
 
 	static validateName2(name, type) {
 		if (name === '' || name.match(/^\s+$/)) {
 			if (type === 'List') {
-				this.emptyTitlePopup2();
+				this.handlePopup2('empty');
 			} else if (type === 'Task') {
-				this.emptyTaskPopup2();
+				this.handlePopup2('empty');
 			}
 			const empty = document.querySelector('.empty');
 			if (empty) {
@@ -620,15 +521,13 @@ export default class UI {
 	static validateListName2(listName) {
 		const listNameTrim = listName.trim();
 		if (!this.validateName2(listNameTrim, 'List')) return false;
-
 		if (this.masterList.findList(listNameTrim)) {
-			this.existsTitlePopup2();
+			this.handlePopup2('exists');
 			const exists = document.querySelector('.exists');
 			exists.setAttribute('data-before', `List with this name already exists`);
 			this.alertSound();
 			return false;
 		}
-
 		return true;
 	}
 
@@ -637,7 +536,7 @@ export default class UI {
 		if (!this.validateName2(taskNameTrim, 'Task')) return false;
 
 		if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
-			this.existsTaskPopup2();
+			this.handlePopup2('exists');
 			const exists = document.querySelector('.exists');
 			if (exists) {
 				exists.setAttribute('data-before', `Task with this name already exists`);
@@ -956,7 +855,9 @@ export default class UI {
 
 		clearAllBtn.addEventListener('click', this.clearAllContent);
 		window.addEventListener('keydown', this.handleKeyboardAddCancel);
-		// window.addEventListener('click', this.closeInputContainerOnClick.bind(this), true);
+
+		window.addEventListener('click', this.closeInputContainerOnClick.bind(this), true);
+
 		tasksTitle.addEventListener('click', this.editListName.bind(this));
 	}
 

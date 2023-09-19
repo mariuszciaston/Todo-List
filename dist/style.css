@@ -230,12 +230,12 @@ button.nav-btn {
 
 .add-btn {
 	background-color: #15803d;
-	border: solid 0.0625rem #15803d !important;
+	border: solid 0.0625rem ;
 }
 
 .cancel-btn {
 	background-color: #991b1b;
-	border: solid 0.0625rem #991b1b !important;
+	border: solid 0.0625rem;
 }
 
 .add-btn:hover {
