@@ -115,7 +115,7 @@ export default class UI {
 
 		const changeName = () => {
 			if (isTask) {
-				if (this.validateTaskName(inputField.value)) {
+				if (this.validateTaskName(inputField.value, 'one')) {
 					this.masterList.changeTaskName(listName, name, inputField.value);
 					this.displayTasks();
 				} else {
@@ -123,7 +123,7 @@ export default class UI {
 						this.displayTasks();
 					}, 1000);
 				}
-			} else if (this.validateListName(inputField.value)) {
+			} else if (this.validateListName(inputField.value, 'one')) {
 				this.masterList.changeListName(name, inputField.value);
 				this.setActiveList(inputField.value);
 				this.updateListName(inputField);
@@ -401,151 +401,158 @@ export default class UI {
 		return currentList;
 	}
 
-	static handlePopup(state, type) {
-		const content = document.querySelector('.content');
-		if (type === 'List') {
-			content.classList.add(state);
-		}
-		content.classList.add('lock');
-		const tasksList = document.querySelectorAll('.tasks-list li');
-		tasksList.forEach((task) => {
-			if (state === 'empty' || state === 'exists') {
-				if (task.querySelector('.task-content').textContent === '') {
-					task.classList.add(state);
-					task.querySelector('.input-field').remove();
+	static handlePopup(state, version, type) {
+		if (version === 'one') {
+			const content = document.querySelector('.content');
+			if (type === 'List') {
+				content.classList.add(state);
+			}
+			content.classList.add('lock');
+			const tasksList = document.querySelectorAll('.tasks-list li');
+			tasksList.forEach((task) => {
+				if (state === 'empty' || state === 'exists') {
+					if (task.querySelector('.task-content').textContent === '') {
+						task.classList.add(state);
+						task.querySelector('.input-field').remove();
+					} else {
+						task.classList.add('lock');
+					}
 				} else {
 					task.classList.add('lock');
 				}
-			} else {
-				task.classList.add('lock');
-			}
-		});
-		const handleAnimationEnd = () => {
-			content.classList.remove(state);
-			tasksList.forEach((task) => {
-				task.classList.remove(state);
-				task.classList.remove('lock');
-				task.removeEventListener('animationend', handleAnimationEnd);
 			});
-			content.removeEventListener('animationend', handleAnimationEnd);
-			this.displayTasks();
-		};
-		setTimeout(() => {
-			content.classList.remove('lock');
-		}, 1000);
+			const handleAnimationEnd = () => {
+				content.classList.remove(state);
+				tasksList.forEach((task) => {
+					task.classList.remove(state);
+					task.classList.remove('lock');
+					task.removeEventListener('animationend', handleAnimationEnd);
+				});
+				content.removeEventListener('animationend', handleAnimationEnd);
+				this.displayTasks();
+			};
+			setTimeout(() => {
+				content.classList.remove('lock');
+			}, 1000);
 
-		content.addEventListener('animationend', handleAnimationEnd);
-	}
-
-	static validateName(name, type) {
-		if (name === '' || name.match(/^\s+$/)) {
-			if (type === 'List') {
-				this.handlePopup('empty');
-			} else if (type === 'Task') {
-				this.handlePopup('empty');
-			}
-			const empty = document.querySelector('.empty');
-			if (empty) {
-				empty.setAttribute('data-before', `${type} name cannot be empty`);
-			}
-			this.alertSound();
-			return false;
+			content.addEventListener('animationend', handleAnimationEnd);
 		}
-		return true;
-	}
 
-	static validateListName(listName) {
-		const listNameTrim = listName.trim();
-		if (!this.validateName(listNameTrim, 'List')) return false;
-		if (this.masterList.findList(listNameTrim)) {
-			this.handlePopup('exists', 'List');
-			const exists = document.querySelector('.exists');
-			exists.setAttribute('data-before', `List with this name already exists`);
-			this.alertSound();
-			return false;
-		}
-		return true;
-	}
+		if (version === 'two') {
+			const inputContainer = document.querySelector('.input-container');
+			inputContainer.classList.add(state);
 
-	static validateTaskName(taskName) {
-		const taskNameTrim = taskName.trim();
-		if (!this.validateName(taskNameTrim, 'Task')) return false;
-		if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
-			this.handlePopup('exists');
-			const exists = document.querySelector('.exists');
-			if (exists) {
-				exists.setAttribute('data-before', `Task with this name already exists`);
+			const handleAnimationEnd = () => {
+				inputContainer.classList.remove(state);
+				inputContainer.removeEventListener('animationend', handleAnimationEnd);
+				this.displayTasks();
+			};
+
+			if (state === 'empty') {
+				const inputField = document.querySelector('.input-container .input-field');
+				inputField.value = '';
 			}
 
-			this.alertSound();
-			return false;
+			inputContainer.addEventListener('animationend', handleAnimationEnd);
 		}
-		return true;
 	}
 
-	static handlePopup2(state) {
-		const inputContainer = document.querySelector('.input-container');
-		inputContainer.classList.add(state);
-
-		const handleAnimationEnd = () => {
-			inputContainer.classList.remove(state);
-			inputContainer.removeEventListener('animationend', handleAnimationEnd);
-			this.displayTasks();
-		};
-
-		if (state === 'empty') {
-			const inputField = document.querySelector('.input-container .input-field');
-			inputField.value = '';
-		}
-
-		inputContainer.addEventListener('animationend', handleAnimationEnd);
-	}
-
-	static validateName2(name, type) {
-		if (name === '' || name.match(/^\s+$/)) {
-			if (type === 'List') {
-				this.handlePopup2('empty');
-			} else if (type === 'Task') {
-				this.handlePopup2('empty');
+	static validateName(name, version, type) {
+		if (version === 'one') {
+			if (name === '' || name.match(/^\s+$/)) {
+				if (type === 'List') {
+					this.handlePopup('empty', version);
+				} else if (type === 'Task') {
+					this.handlePopup('empty', version);
+				}
+				const empty = document.querySelector('.empty');
+				if (empty) {
+					empty.setAttribute('data-before', `${type} name cannot be empty`);
+				}
+				this.alertSound();
+				return false;
 			}
-			const empty = document.querySelector('.empty');
-			if (empty) {
-				empty.setAttribute('data-before', `${type} name cannot be empty`);
-			}
-			this.alertSound();
-			return false;
+			return true;
 		}
-		return true;
+
+		if (version === 'two') {
+			if (name === '' || name.match(/^\s+$/)) {
+				if (type === 'List') {
+					this.handlePopup('empty', version);
+				} else if (type === 'Task') {
+					this.handlePopup('empty', version);
+				}
+				const empty = document.querySelector('.empty');
+				if (empty) {
+					empty.setAttribute('data-before', `${type} name cannot be empty`);
+				}
+				this.alertSound();
+				return false;
+			}
+			return true;
+		}
 	}
 
-	static validateListName2(listName) {
-		const listNameTrim = listName.trim();
-		if (!this.validateName2(listNameTrim, 'List')) return false;
-		if (this.masterList.findList(listNameTrim)) {
-			this.handlePopup2('exists');
-			const exists = document.querySelector('.exists');
-			exists.setAttribute('data-before', `List with this name already exists`);
-			this.alertSound();
-			return false;
+	static validateListName(listName, version) {
+		if (version === 'one') {
+			const listNameTrim = listName.trim();
+			if (!this.validateName(listNameTrim, 'List', version)) return false;
+			if (this.masterList.findList(listNameTrim)) {
+				this.handlePopup('exists', version, 'List');
+				const exists = document.querySelector('.exists');
+				exists.setAttribute('data-before', `List with this name already exists`);
+				this.alertSound();
+				return false;
+			}
+			return true;
 		}
-		return true;
+
+		if (version === 'two') {
+			const listNameTrim = listName.trim();
+			if (!this.validateName(listNameTrim, 'List', version)) return false;
+			if (this.masterList.findList(listNameTrim)) {
+				this.handlePopup('exists', version);
+				const exists = document.querySelector('.exists');
+				exists.setAttribute('data-before', `List with this name already exists`);
+				this.alertSound();
+				return false;
+			}
+			return true;
+		}
 	}
 
-	static validateTaskName2(taskName) {
-		const taskNameTrim = taskName.trim();
-		if (!this.validateName2(taskNameTrim, 'Task')) return false;
+	static validateTaskName(taskName, version) {
+		if (version === 'one') {
+			const taskNameTrim = taskName.trim();
+			if (!this.validateName(taskNameTrim, 'Task', version)) return false;
+			if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
+				this.handlePopup('exists', version);
+				const exists = document.querySelector('.exists');
+				if (exists) {
+					exists.setAttribute('data-before', `Task with this name already exists`);
+				}
 
-		if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
-			this.handlePopup2('exists');
-			const exists = document.querySelector('.exists');
-			if (exists) {
-				exists.setAttribute('data-before', `Task with this name already exists`);
+				this.alertSound();
+				return false;
 			}
-
-			this.alertSound();
-			return false;
+			return true;
 		}
-		return true;
+
+		if (version === 'two') {
+			const taskNameTrim = taskName.trim();
+			if (!this.validateName(taskNameTrim, 'Task', version)) return false;
+			if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
+				this.handlePopup('exists', version);
+				const exists = document.querySelector('.exists');
+				if (exists) {
+					exists.setAttribute('data-before', `Task with this name already exists`);
+				}
+
+				this.alertSound();
+				return false;
+			}
+			return true;
+		}
 	}
 
 	static addBtnPress(inputField, whereToAdd) {
@@ -553,7 +560,7 @@ export default class UI {
 		const name = inputField.value;
 
 		if (whereToAdd.id === 'second-list') {
-			if (!this.validateListName2(name)) {
+			if (!this.validateListName(name, 'two')) {
 				inputField.focus();
 			} else {
 				this.masterList.addList(name);
@@ -569,7 +576,7 @@ export default class UI {
 		console.log(this.masterList.getLists());
 
 		if (whereToAdd.className === 'tasks') {
-			if (!this.validateTaskName2(name)) {
+			if (!this.validateTaskName(name, 'two')) {
 				inputField.focus();
 			} else {
 				this.masterList.addTaskToList(this.getActiveList(), name);
