@@ -321,7 +321,6 @@ export default class UI {
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 		this.masterList.toggleStarInTask(listName, taskName);
 		this.displayTasks();
-
 		this.starSound(e);
 	}
 
@@ -458,101 +457,47 @@ export default class UI {
 	}
 
 	static validateName(name, version, type) {
-		if (version === 'one') {
-			if (name === '' || name.match(/^\s+$/)) {
-				if (type === 'List') {
-					this.handlePopup('empty', version);
-				} else if (type === 'Task') {
-					this.handlePopup('empty', version);
-				}
-				const empty = document.querySelector('.empty');
-				if (empty) {
-					empty.setAttribute('data-before', `${type} name cannot be empty`);
-				}
-				this.alertSound();
-				return false;
+		if ((version === 'one' || version === 'two') && (name === '' || name.match(/^\s+$/))) {
+			this.handlePopup('empty', version, type);
+			const empty = document.querySelector('.empty');
+			if (empty) {
+				empty.setAttribute('data-before', `${type} name cannot be empty`);
 			}
-			return true;
+			this.alertSound();
+			return false;
 		}
-
-		if (version === 'two') {
-			if (name === '' || name.match(/^\s+$/)) {
-				if (type === 'List') {
-					this.handlePopup('empty', version);
-				} else if (type === 'Task') {
-					this.handlePopup('empty', version);
-				}
-				const empty = document.querySelector('.empty');
-				if (empty) {
-					empty.setAttribute('data-before', `${type} name cannot be empty`);
-				}
-				this.alertSound();
-				return false;
-			}
-			return true;
-		}
+		return true;
 	}
 
-	static validateListName(listName, version) {
-		if (version === 'one') {
-			const listNameTrim = listName.trim();
-			if (!this.validateName(listNameTrim, 'List', version)) return false;
-			if (this.masterList.findList(listNameTrim)) {
-				this.handlePopup('exists', version, 'List');
-				const exists = document.querySelector('.exists');
+	static validateListName(listName, version, type = 'List') {
+		const listNameTrim = listName.trim();
+		if (!this.validateName(listNameTrim, version, type)) return false;
+		if (this.masterList.findList(listNameTrim)) {
+			this.handlePopup('exists', version, type);
+			const exists = document.querySelector('.exists');
+			if (exists) {
 				exists.setAttribute('data-before', `List with this name already exists`);
-				this.alertSound();
-				return false;
 			}
-			return true;
+			this.alertSound();
+			return false;
 		}
-
-		if (version === 'two') {
-			const listNameTrim = listName.trim();
-			if (!this.validateName(listNameTrim, 'List', version)) return false;
-			if (this.masterList.findList(listNameTrim)) {
-				this.handlePopup('exists', version);
-				const exists = document.querySelector('.exists');
-				exists.setAttribute('data-before', `List with this name already exists`);
-				this.alertSound();
-				return false;
-			}
-			return true;
-		}
+		return true;
 	}
 
 	static validateTaskName(taskName, version) {
-		if (version === 'one') {
-			const taskNameTrim = taskName.trim();
-			if (!this.validateName(taskNameTrim, 'Task', version)) return false;
-			if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
-				this.handlePopup('exists', version);
-				const exists = document.querySelector('.exists');
-				if (exists) {
-					exists.setAttribute('data-before', `Task with this name already exists`);
-				}
-
-				this.alertSound();
-				return false;
+		const taskNameTrim = taskName.trim();
+		if (!this.validateName(taskNameTrim, version, 'Task')) return false;
+		if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
+			this.handlePopup('exists', version);
+			const exists = document.querySelector('.exists');
+			if (exists) {
+				exists.setAttribute('data-before', `Task with this name already exists`);
 			}
-			return true;
-		}
 
-		if (version === 'two') {
-			const taskNameTrim = taskName.trim();
-			if (!this.validateName(taskNameTrim, 'Task', version)) return false;
-			if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
-				this.handlePopup('exists', version);
-				const exists = document.querySelector('.exists');
-				if (exists) {
-					exists.setAttribute('data-before', `Task with this name already exists`);
-				}
-
-				this.alertSound();
-				return false;
-			}
-			return true;
+			this.alertSound();
+			return false;
 		}
+		return true;
 	}
 
 	static addBtnPress(inputField, whereToAdd) {
