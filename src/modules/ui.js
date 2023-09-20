@@ -3,6 +3,36 @@ import ListsManager from './manage';
 export default class UI {
 	static masterList = new ListsManager();
 
+	static loadAudio() {
+		const toggleSound = new Audio('sound/mixkit-air-woosh-1489-pitch.wav');
+		const reverseToggleSound = new Audio('sound/mixkit-air-woosh-1489-pitch-reverse.wav');
+		const doneSound = new Audio('sound/mixkit-game-ball-tap-2073.wav');
+		const reverseDoneSound = new Audio('sound/mixkit-game-ball-tap-2073-reverse-slow.wav');
+		const starSound = new Audio('sound/mixkit-retro-arcade-casino-notification-211.wav');
+		const reverseStarSound = new Audio('sound/mixkit-retro-arcade-casino-notification-211-reverse.wav');
+		const removeSound = new Audio('sound/Empty-trash-sound-effect-reverse.mp3');
+		const loadExampleSound = new Audio('sound/mixkit-player-boost-recharging-2040.wav');
+		const addNewSound = new Audio('sound/mixkit-repeating-arcade-beep-1084.wav');
+		const alertSound = new Audio('sound/mixkit-quick-jump-arcade-game-239.wav');
+		const confirmSound = new Audio('sound/mixkit-video-game-lock-2851.wav');
+		const abortSound = new Audio('sound/mixkit-video-game-lock-2851-reverse.wav');
+
+		return {
+			toggleSound,
+			reverseToggleSound,
+			doneSound,
+			reverseDoneSound,
+			starSound,
+			reverseStarSound,
+			removeSound,
+			loadExampleSound,
+			addNewSound,
+			alertSound,
+			confirmSound,
+			abortSound,
+		};
+	}
+
 	static lastWidth = window.innerWidth;
 
 	static hamburgerAutoToggle() {
@@ -13,16 +43,14 @@ export default class UI {
 			main.classList.remove('sidebar-toggle');
 
 			if (this.lastWidth < 800) {
-				const toggle = new Audio('sound/mixkit-air-woosh-1489-pitch.wav');
-				toggle.play();
+				UI.loadAudio().toggleSound.play();
 			}
 		} else {
 			hamburger.classList.remove('open');
 			main.classList.add('sidebar-toggle');
 
 			if (this.lastWidth >= 800) {
-				const reverseToggle = new Audio('sound/mixkit-air-woosh-1489-pitch-reverse.wav');
-				reverseToggle.play();
+				UI.loadAudio().reverseToggleSound.play();
 			}
 		}
 		this.lastWidth = window.innerWidth;
@@ -35,13 +63,11 @@ export default class UI {
 		main.classList.toggle('sidebar-toggle');
 
 		if (e.target.closest('#hamburger.open')) {
-			const toggle = new Audio('sound/mixkit-air-woosh-1489-pitch.wav');
-			toggle.play();
+			UI.loadAudio().toggleSound.play();
 		}
 
 		if (e.target.closest('#hamburger:not(.open)')) {
-			const reverseToggle = new Audio('sound/mixkit-air-woosh-1489-pitch-reverse.wav');
-			reverseToggle.play();
+			UI.loadAudio().reverseToggleSound.play();
 		}
 	}
 
@@ -50,8 +76,7 @@ export default class UI {
 		if (e.target.textContent === currentList) {
 			if (e.target.classList.contains('nav-btn')) {
 				if (window.innerWidth < 800) {
-					const reverseToggle = new Audio('sound/mixkit-air-woosh-1489-pitch-reverse.wav');
-					reverseToggle.play();
+					UI.loadAudio().reverseToggleSound.play();
 				}
 			}
 		}
@@ -218,7 +243,7 @@ export default class UI {
 		this.updateActiveList(currentList, listName, nextList);
 		this.displayTasks();
 		this.selectList();
-		this.removeSound();
+		UI.loadAudio().removeSound.play();
 	}
 
 	static addEventHandler(selector, event, handler, location) {
@@ -303,7 +328,7 @@ export default class UI {
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 		this.masterList.toggleIsDoneInTask(listName, taskName);
 		this.displayTasks();
-		this.isDoneSound(e);
+		(!e.target.parentElement.classList.contains('done') ? UI.loadAudio().doneSound : UI.loadAudio().reverseDoneSound).play();
 	}
 
 	static createInputField(task, taskName) {
@@ -321,7 +346,7 @@ export default class UI {
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 		this.masterList.toggleStarInTask(listName, taskName);
 		this.displayTasks();
-		this.starSound(e);
+		(!e.target.classList.contains('yellow') ? UI.loadAudio().starSound : UI.loadAudio().reverseStarSound).play();
 	}
 
 	static removeTask(e) {
@@ -329,7 +354,7 @@ export default class UI {
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 		this.masterList.deleteTaskFromList(listName, taskName);
 		this.displayTasks();
-		this.removeSound();
+		UI.loadAudio().removeSound.play();
 	}
 
 	static addTaskHandlers(tasksList) {
@@ -463,7 +488,7 @@ export default class UI {
 			if (empty) {
 				empty.setAttribute('data-before', `${type} name cannot be empty`);
 			}
-			this.alertSound();
+			UI.loadAudio().alertSound.play();
 			return false;
 		}
 		return true;
@@ -478,7 +503,7 @@ export default class UI {
 			if (exists) {
 				exists.setAttribute('data-before', `List with this name already exists`);
 			}
-			this.alertSound();
+			UI.loadAudio().alertSound.play();
 			return false;
 		}
 		return true;
@@ -493,8 +518,7 @@ export default class UI {
 			if (exists) {
 				exists.setAttribute('data-before', `Task with this name already exists`);
 			}
-
-			this.alertSound();
+			UI.loadAudio().alertSound.play();
 			return false;
 		}
 		return true;
@@ -514,7 +538,7 @@ export default class UI {
 				this.setActiveList(name);
 				this.displayTasks();
 				this.selectList();
-				this.confirmSound();
+				UI.loadAudio().confirmSound.play();
 			}
 		}
 
@@ -527,14 +551,14 @@ export default class UI {
 				this.masterList.addTaskToList(this.getActiveList(), name);
 				this.closeInputContainer();
 				this.displayTasks();
-				this.confirmSound();
+				UI.loadAudio().confirmSound.play();
 			}
 		}
 	}
 
 	static cancelBtnPress(inputContainer) {
 		inputContainer.remove();
-		this.abortSound();
+		UI.loadAudio().abortSound.play();
 	}
 
 	static addNewElement(whichBtn, whereToAdd) {
@@ -565,7 +589,7 @@ export default class UI {
 				const inputField = whereToAdd.querySelector('input');
 				inputField.focus();
 			}
-			this.addNewSound();
+			UI.loadAudio().addNewSound.play();
 		});
 	}
 
@@ -609,60 +633,6 @@ export default class UI {
 			}
 		}
 	};
-
-	static isDoneSound(e) {
-		if (!e.target.parentElement.classList.contains('done')) {
-			const done = new Audio('sound/mixkit-game-ball-tap-2073.wav');
-			done.play();
-		}
-
-		if (e.target.parentElement.classList.contains('done')) {
-			const reverseDone = new Audio('sound/mixkit-game-ball-tap-2073-reverse-slow.wav');
-			reverseDone.play();
-		}
-	}
-
-	static starSound(e) {
-		if (!e.target.classList.contains('yellow')) {
-			const star = new Audio('sound/mixkit-retro-arcade-casino-notification-211.wav');
-			star.play();
-		}
-
-		if (e.target.classList.contains('yellow')) {
-			const reverseStar = new Audio('sound/mixkit-retro-arcade-casino-notification-211-reverse.wav');
-			reverseStar.play();
-		}
-	}
-
-	static removeSound() {
-		const remove = new Audio('sound/Empty-trash-sound-effect-reverse.mp3');
-		remove.play();
-	}
-
-	static loadSound() {
-		const remove = new Audio('sound/mixkit-player-boost-recharging-2040.wav');
-		remove.play();
-	}
-
-	static addNewSound() {
-		const addNew = new Audio('sound/mixkit-repeating-arcade-beep-1084.wav');
-		addNew.play();
-	}
-
-	static alertSound() {
-		const alert = new Audio('sound/mixkit-quick-jump-arcade-game-239.wav');
-		alert.play();
-	}
-
-	static confirmSound() {
-		const confirm = new Audio('sound/mixkit-video-game-lock-2851.wav');
-		confirm.play();
-	}
-
-	static abortSound() {
-		const abort = new Audio('sound/mixkit-video-game-lock-2851-reverse.wav');
-		abort.play();
-	}
 
 	static loadExampleContent = () => {
 		const lists = ['Shopping', 'Movies to watch', 'Places to visit', 'Great ideas!'];
@@ -786,7 +756,7 @@ export default class UI {
 		this.displayLists('TASKS');
 		this.displayTasks();
 		this.selectList();
-		this.removeSound();
+		UI.loadAudio().removeSound.play();
 	};
 
 	static attachEventListeners() {
@@ -802,7 +772,7 @@ export default class UI {
 
 		loadExampleBtn.addEventListener('click', () => {
 			this.loadExampleContent();
-			this.loadSound();
+			UI.loadAudio().loadExampleSound.play();
 		});
 
 		clearAllBtn.addEventListener('click', this.clearAllContent);
@@ -814,6 +784,7 @@ export default class UI {
 	}
 
 	static loadUserInterface() {
+		UI.loadAudio();
 		UI.hamburgerAutoToggle();
 		UI.displayLists('TASKS');
 		UI.displayTasks();
