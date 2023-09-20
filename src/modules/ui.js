@@ -135,6 +135,7 @@ export default class UI {
 
 	static handleInputField(element, name, listName, isTask) {
 		const inputField = this.createInputField(element, name);
+		inputField.value = inputField.value.trim();
 		let isEnterPressed = false;
 		let isEscapePressed = false;
 
@@ -525,7 +526,6 @@ export default class UI {
 	}
 
 	static addBtnPress(inputField, whereToAdd) {
-		// const name = inputField.value.trim();
 		const name = inputField.value;
 
 		if (whereToAdd.id === 'second-list') {
