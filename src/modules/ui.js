@@ -118,7 +118,6 @@ export default class UI {
 		});
 
 		this.setActiveList(activeList);
-
 		this.addListHandlers(secondList);
 	}
 
@@ -322,6 +321,7 @@ export default class UI {
 				});
 		}
 		this.addTaskHandlers(tasksList, tasksTitle);
+		this.disableAddTaskBtn();
 	}
 
 	static toggleIsDone(e) {
@@ -542,8 +542,6 @@ export default class UI {
 			}
 		}
 
-		console.log(this.masterList.getLists());
-
 		if (whereToAdd.className === 'tasks') {
 			if (!this.validateTaskName(name, 'two')) {
 				inputField.focus();
@@ -563,33 +561,35 @@ export default class UI {
 
 	static addNewElement(whichBtn, whereToAdd) {
 		whichBtn.addEventListener('click', () => {
-			let inputContainer = whereToAdd.querySelector('.input-container');
-			if (!inputContainer) {
-				this.closeInputContainer();
+			if (this.getActiveList() !== 'TODAY' && this.getActiveList() !== 'THIS WEEK') {
+				let inputContainer = whereToAdd.querySelector('.input-container');
+				if (!inputContainer) {
+					this.closeInputContainer();
 
-				const secondList = document.querySelector('#second-list');
-				const tasksList = document.querySelector('.tasks');
+					const secondList = document.querySelector('#second-list');
+					const tasksList = document.querySelector('.tasks');
 
-				if (whereToAdd === secondList) {
-					whereToAdd.append(this.createInputContainer());
-				} else if (whereToAdd === tasksList) {
-					whereToAdd.prepend(this.createInputContainer());
+					if (whereToAdd === secondList) {
+						whereToAdd.append(this.createInputContainer());
+					} else if (whereToAdd === tasksList) {
+						whereToAdd.prepend(this.createInputContainer());
+					}
+
+					const inputField = whereToAdd.querySelector('input');
+					inputField.focus();
+					inputContainer = whereToAdd.querySelector('.input-container');
+
+					const addBtn = whereToAdd.querySelector('.add-btn');
+					const cancelBtn = whereToAdd.querySelector('.cancel-btn');
+
+					addBtn.addEventListener('click', () => this.addBtnPress(inputField, whereToAdd));
+					cancelBtn.addEventListener('click', () => this.cancelBtnPress(inputContainer));
+				} else {
+					const inputField = whereToAdd.querySelector('input');
+					inputField.focus();
 				}
-
-				const inputField = whereToAdd.querySelector('input');
-				inputField.focus();
-				inputContainer = whereToAdd.querySelector('.input-container');
-
-				const addBtn = whereToAdd.querySelector('.add-btn');
-				const cancelBtn = whereToAdd.querySelector('.cancel-btn');
-
-				addBtn.addEventListener('click', () => this.addBtnPress(inputField, whereToAdd));
-				cancelBtn.addEventListener('click', () => this.cancelBtnPress(inputContainer));
-			} else {
-				const inputField = whereToAdd.querySelector('input');
-				inputField.focus();
+				UI.loadAudio().addNewSound.play();
 			}
-			UI.loadAudio().addNewSound.play();
 		});
 	}
 
@@ -603,6 +603,15 @@ export default class UI {
 		const newTaskBtn = document.querySelector('#add-task-btn');
 		const tasksList = document.querySelector('.tasks');
 		this.addNewElement(newTaskBtn, tasksList);
+	}
+
+	static disableAddTaskBtn() {
+		const newTaskBtn = document.querySelector('#add-task-btn');
+		if (this.getActiveList() === 'TODAY' || this.getActiveList() === 'THIS WEEK') {
+			newTaskBtn.classList.add('disabled');
+		} else {
+			newTaskBtn.classList.remove('disabled');
+		}
 	}
 
 	static closeInputContainer() {
