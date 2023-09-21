@@ -453,7 +453,8 @@ h2.title.default:hover {
 	border-width: 0.0625rem 0;
 }
 
-.tasks-list li:has(.task-content .input-field) {
+.tasks-list li:has(.task-content .input-field),
+.tasks-list li:has(.date .input-field) {
 	padding: 0rem 2rem;
 	min-height: 3.5rem;
 	transition: none;
@@ -473,6 +474,22 @@ h2.title.default:hover {
 
 .date {
 	white-space: nowrap;
+}
+
+.date:hover {
+	line-height: 2.5rem;
+	padding: 0rem 0.5rem;
+	border: 0.0625rem solid black;
+	cursor: pointer;
+}
+
+.date input {
+	max-height: 2.5rem;
+}
+
+.date:has(.input-field) {
+	padding: 0;
+	border: none;
 }
 
 .star:before {
