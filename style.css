@@ -24,6 +24,8 @@ body {
 	max-width: max(64rem, 1024px);
 	transition: 0.5s ease;
 	overflow: hidden;
+
+	min-height: 520px;
 }
 
 .header {
@@ -230,7 +232,7 @@ button.nav-btn {
 
 .add-btn {
 	background-color: #15803d;
-	border: solid 0.0625rem ;
+	border: solid 0.0625rem;
 }
 
 .cancel-btn {
@@ -601,9 +603,9 @@ h2.title.default:hover {
 
 #second-list .input-container.empty:before,
 #second-list .input-container.exists:before {
-	margin-left: -2rem;
-	padding: 0rem 1.5rem 0rem 2.5rem;
+	padding: 0rem 0rem 0rem 0.5rem;
 	border: 0.0625rem solid hsl(0, 0%, 37.5%);
+	max-width: calc(100% - 2.5rem);
 }
 
 .tasks-list li.lock .task-content,
@@ -686,6 +688,12 @@ button {
 	touch-action: manipulation;
 }
 
+#add-task-btn.disabled {
+	opacity: 50%;
+	filter: blur(2px);
+	cursor: not-allowed;
+}
+
 .footer {
 	background-color: black;
 	display: flex;
@@ -746,6 +754,11 @@ button {
 		margin: 0;
 		padding: 2rem 0;
 		width: 320px;
+	}
+
+	#second-list .input-container.empty:before,
+	#second-list .input-container.exists:before {
+		max-width: calc(100% - 0.5rem);
 	}
 
 	.input-container {
