@@ -25,6 +25,14 @@ export default class ListsManager {
 		}
 	}
 
+	getLists() {
+		return this.lists;
+	}
+
+	findList(listName) {
+		return this.lists.find((list) => list.name === listName);
+	}
+
 	addTaskToList(listName, taskName) {
 		const list = this.findList(listName);
 		if (list) {
@@ -40,25 +48,9 @@ export default class ListsManager {
 		}
 	}
 
-	changeTaskName(listName, taskName, newName) {
-		const task = this.findTaskInList(listName, taskName);
-		if (task) {
-			task.setName(newName);
-		}
-	}
-
-	toggleStarInTask(listName, taskName) {
-		const task = this.findTaskInList(listName, taskName);
-		if (task) {
-			task.toggleStar(task.star);
-		}
-	}
-
-	addStarInTask(listName, taskName) {
-		const task = this.findTaskInList(listName, taskName);
-		if (task) {
-			task.addStar(task.star);
-		}
+	findTaskInList(listName, taskName) {
+		const list = this.findList(listName);
+		return this.findList(listName) ? list.tasks.find((task) => task.name === taskName) : false;
 	}
 
 	toggleIsDoneInTask(listName, taskName) {
@@ -75,16 +67,31 @@ export default class ListsManager {
 		}
 	}
 
-	getLists() {
-		return this.lists;
+	changeTaskName(listName, taskName, newName) {
+		const task = this.findTaskInList(listName, taskName);
+		if (task) {
+			task.setName(newName);
+		}
 	}
 
-	findList(listName) {
-		return this.lists.find((list) => list.name === listName);
+	changeTaskDate(listName, taskName, newDate) {
+		const task = this.findTaskInList(listName, taskName);
+		if (task) {
+			task.setDate(newDate);
+		}
 	}
 
-	findTaskInList(listName, taskName) {
-		const list = this.findList(listName);
-		return this.findList(listName) ? list.tasks.find((task) => task.name === taskName) : false;
+	toggleStarInTask(listName, taskName) {
+		const task = this.findTaskInList(listName, taskName);
+		if (task) {
+			task.toggleStar(task.star);
+		}
+	}
+
+	addStarInTask(listName, taskName) {
+		const task = this.findTaskInList(listName, taskName);
+		if (task) {
+			task.addStar(task.star);
+		}
 	}
 }
