@@ -191,7 +191,6 @@ export default class UI {
 	static editName(e, isTask) {
 		const listName = this.getActiveList();
 		const element = e.target.closest(isTask ? '.task-content' : '.content .title');
-
 		if (element && !element.contains(document.querySelector('.input-field'))) {
 			const name = element.textContent;
 			element.textContent = '';
@@ -207,6 +206,53 @@ export default class UI {
 
 	static editTaskName(e) {
 		this.editName(e, true);
+	}
+
+	static editDate(e) {
+		const element = e.target.closest('.date');
+		const temp = element.textContent;
+
+		if (!element.querySelector('.input-field')) {
+			const dateField = this.createDateField(element);
+			if (element.querySelector('.input-field')) {
+				const currentList = this.getActiveList();
+				const taskName = e.target.parentElement.querySelector('.task-content').textContent;
+
+				const removeListeners = () => {
+					window.removeEventListener('keydown', keydownHandler);
+					window.removeEventListener('click', clickHandler);
+				};
+
+				const setTextContent = (value) => {
+					element.textContent = value;
+					removeListeners();
+				};
+
+				const keydownHandler = (k) => {
+					if (k.key === 'Enter') {
+						if (dateField.value) {
+							this.masterList.changeTaskDate(currentList, taskName, dateField.value);
+							setTextContent(dateField.value);
+						} else {
+							dateField.focus();
+						}
+					}
+					if (k.key === 'Escape') {
+						setTextContent(temp);
+					}
+				};
+
+				const clickHandler = (c) => {
+					if (!element.contains(c.target)) {
+						this.masterList.changeTaskDate(currentList, taskName, dateField.value);
+						setTextContent(dateField.value || 'set date');
+					}
+				};
+
+				window.addEventListener('click', clickHandler);
+				window.addEventListener('keydown', keydownHandler);
+			}
+		}
 	}
 
 	static getNextList(e) {
@@ -342,6 +388,20 @@ export default class UI {
 		return inputField;
 	}
 
+	static createDateField(task) {
+		const dateField = document.createElement('input');
+		dateField.type = 'date';
+		dateField.className = 'input-field';
+		dateField.min = '1900-01-01';
+		dateField.max = '2100-12-31';
+		dateField.value = task.textContent;
+		const clearTask = task;
+		clearTask.textContent = '';
+		task.append(dateField);
+		dateField.focus();
+		return dateField;
+	}
+
 	static toggleStar(e) {
 		const listName = this.getActiveList();
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
@@ -361,6 +421,7 @@ export default class UI {
 	static addTaskHandlers(tasksList) {
 		this.addEventHandler('.circle', 'click', this.toggleIsDone, tasksList);
 		this.addEventHandler('.task-content', 'click', this.editTaskName, tasksList);
+		this.addEventHandler('.date', 'click', this.editDate, tasksList);
 		this.addEventHandler('.star', 'click', this.toggleStar, tasksList);
 		this.addEventHandler('.remove', 'click', this.removeTask, tasksList);
 	}
