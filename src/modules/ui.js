@@ -1,4 +1,4 @@
-import { format, parseISO, parse } from 'date-fns';
+import { format, parseISO, parse, isThisWeek, isToday } from 'date-fns';
 
 import ListsManager from './manage';
 
@@ -355,6 +355,7 @@ export default class UI {
 		const tasksTitle = document.querySelector('.content .title');
 		const tasksList = document.querySelector('.tasks-list');
 		const currentList = this.getActiveList();
+
 		if (currentList) {
 			tasksList.textContent = '';
 			tasksTitle.textContent = currentList;
@@ -365,13 +366,38 @@ export default class UI {
 				tasksTitle.classList.remove('default');
 			}
 
-			this.masterList
-				.findList(currentList)
-				.getTasks()
-				.forEach((task) => {
-					tasksList.prepend(this.createTask(task));
+			if (tasksTitle.textContent === 'TODAY') {
+				const lists = this.masterList.getLists();
+				lists.splice(1, 2);
+
+				lists.forEach((list) => {
+					list.getTasks().forEach((task) => {
+						if (task.date !== 'set date' && isToday(parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd')))) {
+							tasksList.prepend(this.createTask(task));
+						}
+					});
 				});
+			} else if (tasksTitle.textContent === 'THIS WEEK') {
+				const lists = this.masterList.getLists();
+				lists.splice(1, 2);
+
+				lists.forEach((list) => {
+					list.getTasks().forEach((task) => {
+						if (task.date !== 'set date' && isThisWeek(parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd')))) {
+							tasksList.prepend(this.createTask(task));
+						}
+					});
+				});
+			} else {
+				this.masterList
+					.findList(currentList)
+					.getTasks()
+					.forEach((task) => {
+						tasksList.prepend(this.createTask(task));
+					});
+			}
 		}
+
 		this.addTaskHandlers(tasksList, tasksTitle);
 		this.disableAddTaskBtn();
 	}
