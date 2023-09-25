@@ -1,3 +1,5 @@
+import { format, parseISO } from 'date-fns';
+
 import ListsManager from './manage';
 
 export default class UI {
@@ -214,6 +216,7 @@ export default class UI {
 
 		if (!element.querySelector('.input-field')) {
 			const dateField = this.createDateField(element);
+
 			if (element.querySelector('.input-field')) {
 				const currentList = this.getActiveList();
 				const taskName = e.target.parentElement.querySelector('.task-content').textContent;
@@ -227,8 +230,9 @@ export default class UI {
 				const keydownHandler = (k) => {
 					if (k.key === 'Enter') {
 						if (dateField.value) {
-							this.masterList.changeTaskDate(currentList, taskName, dateField.value);
-							setTextContent(dateField.value);
+							const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
+							this.masterList.changeTaskDate(currentList, taskName, dateFormatted);
+							setTextContent(dateFormatted);
 						} else {
 							dateField.focus();
 						}
@@ -240,8 +244,10 @@ export default class UI {
 
 				const clickHandler = (c) => {
 					if (!element.contains(c.target)) {
-						this.masterList.changeTaskDate(currentList, taskName, dateField.value || 'set date');
-						setTextContent(dateField.value || 'set date');
+						const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
+
+						this.masterList.changeTaskDate(currentList, taskName, dateFormatted || 'set date');
+						setTextContent(dateFormatted || 'set date');
 					}
 				};
 
