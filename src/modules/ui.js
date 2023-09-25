@@ -218,14 +218,10 @@ export default class UI {
 				const currentList = this.getActiveList();
 				const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 
-				const removeListeners = () => {
-					window.removeEventListener('keydown', keydownHandler);
-					window.removeEventListener('click', clickHandler);
-				};
-
 				const setTextContent = (value) => {
 					element.textContent = value;
-					removeListeners();
+					window.removeEventListener('click', clickHandler);
+					window.removeEventListener('keydown', keydownHandler);
 				};
 
 				const keydownHandler = (k) => {
@@ -244,7 +240,7 @@ export default class UI {
 
 				const clickHandler = (c) => {
 					if (!element.contains(c.target)) {
-						this.masterList.changeTaskDate(currentList, taskName, dateField.value);
+						this.masterList.changeTaskDate(currentList, taskName, dateField.value || 'set date');
 						setTextContent(dateField.value || 'set date');
 					}
 				};
@@ -847,9 +843,7 @@ export default class UI {
 
 		clearAllBtn.addEventListener('click', this.clearAllContent);
 		window.addEventListener('keydown', this.handleKeyboardAddCancel);
-
 		window.addEventListener('click', this.closeInputContainerOnClick.bind(this), true);
-
 		tasksTitle.addEventListener('click', this.editListName.bind(this));
 	}
 
