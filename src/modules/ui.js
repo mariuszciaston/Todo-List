@@ -366,7 +366,7 @@ export default class UI {
 				tasksTitle.classList.remove('default');
 			}
 
-			if (tasksTitle.textContent === 'TODAY' || tasksTitle.textContent === 'THIS WEEK') {
+			if (tasksTitle.textContent === 'TODAY' && tasksTitle.textContent === 'THIS WEEK') {
 				const lists = this.masterList.getLists();
 				lists.splice(1, 2);
 
