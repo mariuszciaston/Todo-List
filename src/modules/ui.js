@@ -1,4 +1,4 @@
-import { format, parseISO } from 'date-fns';
+import { format, parseISO, parse } from 'date-fns';
 
 import ListsManager from './manage';
 
@@ -255,7 +255,7 @@ export default class UI {
 					}
 				};
 
-				window.addEventListener('click', clickHandler);
+				window.addEventListener('click', clickHandler, true);
 				window.addEventListener('keydown', keydownHandler);
 			}
 		}
@@ -394,16 +394,20 @@ export default class UI {
 		return inputField;
 	}
 
-	static createDateField(task) {
+	static createDateField(dateElement) {
 		const dateField = document.createElement('input');
 		dateField.type = 'date';
 		dateField.className = 'input-field';
 		dateField.min = '1900-01-01';
 		dateField.max = '2100-12-31';
-		dateField.value = task.textContent;
-		const clearTask = task;
-		clearTask.textContent = '';
-		task.append(dateField);
+
+		if (dateElement.textContent !== 'set date') {
+			dateField.value = format(parse(dateElement.textContent, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd');
+		}
+
+		const clear = dateElement;
+		clear.textContent = '';
+		dateElement.append(dateField);
 		dateField.focus();
 		return dateField;
 	}
