@@ -366,25 +366,17 @@ export default class UI {
 				tasksTitle.classList.remove('default');
 			}
 
-			if (tasksTitle.textContent === 'TODAY') {
+			if (tasksTitle.textContent === 'TODAY' || tasksTitle.textContent === 'THIS WEEK') {
 				const lists = this.masterList.getLists();
 				lists.splice(1, 2);
 
 				lists.forEach((list) => {
 					list.getTasks().forEach((task) => {
-						if (task.date !== 'set date' && isToday(parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd')))) {
-							tasksList.prepend(this.createTask(task));
-						}
-					});
-				});
-			} else if (tasksTitle.textContent === 'THIS WEEK') {
-				const lists = this.masterList.getLists();
-				lists.splice(1, 2);
-
-				lists.forEach((list) => {
-					list.getTasks().forEach((task) => {
-						if (task.date !== 'set date' && isThisWeek(parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd')))) {
-							tasksList.prepend(this.createTask(task));
+						if (task.date !== 'set date') {
+							const taskDate = parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'));
+							if ((tasksTitle.textContent === 'TODAY' && isToday(taskDate)) || (tasksTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate))) {
+								tasksList.prepend(this.createTask(task));
+							}
 						}
 					});
 				});
@@ -397,7 +389,6 @@ export default class UI {
 					});
 			}
 		}
-
 		this.addTaskHandlers(tasksList, tasksTitle);
 		this.disableAddTaskBtn();
 	}
