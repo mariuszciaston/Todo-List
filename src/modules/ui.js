@@ -244,10 +244,14 @@ export default class UI {
 
 				const clickHandler = (c) => {
 					if (!element.contains(c.target)) {
-						const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
-
-						this.masterList.changeTaskDate(currentList, taskName, dateFormatted || 'set date');
-						setTextContent(dateFormatted || 'set date');
+						if (dateField.value) {
+							const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
+							this.masterList.changeTaskDate(currentList, taskName, dateFormatted);
+							setTextContent(dateFormatted);
+						} else {
+							this.masterList.changeTaskDate(currentList, taskName, 'set date');
+							setTextContent('set date');
+						}
 					}
 				};
 
@@ -812,13 +816,13 @@ export default class UI {
 		loadTasks('Movies to watch', moviesToWatch);
 		loadTasks('Great ideas!', greatIdeas);
 
-		this.masterList.addStarInTask('TASKS', 'Conquer the Crown of Polish Mountains');
+		this.masterList.addStarInTask('TASKS', 'Finish The Odin Project');
 		this.masterList.addIsDoneInTask('TASKS', 'Go swimming on Tuesday');
+		this.masterList.addIsDoneInTask('TASKS', 'Conquer the Crown of Polish Mountains');
+		const currentDate = format(new Date(), 'dd/MM/yyyy');
+		this.masterList.changeTaskDate('TASKS', 'Bake Neapolitan pizza', currentDate);
 
 		this.displayLists('TASKS');
-
-		this.displayLists('Shopping');
-
 		this.displayTasks();
 		this.selectList();
 	};
