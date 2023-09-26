@@ -376,16 +376,44 @@ export default class UI {
 					tasksList.prepend(this.createTask(task));
 				});
 		} else {
+			this.masterList.findList('TODAY').clearTasks();
+			this.masterList.findList('THIS WEEK').clearTasks();
+
 			this.masterList.getLists().forEach((list) => {
-				list.getTasks().forEach((task) => {
-					if (task.date !== 'set date') {
-						const taskDate = parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'));
-						if ((tasksTitle.textContent === 'TODAY' && isToday(taskDate)) || (tasksTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate))) {
-							tasksList.prepend(this.createTask(task));
+				if (list.name !== 'TODAY' && list.name !== 'THIS WEEK')
+					list.getTasks().forEach((task) => {
+						if (task.date !== 'set date') {
+							const taskDate = parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'));
+							if (tasksTitle.textContent === 'TODAY' && isToday(taskDate)) {
+								this.masterList.findList('TODAY').addTask(task);
+							}
+
+							if (tasksTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate)) {
+								this.masterList.findList('THIS WEEK').addTask(task);
+							}
 						}
-					}
-				});
+					});
 			});
+
+			this.masterList
+				.findList('TODAY')
+				.getTasks()
+				.forEach((task) => {
+					tasksList.append(this.createTask(task));
+				});
+
+			this.masterList
+				.findList('THIS WEEK')
+				.getTasks()
+				.sort((a, b) => {
+					const dateA = parse(a.date, 'dd/MM/yyyy', new Date());
+					const dateB = parse(b.date, 'dd/MM/yyyy', new Date());
+
+					return dateA - dateB;
+				})
+				.forEach((task) => {
+					tasksList.append(this.createTask(task));
+				});
 		}
 
 		this.addTaskHandlers(tasksList, tasksTitle);
