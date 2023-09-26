@@ -369,55 +369,70 @@ export default class UI {
 		this.disableListNameHover(tasksTitle);
 
 		if (tasksTitle.textContent !== 'TODAY' && tasksTitle.textContent !== 'THIS WEEK') {
-			this.masterList
-				.findList(currentList)
-				.getTasks()
-				.forEach((task) => {
-					tasksList.prepend(this.createTask(task));
-				});
+			this.displayRegularTasks(tasksList, currentList);
 		} else {
-			this.masterList.findList('TODAY').clearTasks();
-			this.masterList.findList('THIS WEEK').clearTasks();
-
-			this.masterList.getLists().forEach((list) => {
-				if (list.name !== 'TODAY' && list.name !== 'THIS WEEK')
-					list.getTasks().forEach((task) => {
-						if (task.date !== 'set date') {
-							const taskDate = parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'));
-							if (tasksTitle.textContent === 'TODAY' && isToday(taskDate)) {
-								this.masterList.findList('TODAY').addTask(task);
-							}
-
-							if (tasksTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate)) {
-								this.masterList.findList('THIS WEEK').addTask(task);
-							}
-						}
-					});
-			});
-
-			this.masterList
-				.findList('TODAY')
-				.getTasks()
-				.forEach((task) => {
-					tasksList.append(this.createTask(task));
-				});
-
-			this.masterList
-				.findList('THIS WEEK')
-				.getTasks()
-				.sort((a, b) => {
-					const dateA = parse(a.date, 'dd/MM/yyyy', new Date());
-					const dateB = parse(b.date, 'dd/MM/yyyy', new Date());
-
-					return dateA - dateB;
-				})
-				.forEach((task) => {
-					tasksList.append(this.createTask(task));
-				});
+			this.displaySpecialTasks(tasksList, tasksTitle);
 		}
 
 		this.addTaskHandlers(tasksList, tasksTitle);
 		this.disableAddTaskBtn();
+	}
+
+	static displayRegularTasks(tasksList, currentList) {
+		this.masterList
+			.findList(currentList)
+			.getTasks()
+			.forEach((task) => {
+				tasksList.prepend(this.createTask(task));
+			});
+	}
+
+	static displaySpecialTasks(tasksList, tasksTitle) {
+		this.masterList.findList('TODAY').clearTasks();
+		this.masterList.findList('THIS WEEK').clearTasks();
+
+		this.masterList.getLists().forEach((list) => {
+			if (list.name !== 'TODAY' && list.name !== 'THIS WEEK') this.addTasksToSpecialLists(list, tasksTitle);
+		});
+
+		this.displayTasksFromSpecialLists(tasksList);
+	}
+
+	static addTasksToSpecialLists(list, tasksTitle) {
+		list.getTasks().forEach((task) => {
+			if (task.date !== 'set date') {
+				const taskDate = parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'));
+				if (tasksTitle.textContent === 'TODAY' && isToday(taskDate)) {
+					this.masterList.findList('TODAY').addTask(task);
+				}
+
+				if (tasksTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate)) {
+					this.masterList.findList('THIS WEEK').addTask(task);
+				}
+			}
+		});
+	}
+
+	static displayTasksFromSpecialLists(tasksList) {
+		this.masterList
+			.findList('TODAY')
+			.getTasks()
+			.forEach((task) => {
+				tasksList.append(this.createTask(task));
+			});
+
+		this.masterList
+			.findList('THIS WEEK')
+			.getTasks()
+			.sort((a, b) => {
+				const dateA = parse(a.date, 'dd/MM/yyyy', new Date());
+				const dateB = parse(b.date, 'dd/MM/yyyy', new Date());
+
+				return dateA - dateB;
+			})
+			.forEach((task) => {
+				tasksList.append(this.createTask(task));
+			});
 	}
 
 	static toggleIsDone(e) {
