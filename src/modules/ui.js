@@ -1,4 +1,4 @@
-import { format, parseISO, parse, isThisWeek, isToday } from 'date-fns';
+import { format, parseISO, parse, isThisWeek, isToday, addDays } from 'date-fns';
 
 import ListsManager from './manage';
 
@@ -761,56 +761,56 @@ export default class UI {
 		const placesToVisit = ['Amsterdam', 'Berlin', 'Madrid', 'Rome', 'London', 'Paris', 'Prague', 'Stockholm', 'Vienna'];
 
 		const moviesToWatch = [
-			'1. 2001: A Space Odyssey (1968)',
-			'2. Blade Runner (1982)',
-			'3. Star Wars: Episode IV - A New Hope (1977)',
-			'4. Alien (1979)',
-			'5. Star Wars: Episode V - The Empire Strikes Back (1980)',
-			'6. Planet of the Apes (1968)',
-			'7. Star Trek II: The Wrath of Khan (1982)',
-			'8. The Matrix (1999)',
-			'9. The Thing (1982)',
-			'10. Jurassic Park (1993)',
-			'11. Aliens (1986)',
-			'12. E.T. the Extra-Terrestrial (1982)',
-			'13. A Clockwork Orange (1971)',
-			'14. The Day the Earth Stood Still (1951)',
-			'15. Invasion of the Body Snatchers (1956)',
-			'16. Metropolis (1927)',
-			'17. Terminator 2: Judgement Day (1991)',
-			'18. Forbidden Planet (1956)',
-			'19. Close Encounters of the Third Kind (1977)',
-			'20. Back to the Future (1985)',
-			'21. Brazil (1985)',
-			'22. Starship Troopers (1997)',
-			'23. Ex Machina (2014)',
-			'24. Wall-E (2008)',
-			'25. Inception (2010)',
+			'2001: A Space Odyssey (1968)',
+			'Blade Runner (1982)',
+			'Star Wars: Episode IV - A New Hope (1977)',
+			'Alien (1979)',
+			'Star Wars: Episode V - The Empire Strikes Back (1980)',
+			'Planet of the Apes (1968)',
+			'Star Trek II: The Wrath of Khan (1982)',
+			'The Matrix (1999)',
+			'The Thing (1982)',
+			'Jurassic Park (1993)',
+			'Aliens (1986)',
+			'E.T. the Extra-Terrestrial (1982)',
+			'A Clockwork Orange (1971)',
+			'The Day the Earth Stood Still (1951)',
+			'Invasion of the Body Snatchers (1956)',
+			'Metropolis (1927)',
+			'Terminator 2: Judgement Day (1991)',
+			'Forbidden Planet (1956)',
+			'Close Encounters of the Third Kind (1977)',
+			'Back to the Future (1985)',
+			'Brazil (1985)',
+			'Starship Troopers (1997)',
+			'Ex Machina (2014)',
+			'Wall-E (2008)',
+			'Inception (2010)',
 		];
 
 		const greatIdeas = [
-			'1) Travel to a country where you don’t speak the language',
-			'2) Go on a solo trip',
-			'3) Visit a “Dark Sky” site',
-			'4) Live abroad for a year',
-			'5) Take a pottery class',
-			'6) Plant a vegetable garden',
-			'7) Start a book club',
-			'8) Write a book',
-			'9) Teach a class',
-			'10) Become a mentor',
-			'11) Climb a mountain',
-			'12) Run a marathon',
-			'13) Start your own business',
-			'14) Plant a tree and watch it grow',
-			'15) Become a volunteer',
-			'16) Adopt a pet',
-			'17) Try skydiving',
-			'18) Take a hot air balloon ride',
-			'19) Learn to meditate',
-			'20) Join a dance class',
-			'21) Write a Letter to Your Future Self',
-			'22) Do Something—anything!—You’ve never done',
+			'Travel to a country where you don’t speak the language',
+			'Go on a solo trip',
+			'Visit a “Dark Sky” site',
+			'Live abroad for a year',
+			'Take a pottery class',
+			'Plant a vegetable garden',
+			'Start a book club',
+			'Write a book',
+			'Teach a class',
+			'Become a mentor',
+			'Climb a mountain',
+			'Run a marathon',
+			'Start your own business',
+			'Plant a tree and watch it grow',
+			'Become a volunteer',
+			'Adopt a pet',
+			'Try skydiving',
+			'Take a hot air balloon ride',
+			'Learn to meditate',
+			'Join a dance class',
+			'Write a Letter to Your Future Self',
+			'Do Something, anything! You’ve never done',
 		];
 
 		const loadLists = (listsArray) => {
@@ -837,10 +837,32 @@ export default class UI {
 		loadTasks('Great ideas!', greatIdeas);
 
 		this.masterList.addStarInTask('TASKS', 'Finish The Odin Project');
+		this.masterList.addStarInTask('Movies to watch', 'The Matrix (1999)');
+		this.masterList.addStarInTask('Movies to watch', '2001: A Space Odyssey (1968)');
+		this.masterList.addStarInTask('Movies to watch', 'Alien (1979)');
+		this.masterList.addStarInTask('Movies to watch', 'Aliens (1986)');
+		this.masterList.addStarInTask('Movies to watch', 'Terminator 2: Judgement Day (1991)');
+		this.masterList.addStarInTask('Movies to watch', 'Back to the Future (1985)');
+
 		this.masterList.addIsDoneInTask('TASKS', 'Go swimming on Tuesday');
 		this.masterList.addIsDoneInTask('TASKS', 'Conquer the Crown of Polish Mountains');
-		const currentDate = format(new Date(), 'dd/MM/yyyy');
-		this.masterList.changeTaskDate('TASKS', 'Bake Neapolitan pizza', currentDate);
+		this.masterList.addIsDoneInTask('Shopping', 'Onion');
+		this.masterList.addIsDoneInTask('Shopping', 'Broccoli');
+		this.masterList.addIsDoneInTask('Shopping', 'Garlic');
+		this.masterList.addIsDoneInTask('Shopping', 'Lemons/Limes');
+
+		const todaysDate = format(new Date(), 'dd/MM/yyyy');
+		const tommorowsDate = format(addDays(new Date(), 1), 'dd/MM/yyyy');
+		const theDayAfterTommorowsDate = format(addDays(new Date(), 2), 'dd/MM/yyyy');
+
+		this.masterList.changeTaskDate('TASKS', 'Bake Neapolitan pizza', todaysDate);
+		this.masterList.changeTaskDate('Movies to watch', 'The Matrix (1999)', todaysDate);
+		this.masterList.changeTaskDate('Great ideas!', 'Learn to meditate', todaysDate);
+		this.masterList.changeTaskDate('Great ideas!', 'Climb a mountain', tommorowsDate);
+		this.masterList.changeTaskDate('Great ideas!', 'Try skydiving', tommorowsDate);
+		this.masterList.changeTaskDate('Great ideas!', 'Join a dance class', theDayAfterTommorowsDate);
+		this.masterList.changeTaskDate('Great ideas!', 'Plant a tree and watch it grow', theDayAfterTommorowsDate);
+		this.masterList.changeTaskDate('Great ideas!', 'Go on a solo trip', theDayAfterTommorowsDate);
 
 		this.displayLists('TASKS');
 		this.displayTasks();
