@@ -483,6 +483,15 @@ export default class UI {
 		const listName = this.getActiveList();
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 		this.masterList.deleteTaskFromList(listName, taskName);
+
+		if (listName === 'TODAY' || listName === 'THIS WEEK') {
+			this.masterList.getLists().forEach((list) => {
+				if (list.name !== 'TODAY' && list.name !== 'THIS WEEK') {
+					this.masterList.deleteTaskFromList(list.name, taskName);
+				}
+			});
+		}
+
 		this.displayTasks();
 		UI.loadAudio().removeSound.play();
 	}
