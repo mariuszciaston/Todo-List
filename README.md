@@ -1,6 +1,6 @@
 # minimaLIST
 
-Minimalistic black and white Todo list app
+Minimalistic black and white Todo list app with cute sounds
 
 Work in progress...
 
