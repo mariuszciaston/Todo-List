@@ -233,6 +233,7 @@ export default class UI {
 							const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
 							this.masterList.changeTaskDate(currentList, taskName, dateFormatted);
 							setTextContent(dateFormatted);
+							this.displayTasks();
 						} else {
 							dateField.focus();
 						}
@@ -248,6 +249,7 @@ export default class UI {
 							const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
 							this.masterList.changeTaskDate(currentList, taskName, dateFormatted);
 							setTextContent(dateFormatted);
+							this.displayTasks();
 						} else {
 							this.masterList.changeTaskDate(currentList, taskName, 'set date');
 							setTextContent('set date');
@@ -255,7 +257,8 @@ export default class UI {
 					}
 				};
 
-				window.addEventListener('click', clickHandler, true);
+				// window.addEventListener('click', clickHandler, true);
+				window.addEventListener('click', clickHandler);
 				window.addEventListener('keydown', keydownHandler);
 			}
 		}
