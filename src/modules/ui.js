@@ -351,44 +351,43 @@ export default class UI {
 		return li;
 	}
 
+	static disableListNameHover(tasksTitle) {
+		if (tasksTitle.textContent === 'TASKS' || tasksTitle.textContent === 'TODAY' || tasksTitle.textContent === 'THIS WEEK') {
+			tasksTitle.classList.add('default');
+		} else {
+			tasksTitle.classList.remove('default');
+		}
+	}
+
 	static displayTasks() {
 		const tasksTitle = document.querySelector('.content .title');
 		const tasksList = document.querySelector('.tasks-list');
 		const currentList = this.getActiveList();
 
-		if (currentList) {
-			tasksList.textContent = '';
-			tasksTitle.textContent = currentList;
+		tasksList.textContent = '';
+		tasksTitle.textContent = currentList;
+		this.disableListNameHover(tasksTitle);
 
-			if (tasksTitle.textContent === 'TASKS' || tasksTitle.textContent === 'TODAY' || tasksTitle.textContent === 'THIS WEEK') {
-				tasksTitle.classList.add('default');
-			} else {
-				tasksTitle.classList.remove('default');
-			}
-
-			if (tasksTitle.textContent === 'TODAY' && tasksTitle.textContent === 'THIS WEEK') {
-				const lists = this.masterList.getLists();
-				lists.splice(1, 2);
-
-				lists.forEach((list) => {
-					list.getTasks().forEach((task) => {
-						if (task.date !== 'set date') {
-							const taskDate = parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'));
-							if ((tasksTitle.textContent === 'TODAY' && isToday(taskDate)) || (tasksTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate))) {
-								tasksList.prepend(this.createTask(task));
-							}
-						}
-					});
+		if (tasksTitle.textContent !== 'TODAY' && tasksTitle.textContent !== 'THIS WEEK') {
+			this.masterList
+				.findList(currentList)
+				.getTasks()
+				.forEach((task) => {
+					tasksList.prepend(this.createTask(task));
 				});
-			} else {
-				this.masterList
-					.findList(currentList)
-					.getTasks()
-					.forEach((task) => {
-						tasksList.prepend(this.createTask(task));
-					});
-			}
+		} else {
+			this.masterList.getLists().forEach((list) => {
+				list.getTasks().forEach((task) => {
+					if (task.date !== 'set date') {
+						const taskDate = parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'));
+						if ((tasksTitle.textContent === 'TODAY' && isToday(taskDate)) || (tasksTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate))) {
+							tasksList.prepend(this.createTask(task));
+						}
+					}
+				});
+			});
 		}
+
 		this.addTaskHandlers(tasksList, tasksTitle);
 		this.disableAddTaskBtn();
 	}
