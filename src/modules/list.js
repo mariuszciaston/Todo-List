@@ -23,4 +23,8 @@ export default class List {
 	getTasks() {
 		return this.tasks;
 	}
+
+	clearTasks() {
+		this.tasks = [];
+	}
 }
