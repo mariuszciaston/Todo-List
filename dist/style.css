@@ -484,7 +484,8 @@ h2.title.default:hover {
 }
 
 .date input {
-	max-height: 2.5rem;
+	height: 2.5rem;
+	max-width: min-content;
 }
 
 .date:has(.input-field) {
