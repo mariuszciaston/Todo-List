@@ -256,8 +256,6 @@ export default class UI {
 						}
 					}
 				};
-
-				// window.addEventListener('click', clickHandler, true);
 				window.addEventListener('click', clickHandler);
 				window.addEventListener('keydown', keydownHandler);
 			}
@@ -950,7 +948,7 @@ export default class UI {
 
 		clearAllBtn.addEventListener('click', this.clearAllContent);
 		window.addEventListener('keydown', this.handleKeyboardAddCancel);
-		window.addEventListener('click', this.closeInputContainerOnClick.bind(this), true);
+		window.addEventListener('click', this.closeInputContainerOnClick.bind(this));
 		tasksTitle.addEventListener('click', this.editListName.bind(this));
 	}
 
