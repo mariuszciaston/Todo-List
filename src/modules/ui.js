@@ -741,7 +741,7 @@ export default class UI {
 		}
 	}
 
-	static handleKeyboardAddCancel = (e) => {
+	static handleKeyboardAddCancel(e) {
 		const inputContainer = document.querySelector('.input-container');
 		if (inputContainer) {
 			if (e.key === 'Enter') {
@@ -752,15 +752,13 @@ export default class UI {
 				cancelBtn.click();
 			}
 		}
-	};
+	}
 
-	static loadExampleContent = () => {
+	static loadExampleContent() {
 		const loadLists = (listsArray) => {
 			listsArray.forEach((list) => {
 				if (!Storage.masterList.findList(list)) {
 					Storage.masterList.addList(list);
-					Storage.clearAll();
-					Storage.saveAll();
 				}
 			});
 		};
@@ -773,55 +771,54 @@ export default class UI {
 			});
 		};
 
+		const loadStars = (starsArray) => {
+			starsArray.forEach((item) => Storage.masterList.addStarInTask(item.list, item.task));
+		};
+
+		const loadIsDone = (isDoneArray) => {
+			isDoneArray.forEach((item) => Storage.masterList.addIsDoneInTask(item.list, item.task));
+		};
+
+		const todaysDate = format(new Date(), 'dd/MM/yyyy');
+		const tommorowsDate = format(addDays(new Date(), 1), 'dd/MM/yyyy');
+		const theDayAfterTommorowsDate = format(addDays(new Date(), 2), 'dd/MM/yyyy');
+
+		const getRandomDate = () => {
+			const dates = [todaysDate, tommorowsDate, theDayAfterTommorowsDate];
+			return dates[Math.floor(Math.random() * dates.length)];
+		};
+
+		const loadDates = (datesArray) => {
+			datesArray.forEach((item) => Storage.masterList.changeTaskDate(item.list, item.task, getRandomDate()));
+		};
+
 		loadLists(ContentExample.lists);
+
 		loadTasks('TASKS', ContentExample.tasks);
 		loadTasks('Shopping', ContentExample.shopping);
 		loadTasks('Places to visit', ContentExample.placesToVisit);
 		loadTasks('Movies to watch', ContentExample.moviesToWatch);
 		loadTasks('Great ideas!', ContentExample.greatIdeas);
 
-		Storage.masterList.addStarInTask('TASKS', 'Finish The Odin Project');
-		Storage.masterList.addStarInTask('Movies to watch', 'The Matrix (1999)');
-		Storage.masterList.addStarInTask('Movies to watch', '2001: A Space Odyssey (1968)');
-		Storage.masterList.addStarInTask('Movies to watch', 'Alien (1979)');
-		Storage.masterList.addStarInTask('Movies to watch', 'Aliens (1986)');
-		Storage.masterList.addStarInTask('Movies to watch', 'Terminator 2: Judgement Day (1991)');
-		Storage.masterList.addStarInTask('Movies to watch', 'Back to the Future (1985)');
+		loadStars(ContentExample.addStars);
+		loadIsDone(ContentExample.addIsDone);
+		loadDates(ContentExample.addDates);
 
-		Storage.masterList.addIsDoneInTask('TASKS', 'Go swimming on Tuesday');
-		Storage.masterList.addIsDoneInTask('TASKS', 'Conquer the Crown of Polish Mountains');
-		Storage.masterList.addIsDoneInTask('Shopping', 'Onion');
-		Storage.masterList.addIsDoneInTask('Shopping', 'Broccoli');
-		Storage.masterList.addIsDoneInTask('Shopping', 'Garlic');
-		Storage.masterList.addIsDoneInTask('Shopping', 'Lemons/Limes');
-
-		const todaysDate = format(new Date(), 'dd/MM/yyyy');
-		const tommorowsDate = format(addDays(new Date(), 1), 'dd/MM/yyyy');
-		const theDayAfterTommorowsDate = format(addDays(new Date(), 2), 'dd/MM/yyyy');
-
-		Storage.masterList.changeTaskDate('TASKS', 'Bake Neapolitan pizza', todaysDate);
-		Storage.masterList.changeTaskDate('Movies to watch', 'The Matrix (1999)', todaysDate);
-		Storage.masterList.changeTaskDate('Great ideas!', 'Learn to meditate', todaysDate);
-		Storage.masterList.changeTaskDate('Great ideas!', 'Climb a mountain', tommorowsDate);
-		Storage.masterList.changeTaskDate('Great ideas!', 'Try skydiving', tommorowsDate);
-		Storage.masterList.changeTaskDate('Great ideas!', 'Join a dance class', theDayAfterTommorowsDate);
-		Storage.masterList.changeTaskDate('Great ideas!', 'Plant a tree and watch it grow', theDayAfterTommorowsDate);
-		Storage.masterList.changeTaskDate('Great ideas!', 'Go on a solo trip', theDayAfterTommorowsDate);
-
+		Storage.clearAll();
 		Storage.saveAll();
 		this.displayLists('TASKS');
 		this.displayTasks();
 		this.selectList();
-	};
+	}
 
-	static clearAllContent = () => {
+	static clearAllContent() {
 		Storage.resetMasterList();
 		Storage.clearAll();
 		this.displayLists('TASKS');
 		this.displayTasks();
 		this.selectList();
 		Sound.loadAudio().removeSound.play();
-	};
+	}
 
 	static attachEventListeners() {
 		const hamburger = document.querySelector('#hamburger');
@@ -855,6 +852,6 @@ export default class UI {
 		UI.addNewList();
 		UI.addNewTask();
 		UI.attachEventListeners();
-		UI.loadExampleContent();
+		// UI.loadExampleContent();
 	}
 }
