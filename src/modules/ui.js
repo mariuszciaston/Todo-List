@@ -1,10 +1,8 @@
 import { format, parseISO, parse, isThisWeek, isToday, addDays } from 'date-fns';
 
-import ListsManager from './manage';
+import Storage from './storage';
 
 export default class UI {
-	static masterList = new ListsManager();
-
 	static loadAudio() {
 		const toggleSound = new Audio('sound/mixkit-air-woosh-1489-pitch.wav');
 		const reverseToggleSound = new Audio('sound/mixkit-air-woosh-1489-pitch-reverse.wav');
@@ -102,8 +100,8 @@ export default class UI {
 	}
 
 	static displayLists(activeList) {
-		const listOne = this.masterList.getLists().slice(0, 3);
-		const listTwo = this.masterList.getLists().slice(3);
+		const listOne = Storage.masterList.getLists().slice(0, 3);
+		const listTwo = Storage.masterList.getLists().slice(3);
 		const firstList = document.querySelector('#first-list');
 		const secondList = document.querySelector('#second-list');
 		firstList.textContent = '';
@@ -143,7 +141,7 @@ export default class UI {
 		const changeName = () => {
 			if (isTask) {
 				if (this.validateTaskName(inputField.value, 'one')) {
-					this.masterList.changeTaskName(listName, name, inputField.value);
+					Storage.masterList.changeTaskName(listName, name, inputField.value);
 					this.displayTasks();
 				} else {
 					setTimeout(() => {
@@ -151,7 +149,7 @@ export default class UI {
 					}, 1000);
 				}
 			} else if (this.validateListName(inputField.value, 'one')) {
-				this.masterList.changeListName(name, inputField.value);
+				Storage.masterList.changeListName(name, inputField.value);
 				this.setActiveList(inputField.value);
 				this.updateListName(inputField);
 				this.selectList();
@@ -231,7 +229,7 @@ export default class UI {
 					if (k.key === 'Enter') {
 						if (dateField.value) {
 							const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
-							this.masterList.changeTaskDate(currentList, taskName, dateFormatted);
+							Storage.masterList.changeTaskDate(currentList, taskName, dateFormatted);
 							setTextContent(dateFormatted);
 							this.displayTasks();
 						} else {
@@ -247,11 +245,11 @@ export default class UI {
 					if (!element.contains(c.target)) {
 						if (dateField.value) {
 							const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
-							this.masterList.changeTaskDate(currentList, taskName, dateFormatted);
+							Storage.masterList.changeTaskDate(currentList, taskName, dateFormatted);
 							setTextContent(dateFormatted);
 							this.displayTasks();
 						} else {
-							this.masterList.changeTaskDate(currentList, taskName, 'set date');
+							Storage.masterList.changeTaskDate(currentList, taskName, 'set date');
 							setTextContent('set date');
 						}
 					}
@@ -275,7 +273,7 @@ export default class UI {
 	}
 
 	static updateActiveList(currentList, listName, nextList) {
-		const lastList = this.masterList.getLists().slice(-1)[0].name;
+		const lastList = Storage.masterList.getLists().slice(-1)[0].name;
 
 		if (currentList !== listName) {
 			this.setActiveList(currentList);
@@ -291,7 +289,7 @@ export default class UI {
 		const currentList = this.getActiveList();
 		const nextList = this.getNextList(e);
 
-		this.masterList.deleteList(listName);
+		Storage.masterList.deleteList(listName);
 		this.displayLists();
 		this.updateActiveList(currentList, listName, nextList);
 		this.displayTasks();
@@ -380,7 +378,7 @@ export default class UI {
 	}
 
 	static displayRegularTasks(tasksList, currentList) {
-		this.masterList
+		Storage.masterList
 			.findList(currentList)
 			.getTasks()
 			.forEach((task) => {
@@ -389,10 +387,10 @@ export default class UI {
 	}
 
 	static displaySpecialTasks(tasksList, tasksTitle) {
-		this.masterList.findList('TODAY').clearTasks();
-		this.masterList.findList('THIS WEEK').clearTasks();
+		Storage.masterList.findList('TODAY').clearTasks();
+		Storage.masterList.findList('THIS WEEK').clearTasks();
 
-		this.masterList.getLists().forEach((list) => {
+		Storage.masterList.getLists().forEach((list) => {
 			if (list.name !== 'TODAY' && list.name !== 'THIS WEEK') this.addTasksToSpecialLists(list, tasksTitle);
 		});
 
@@ -404,25 +402,25 @@ export default class UI {
 			if (task.date !== 'set date') {
 				const taskDate = parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'));
 				if (tasksTitle.textContent === 'TODAY' && isToday(taskDate)) {
-					this.masterList.findList('TODAY').addTask(task);
+					Storage.masterList.findList('TODAY').addTask(task);
 				}
 
-				if (tasksTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate)) {
-					this.masterList.findList('THIS WEEK').addTask(task);
+				if (tasksTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate, { weekStartsOn: 1 })) {
+					Storage.masterList.findList('THIS WEEK').addTask(task);
 				}
 			}
 		});
 	}
 
 	static displayTasksFromSpecialLists(tasksList) {
-		this.masterList
+		Storage.masterList
 			.findList('TODAY')
 			.getTasks()
 			.forEach((task) => {
 				tasksList.append(this.createTask(task));
 			});
 
-		this.masterList
+		Storage.masterList
 			.findList('THIS WEEK')
 			.getTasks()
 			.sort((a, b) => {
@@ -439,7 +437,7 @@ export default class UI {
 	static toggleIsDone(e) {
 		const listName = this.getActiveList();
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
-		this.masterList.toggleIsDoneInTask(listName, taskName);
+		Storage.masterList.toggleIsDoneInTask(listName, taskName);
 		this.displayTasks();
 		(!e.target.parentElement.classList.contains('done') ? UI.loadAudio().doneSound : UI.loadAudio().reverseDoneSound).play();
 	}
@@ -475,7 +473,7 @@ export default class UI {
 	static toggleStar(e) {
 		const listName = this.getActiveList();
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
-		this.masterList.toggleStarInTask(listName, taskName);
+		Storage.masterList.toggleStarInTask(listName, taskName);
 		this.displayTasks();
 		(!e.target.classList.contains('yellow') ? UI.loadAudio().starSound : UI.loadAudio().reverseStarSound).play();
 	}
@@ -483,12 +481,12 @@ export default class UI {
 	static removeTask(e) {
 		const listName = this.getActiveList();
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
-		this.masterList.deleteTaskFromList(listName, taskName);
+		Storage.masterList.deleteTaskFromList(listName, taskName);
 
 		if (listName === 'TODAY' || listName === 'THIS WEEK') {
-			this.masterList.getLists().forEach((list) => {
+			Storage.masterList.getLists().forEach((list) => {
 				if (list.name !== 'TODAY' && list.name !== 'THIS WEEK') {
-					this.masterList.deleteTaskFromList(list.name, taskName);
+					Storage.masterList.deleteTaskFromList(list.name, taskName);
 				}
 			});
 		}
@@ -638,7 +636,7 @@ export default class UI {
 	static validateListName(listName, version, type = 'List') {
 		const listNameTrim = listName.trim();
 		if (!this.validateName(listNameTrim, version, type)) return false;
-		if (this.masterList.findList(listNameTrim)) {
+		if (Storage.masterList.findList(listNameTrim)) {
 			this.handlePopup('exists', version, type);
 			const exists = document.querySelector('.exists');
 			if (exists) {
@@ -653,7 +651,7 @@ export default class UI {
 	static validateTaskName(taskName, version) {
 		const taskNameTrim = taskName.trim();
 		if (!this.validateName(taskNameTrim, version, 'Task')) return false;
-		if (this.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
+		if (Storage.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
 			this.handlePopup('exists', version);
 			const exists = document.querySelector('.exists');
 			if (exists) {
@@ -672,7 +670,8 @@ export default class UI {
 			if (!this.validateListName(name, 'two')) {
 				inputField.focus();
 			} else {
-				this.masterList.addList(name);
+				Storage.masterList.addList(name);
+				Storage.saveAll();
 				this.closeInputContainer();
 				this.displayLists('TASKS');
 				this.setActiveList(name);
@@ -686,7 +685,7 @@ export default class UI {
 			if (!this.validateTaskName(name, 'two')) {
 				inputField.focus();
 			} else {
-				this.masterList.addTaskToList(this.getActiveList(), name);
+				Storage.masterList.addTaskToList(this.getActiveList(), name);
 				this.closeInputContainer();
 				this.displayTasks();
 				UI.loadAudio().confirmSound.play();
@@ -868,16 +867,18 @@ export default class UI {
 
 		const loadLists = (listsArray) => {
 			listsArray.forEach((list) => {
-				if (!this.masterList.findList(list)) {
-					this.masterList.addList(list);
+				if (!Storage.masterList.findList(list)) {
+					Storage.masterList.addList(list);
+					Storage.clearAll();
+					Storage.saveAll();
 				}
 			});
 		};
 
 		const loadTasks = (listName, tasksArray) => {
 			tasksArray.forEach((task) => {
-				if (!this.masterList.findTaskInList(listName, task)) {
-					this.masterList.addTaskToList(listName, task);
+				if (!Storage.masterList.findTaskInList(listName, task)) {
+					Storage.masterList.addTaskToList(listName, task);
 				}
 			});
 		};
@@ -889,41 +890,43 @@ export default class UI {
 		loadTasks('Movies to watch', moviesToWatch);
 		loadTasks('Great ideas!', greatIdeas);
 
-		this.masterList.addStarInTask('TASKS', 'Finish The Odin Project');
-		this.masterList.addStarInTask('Movies to watch', 'The Matrix (1999)');
-		this.masterList.addStarInTask('Movies to watch', '2001: A Space Odyssey (1968)');
-		this.masterList.addStarInTask('Movies to watch', 'Alien (1979)');
-		this.masterList.addStarInTask('Movies to watch', 'Aliens (1986)');
-		this.masterList.addStarInTask('Movies to watch', 'Terminator 2: Judgement Day (1991)');
-		this.masterList.addStarInTask('Movies to watch', 'Back to the Future (1985)');
+		Storage.masterList.addStarInTask('TASKS', 'Finish The Odin Project');
+		Storage.masterList.addStarInTask('Movies to watch', 'The Matrix (1999)');
+		Storage.masterList.addStarInTask('Movies to watch', '2001: A Space Odyssey (1968)');
+		Storage.masterList.addStarInTask('Movies to watch', 'Alien (1979)');
+		Storage.masterList.addStarInTask('Movies to watch', 'Aliens (1986)');
+		Storage.masterList.addStarInTask('Movies to watch', 'Terminator 2: Judgement Day (1991)');
+		Storage.masterList.addStarInTask('Movies to watch', 'Back to the Future (1985)');
 
-		this.masterList.addIsDoneInTask('TASKS', 'Go swimming on Tuesday');
-		this.masterList.addIsDoneInTask('TASKS', 'Conquer the Crown of Polish Mountains');
-		this.masterList.addIsDoneInTask('Shopping', 'Onion');
-		this.masterList.addIsDoneInTask('Shopping', 'Broccoli');
-		this.masterList.addIsDoneInTask('Shopping', 'Garlic');
-		this.masterList.addIsDoneInTask('Shopping', 'Lemons/Limes');
+		Storage.masterList.addIsDoneInTask('TASKS', 'Go swimming on Tuesday');
+		Storage.masterList.addIsDoneInTask('TASKS', 'Conquer the Crown of Polish Mountains');
+		Storage.masterList.addIsDoneInTask('Shopping', 'Onion');
+		Storage.masterList.addIsDoneInTask('Shopping', 'Broccoli');
+		Storage.masterList.addIsDoneInTask('Shopping', 'Garlic');
+		Storage.masterList.addIsDoneInTask('Shopping', 'Lemons/Limes');
 
 		const todaysDate = format(new Date(), 'dd/MM/yyyy');
 		const tommorowsDate = format(addDays(new Date(), 1), 'dd/MM/yyyy');
 		const theDayAfterTommorowsDate = format(addDays(new Date(), 2), 'dd/MM/yyyy');
 
-		this.masterList.changeTaskDate('TASKS', 'Bake Neapolitan pizza', todaysDate);
-		this.masterList.changeTaskDate('Movies to watch', 'The Matrix (1999)', todaysDate);
-		this.masterList.changeTaskDate('Great ideas!', 'Learn to meditate', todaysDate);
-		this.masterList.changeTaskDate('Great ideas!', 'Climb a mountain', tommorowsDate);
-		this.masterList.changeTaskDate('Great ideas!', 'Try skydiving', tommorowsDate);
-		this.masterList.changeTaskDate('Great ideas!', 'Join a dance class', theDayAfterTommorowsDate);
-		this.masterList.changeTaskDate('Great ideas!', 'Plant a tree and watch it grow', theDayAfterTommorowsDate);
-		this.masterList.changeTaskDate('Great ideas!', 'Go on a solo trip', theDayAfterTommorowsDate);
+		Storage.masterList.changeTaskDate('TASKS', 'Bake Neapolitan pizza', todaysDate);
+		Storage.masterList.changeTaskDate('Movies to watch', 'The Matrix (1999)', todaysDate);
+		Storage.masterList.changeTaskDate('Great ideas!', 'Learn to meditate', todaysDate);
+		Storage.masterList.changeTaskDate('Great ideas!', 'Climb a mountain', tommorowsDate);
+		Storage.masterList.changeTaskDate('Great ideas!', 'Try skydiving', tommorowsDate);
+		Storage.masterList.changeTaskDate('Great ideas!', 'Join a dance class', theDayAfterTommorowsDate);
+		Storage.masterList.changeTaskDate('Great ideas!', 'Plant a tree and watch it grow', theDayAfterTommorowsDate);
+		Storage.masterList.changeTaskDate('Great ideas!', 'Go on a solo trip', theDayAfterTommorowsDate);
 
+		Storage.saveAll();
 		this.displayLists('TASKS');
 		this.displayTasks();
 		this.selectList();
 	};
 
 	static clearAllContent = () => {
-		this.masterList = new ListsManager();
+		Storage.resetMasterList();
+		Storage.clearAll();
 		this.displayLists('TASKS');
 		this.displayTasks();
 		this.selectList();
@@ -943,6 +946,7 @@ export default class UI {
 
 		loadExampleBtn.addEventListener('click', () => {
 			this.loadExampleContent();
+			Storage.saveAll();
 			UI.loadAudio().loadExampleSound.play();
 		});
 
