@@ -1,38 +1,9 @@
 import { format, parseISO, parse, isThisWeek, isToday, addDays } from 'date-fns';
 
 import Storage from './storage';
+import Sound from './sound';
 
 export default class UI {
-	static loadAudio() {
-		const toggleSound = new Audio('sound/mixkit-air-woosh-1489-pitch.wav');
-		const reverseToggleSound = new Audio('sound/mixkit-air-woosh-1489-pitch-reverse.wav');
-		const doneSound = new Audio('sound/mixkit-game-ball-tap-2073.wav');
-		const reverseDoneSound = new Audio('sound/mixkit-game-ball-tap-2073-reverse-slow.wav');
-		const starSound = new Audio('sound/mixkit-retro-arcade-casino-notification-211.wav');
-		const reverseStarSound = new Audio('sound/mixkit-retro-arcade-casino-notification-211-reverse.wav');
-		const removeSound = new Audio('sound/Empty-trash-sound-effect-reverse.mp3');
-		const loadExampleSound = new Audio('sound/mixkit-player-boost-recharging-2040.wav');
-		const addNewSound = new Audio('sound/mixkit-repeating-arcade-beep-1084.wav');
-		const alertSound = new Audio('sound/mixkit-quick-jump-arcade-game-239.wav');
-		const confirmSound = new Audio('sound/mixkit-video-game-lock-2851.wav');
-		const abortSound = new Audio('sound/mixkit-video-game-lock-2851-reverse.wav');
-
-		return {
-			toggleSound,
-			reverseToggleSound,
-			doneSound,
-			reverseDoneSound,
-			starSound,
-			reverseStarSound,
-			removeSound,
-			loadExampleSound,
-			addNewSound,
-			alertSound,
-			confirmSound,
-			abortSound,
-		};
-	}
-
 	static lastWidth = window.innerWidth;
 
 	static hamburgerAutoToggle() {
@@ -43,14 +14,14 @@ export default class UI {
 			main.classList.remove('sidebar-toggle');
 
 			if (this.lastWidth < 800) {
-				UI.loadAudio().toggleSound.play();
+				Sound.loadAudio().toggleSound.play();
 			}
 		} else {
 			hamburger.classList.remove('open');
 			main.classList.add('sidebar-toggle');
 
 			if (this.lastWidth >= 800) {
-				UI.loadAudio().reverseToggleSound.play();
+				Sound.loadAudio().reverseToggleSound.play();
 			}
 		}
 		this.lastWidth = window.innerWidth;
@@ -63,11 +34,11 @@ export default class UI {
 		main.classList.toggle('sidebar-toggle');
 
 		if (e.target.closest('#hamburger.open')) {
-			UI.loadAudio().toggleSound.play();
+			Sound.loadAudio().toggleSound.play();
 		}
 
 		if (e.target.closest('#hamburger:not(.open)')) {
-			UI.loadAudio().reverseToggleSound.play();
+			Sound.loadAudio().reverseToggleSound.play();
 		}
 	}
 
@@ -76,7 +47,7 @@ export default class UI {
 		if (e.target.textContent === currentList) {
 			if (e.target.classList.contains('nav-btn')) {
 				if (window.innerWidth < 800) {
-					UI.loadAudio().reverseToggleSound.play();
+					Sound.loadAudio().reverseToggleSound.play();
 				}
 			}
 		}
@@ -294,7 +265,7 @@ export default class UI {
 		this.updateActiveList(currentList, listName, nextList);
 		this.displayTasks();
 		this.selectList();
-		UI.loadAudio().removeSound.play();
+		Sound.loadAudio().removeSound.play();
 	}
 
 	static addEventHandler(selector, event, handler, location) {
@@ -439,7 +410,7 @@ export default class UI {
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 		Storage.masterList.toggleIsDoneInTask(listName, taskName);
 		this.displayTasks();
-		(!e.target.parentElement.classList.contains('done') ? UI.loadAudio().doneSound : UI.loadAudio().reverseDoneSound).play();
+		(!e.target.parentElement.classList.contains('done') ? Sound.loadAudio().doneSound : Sound.loadAudio().reverseDoneSound).play();
 	}
 
 	static createInputField(task, taskName) {
@@ -475,7 +446,7 @@ export default class UI {
 		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
 		Storage.masterList.toggleStarInTask(listName, taskName);
 		this.displayTasks();
-		(!e.target.classList.contains('yellow') ? UI.loadAudio().starSound : UI.loadAudio().reverseStarSound).play();
+		(!e.target.classList.contains('yellow') ? Sound.loadAudio().starSound : Sound.loadAudio().reverseStarSound).play();
 	}
 
 	static removeTask(e) {
@@ -492,7 +463,7 @@ export default class UI {
 		}
 
 		this.displayTasks();
-		UI.loadAudio().removeSound.play();
+		Sound.loadAudio().removeSound.play();
 	}
 
 	static addTaskHandlers(tasksList) {
@@ -627,7 +598,7 @@ export default class UI {
 			if (empty) {
 				empty.setAttribute('data-before', `${type} name cannot be empty`);
 			}
-			UI.loadAudio().alertSound.play();
+			Sound.loadAudio().alertSound.play();
 			return false;
 		}
 		return true;
@@ -642,7 +613,7 @@ export default class UI {
 			if (exists) {
 				exists.setAttribute('data-before', `List with this name already exists`);
 			}
-			UI.loadAudio().alertSound.play();
+			Sound.loadAudio().alertSound.play();
 			return false;
 		}
 		return true;
@@ -657,7 +628,7 @@ export default class UI {
 			if (exists) {
 				exists.setAttribute('data-before', `Task with this name already exists`);
 			}
-			UI.loadAudio().alertSound.play();
+			Sound.loadAudio().alertSound.play();
 			return false;
 		}
 		return true;
@@ -677,7 +648,7 @@ export default class UI {
 				this.setActiveList(name);
 				this.displayTasks();
 				this.selectList();
-				UI.loadAudio().confirmSound.play();
+				Sound.loadAudio().confirmSound.play();
 			}
 		}
 
@@ -688,14 +659,14 @@ export default class UI {
 				Storage.masterList.addTaskToList(this.getActiveList(), name);
 				this.closeInputContainer();
 				this.displayTasks();
-				UI.loadAudio().confirmSound.play();
+				Sound.loadAudio().confirmSound.play();
 			}
 		}
 	}
 
 	static cancelBtnPress(inputContainer) {
 		inputContainer.remove();
-		UI.loadAudio().abortSound.play();
+		Sound.loadAudio().abortSound.play();
 	}
 
 	static addNewElement(whichBtn, whereToAdd) {
@@ -727,7 +698,7 @@ export default class UI {
 					const inputField = whereToAdd.querySelector('input');
 					inputField.focus();
 				}
-				UI.loadAudio().addNewSound.play();
+				Sound.loadAudio().addNewSound.play();
 			}
 		});
 	}
@@ -930,7 +901,7 @@ export default class UI {
 		this.displayLists('TASKS');
 		this.displayTasks();
 		this.selectList();
-		UI.loadAudio().removeSound.play();
+		Sound.loadAudio().removeSound.play();
 	};
 
 	static attachEventListeners() {
@@ -947,7 +918,7 @@ export default class UI {
 		loadExampleBtn.addEventListener('click', () => {
 			this.loadExampleContent();
 			Storage.saveAll();
-			UI.loadAudio().loadExampleSound.play();
+			Sound.loadAudio().loadExampleSound.play();
 		});
 
 		clearAllBtn.addEventListener('click', this.clearAllContent);
@@ -957,7 +928,7 @@ export default class UI {
 	}
 
 	static loadUserInterface() {
-		UI.loadAudio();
+		Sound.loadAudio();
 		UI.hamburgerAutoToggle();
 		UI.displayLists('TASKS');
 		UI.displayTasks();
