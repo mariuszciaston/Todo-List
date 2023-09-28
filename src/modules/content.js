@@ -80,4 +80,34 @@ export default class ContentExample {
 		'Write a Letter to Your Future Self',
 		'Do Something, anything! You’ve never done',
 	];
+
+	static addStars = [
+		{ list: 'TASKS', task: 'Finish The Odin Project' },
+		{ list: 'Movies to watch', task: 'The Matrix (1999)' },
+		{ list: 'Movies to watch', task: '2001: A Space Odyssey (1968)' },
+		{ list: 'Movies to watch', task: 'Alien (1979)' },
+		{ list: 'Movies to watch', task: 'Aliens (1986)' },
+		{ list: 'Movies to watch', task: 'Terminator 2: Judgement Day (1991)' },
+		{ list: 'Movies to watch', task: 'Back to the Future (1985)' },
+	];
+
+	static addIsDone = [
+		{ list: 'TASKS', task: 'Go swimming on Tuesday' },
+		{ list: 'TASKS', task: 'Conquer the Crown of Polish Mountains' },
+		{ list: 'Shopping', task: 'Onion' },
+		{ list: 'Shopping', task: 'Broccoli' },
+		{ list: 'Shopping', task: 'Garlic' },
+		{ list: 'Shopping', task: 'Lemons/Limes' },
+	];
+
+	static addDates = [
+		{ list: 'TASKS', task: 'Bake Neapolitan pizza' },
+		{ list: 'Movies to watch', task: 'The Matrix (1999)' },
+		{ list: 'Great ideas!', task: 'Learn to meditate' },
+		{ list: 'Great ideas!', task: 'Climb a mountain' },
+		{ list: 'Great ideas!', task: 'Try skydiving' },
+		{ list: 'Great ideas!', task: 'Join a dance class' },
+		{ list: 'Great ideas!', task: 'Plant a tree and watch it grow' },
+		{ list: 'Great ideas!', task: 'Go on a solo trip' },
+	];
 }
