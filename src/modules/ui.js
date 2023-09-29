@@ -682,7 +682,9 @@ export default class UI {
 
 	static addNewElement(whichBtn, whereToAdd) {
 		whichBtn.addEventListener('click', () => {
-			if (this.getActiveList() !== 'TODAY' && this.getActiveList() !== 'THIS WEEK') {
+			const newTaskBtn = document.querySelector('#add-task-btn');
+
+			if ((this.getActiveList() !== 'TODAY' && this.getActiveList() !== 'THIS WEEK') || whichBtn !== newTaskBtn) {
 				let inputContainer = whereToAdd.querySelector('.input-container');
 				if (!inputContainer) {
 					this.closeInputContainer();
