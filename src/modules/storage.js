@@ -20,7 +20,7 @@ export default class Storage {
 	static recoverAll() {
 		if (localStorage.getItem('masterList')) {
 			const recoveredData = JSON.parse(localStorage.getItem('masterList'));
-			this.masterList = new ListsManager();
+			this.resetMasterList();
 
 			this.masterList.lists = recoveredData.map((listData) => {
 				const list = new List(listData.name);

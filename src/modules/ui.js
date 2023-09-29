@@ -856,12 +856,12 @@ export default class UI {
 	static loadUserInterface() {
 		Sound.loadAudio();
 		UI.hamburgerAutoToggle();
+		Storage.recoverAll();
 		UI.displayLists('TASKS');
 		UI.displayTasks();
 		UI.selectList();
 		UI.addNewList();
 		UI.addNewTask();
 		UI.attachEventListeners();
-		UI.loadExampleContent();
 	}
 }
