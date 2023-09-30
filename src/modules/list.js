@@ -8,10 +8,6 @@ export default class List {
 		this.name = name;
 	}
 
-	getName() {
-		return this.name;
-	}
-
 	addTask(newTask) {
 		this.tasks.push(newTask);
 	}
