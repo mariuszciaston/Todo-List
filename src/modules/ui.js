@@ -791,12 +791,14 @@ export default class UI {
 			isDoneArray.forEach((item) => Storage.masterList.addIsDoneInTask(item.list, item.task));
 		};
 
-		const todaysDate = format(new Date(), 'dd/MM/yyyy');
-		const tommorowsDate = format(addDays(new Date(), 1), 'dd/MM/yyyy');
-		const theDayAfterTommorowsDate = format(addDays(new Date(), 2), 'dd/MM/yyyy');
+		const beforeYesterdayDate = format(addDays(new Date(), -2), 'dd/MM/yyyy');
+		const yesterdayDate = format(addDays(new Date(), -1), 'dd/MM/yyyy');
+		const todayDate = format(new Date(), 'dd/MM/yyyy');
+		const tommorowDate = format(addDays(new Date(), 1), 'dd/MM/yyyy');
+		const afterTommorowDate = format(addDays(new Date(), 2), 'dd/MM/yyyy');
 
 		const getRandomDate = () => {
-			const dates = [todaysDate, tommorowsDate, theDayAfterTommorowsDate];
+			const dates = [beforeYesterdayDate, yesterdayDate, todayDate, tommorowDate, afterTommorowDate];
 			return dates[Math.floor(Math.random() * dates.length)];
 		};
 
