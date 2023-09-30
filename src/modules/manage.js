@@ -53,17 +53,17 @@ export default class ListsManager {
 		return this.findList(listName) ? list.tasks.find((task) => task.name === taskName) : false;
 	}
 
-	toggleIsDoneInTask(listName, taskName) {
-		const task = this.findTaskInList(listName, taskName);
-		if (task) {
-			task.toggleIsDone(task.isDone);
-		}
-	}
-
 	addIsDoneInTask(listName, taskName) {
 		const task = this.findTaskInList(listName, taskName);
 		if (task) {
 			task.addIsDone(task.isDone);
+		}
+	}
+
+	toggleIsDoneInTask(listName, taskName) {
+		const task = this.findTaskInList(listName, taskName);
+		if (task) {
+			task.toggleIsDone(task.isDone);
 		}
 	}
 
@@ -81,17 +81,17 @@ export default class ListsManager {
 		}
 	}
 
-	toggleStarInTask(listName, taskName) {
-		const task = this.findTaskInList(listName, taskName);
-		if (task) {
-			task.toggleStar(task.star);
-		}
-	}
-
 	addStarInTask(listName, taskName) {
 		const task = this.findTaskInList(listName, taskName);
 		if (task) {
 			task.addStar(task.star);
+		}
+	}
+
+	toggleStarInTask(listName, taskName) {
+		const task = this.findTaskInList(listName, taskName);
+		if (task) {
+			task.toggleStar(task.star);
 		}
 	}
 }
