@@ -10,31 +10,23 @@ export default class Task {
 		this.name = name;
 	}
 
-	getName() {
-		return this.name;
-	}
-
 	setDate(date) {
 		this.date = date;
-	}
-
-	getDate() {
-		return this.date;
-	}
-
-	toggleStar(star) {
-		this.star = !star;
 	}
 
 	addStar() {
 		this.star = true;
 	}
 
-	toggleIsDone(isDone) {
-		this.isDone = !isDone;
+	toggleStar(star) {
+		this.star = !star;
 	}
 
 	addIsDone() {
 		this.isDone = true;
+	}
+
+	toggleIsDone(isDone) {
+		this.isDone = !isDone;
 	}
 }
