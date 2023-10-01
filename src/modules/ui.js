@@ -10,6 +10,7 @@ export default class UI {
 	static hamburgerAutoToggle() {
 		const hamburger = document.querySelector('#hamburger');
 		const main = document.querySelector('.main');
+
 		if (window.matchMedia('(min-width: 800px)').matches) {
 			hamburger.classList.add('open');
 			main.classList.remove('sidebar-toggle');
@@ -56,13 +57,12 @@ export default class UI {
 
 	static createList(list) {
 		const button = document.createElement('button');
+		const remove = document.createElement('div');
+		const btnWrap = document.createElement('div');
+
 		button.className = 'button nav-btn';
 		button.textContent = list.name;
-
-		const remove = document.createElement('div');
 		remove.className = 'remove';
-
-		const btnWrap = document.createElement('div');
 		btnWrap.className = 'btnWrap';
 
 		btnWrap.append(button);
@@ -71,11 +71,15 @@ export default class UI {
 		return { button, btnWrap };
 	}
 
+	static getSecondList() {
+		return document.querySelector('#second-list');
+	}
+
 	static displayLists(activeList) {
 		const listOne = Storage.masterList.getLists().slice(0, 3);
 		const listTwo = Storage.masterList.getLists().slice(3);
 		const firstList = document.querySelector('#first-list');
-		const secondList = document.querySelector('#second-list');
+		const secondList = this.getSecondList();
 		firstList.textContent = '';
 		secondList.textContent = '';
 
@@ -90,18 +94,26 @@ export default class UI {
 		});
 
 		this.setActiveList(activeList);
-		this.addListHandlers(secondList);
+		this.addEventHandler('.remove', 'click', this.removeList, secondList);
+	}
+
+	static getListTitle() {
+		return document.querySelector('.content .title');
+	}
+
+	static tasksList() {
+		return document.querySelector('.tasks-list');
 	}
 
 	static updateListName(inputField) {
-		const tasksTitle = document.querySelector('.content .title');
-		const tasksList = document.querySelector('.tasks-list');
-		tasksTitle.textContent = inputField.value;
+		const listTitle = this.getListTitle();
+		const tasksList = this.tasksList();
+		listTitle.textContent = inputField.value;
 		if (!inputField.value) {
-			tasksTitle.textContent = inputField;
+			listTitle.textContent = inputField;
 		}
-		this.displayLists(tasksTitle.textContent);
-		this.addTaskHandlers(tasksList, tasksTitle);
+		this.displayLists(listTitle.textContent);
+		this.addTaskHandlers(tasksList, listTitle);
 	}
 
 	static handleInputField(element, name, listName, isTask) {
@@ -182,6 +194,10 @@ export default class UI {
 		this.editName(e, true);
 	}
 
+	static getTaskName(e) {
+		return e.target.parentElement.querySelector('.task-content').textContent;
+	}
+
 	static editDate(e) {
 		const element = e.target.closest('.date');
 		const temp = element.textContent;
@@ -191,8 +207,7 @@ export default class UI {
 
 			if (element.querySelector('.input-field')) {
 				const currentList = this.getActiveList();
-				const taskName = e.target.parentElement.querySelector('.task-content').textContent;
-
+				const taskName = this.getTaskName(e);
 				const setTextContent = (value) => {
 					element.textContent = value;
 					window.removeEventListener('click', clickHandler);
@@ -237,6 +252,10 @@ export default class UI {
 		}
 	}
 
+	static getListName(e) {
+		return e.target.parentElement.querySelector('.nav-btn').textContent;
+	}
+
 	static getNextList(e) {
 		let nextList;
 		const parentElementSibling = e.target.parentElement.nextElementSibling;
@@ -262,10 +281,9 @@ export default class UI {
 	}
 
 	static removeList(e) {
-		const listName = e.target.parentElement.querySelector('.nav-btn').textContent;
 		const currentList = this.getActiveList();
+		const listName = this.getListName(e);
 		const nextList = this.getNextList(e);
-
 		Storage.masterList.deleteList(listName);
 		Storage.clearAll();
 		Storage.saveAll();
@@ -282,10 +300,6 @@ export default class UI {
 		elements.forEach((element) => {
 			element.addEventListener(event, handler.bind(this));
 		});
-	}
-
-	static addListHandlers(secondList) {
-		this.addEventHandler('.remove', 'click', this.removeList, secondList);
 	}
 
 	static createTask(task) {
@@ -329,31 +343,31 @@ export default class UI {
 		return li;
 	}
 
-	static disableListNameHover(tasksTitle) {
-		if (tasksTitle.textContent === 'TASKS' || tasksTitle.textContent === 'TODAY' || tasksTitle.textContent === 'THIS WEEK') {
-			tasksTitle.classList.add('default');
+	static disableListNameHover(listTitle) {
+		if (listTitle.textContent === 'TASKS' || listTitle.textContent === 'TODAY' || listTitle.textContent === 'THIS WEEK') {
+			listTitle.classList.add('default');
 		} else {
-			tasksTitle.classList.remove('default');
+			listTitle.classList.remove('default');
 		}
 	}
 
 	static displayTasks() {
-		const tasksTitle = document.querySelector('.content .title');
-		const tasksList = document.querySelector('.tasks-list');
+		const listTitle = this.getListTitle();
+		const tasksList = this.tasksList();
 		const currentList = this.getActiveList();
 
 		tasksList.textContent = '';
-		tasksTitle.textContent = currentList;
-		this.disableListNameHover(tasksTitle);
+		listTitle.textContent = currentList;
+		this.disableListNameHover(listTitle);
 
-		if (tasksTitle.textContent !== 'TODAY' && tasksTitle.textContent !== 'THIS WEEK') {
+		if (listTitle.textContent !== 'TODAY' && listTitle.textContent !== 'THIS WEEK') {
 			this.displayRegularTasks(tasksList, currentList);
 		} else {
-			this.displaySpecialTasks(tasksList, tasksTitle);
+			this.displaySpecialTasks(tasksList, listTitle);
 		}
 
-		this.addTaskHandlers(tasksList, tasksTitle);
-		this.disableAddTaskBtn();
+		this.addTaskHandlers(tasksList, listTitle);
+		this.disableNewTaskBtn();
 	}
 
 	static displayRegularTasks(tasksList, currentList) {
@@ -365,26 +379,27 @@ export default class UI {
 			});
 	}
 
-	static displaySpecialTasks(tasksList, tasksTitle) {
+	static displaySpecialTasks(tasksList, listTitle) {
 		Storage.masterList.findList('TODAY').clearTasks();
 		Storage.masterList.findList('THIS WEEK').clearTasks();
 
 		Storage.masterList.getLists().forEach((list) => {
-			if (list.name !== 'TODAY' && list.name !== 'THIS WEEK') this.addTasksToSpecialLists(list, tasksTitle);
+			if (list.name !== 'TODAY' && list.name !== 'THIS WEEK') this.addTasksToSpecialLists(list, listTitle);
 		});
 
 		this.displayTasksFromSpecialLists(tasksList);
 	}
 
-	static addTasksToSpecialLists(list, tasksTitle) {
+	static addTasksToSpecialLists(list, listTitle) {
 		list.getTasks().forEach((task) => {
 			if (task.date !== 'set date') {
 				const taskDate = parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'));
-				if (tasksTitle.textContent === 'TODAY' && isToday(taskDate)) {
+
+				if (listTitle.textContent === 'TODAY' && isToday(taskDate)) {
 					Storage.masterList.findList('TODAY').addTask(task);
 				}
 
-				if (tasksTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate, { weekStartsOn: 1 })) {
+				if (listTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate, { weekStartsOn: 1 })) {
 					Storage.masterList.findList('THIS WEEK').addTask(task);
 				}
 			}
@@ -415,7 +430,7 @@ export default class UI {
 
 	static toggleIsDone(e) {
 		const listName = this.getActiveList();
-		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
+		const taskName = this.getTaskName(e);
 		Storage.masterList.toggleIsDoneInTask(listName, taskName);
 		Storage.saveAll();
 		this.displayTasks();
@@ -426,8 +441,8 @@ export default class UI {
 		const inputField = document.createElement('input');
 		inputField.className = 'input-field';
 		inputField.type = 'text';
-		task.append(inputField);
 		inputField.value = taskName;
+		task.append(inputField);
 		inputField.focus();
 		return inputField;
 	}
@@ -452,7 +467,7 @@ export default class UI {
 
 	static toggleStar(e) {
 		const listName = this.getActiveList();
-		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
+		const taskName = this.getTaskName(e);
 		Storage.masterList.toggleStarInTask(listName, taskName);
 		Storage.saveAll();
 		this.displayTasks();
@@ -461,9 +476,10 @@ export default class UI {
 
 	static removeTask(e) {
 		const listName = this.getActiveList();
-		const taskName = e.target.parentElement.querySelector('.task-content').textContent;
+		const taskName = this.getTaskName(e);
 		Storage.masterList.deleteTaskFromList(listName, taskName);
 		Storage.saveAll();
+
 		if (listName === 'TODAY' || listName === 'THIS WEEK') {
 			Storage.masterList.getLists().forEach((list) => {
 				if (list.name !== 'TODAY' && list.name !== 'THIS WEEK') {
@@ -485,13 +501,17 @@ export default class UI {
 		this.addEventHandler('.remove', 'click', this.removeTask, tasksList);
 	}
 
+	static getListsNodeList() {
+		return document.querySelectorAll('nav .nav-btn');
+	}
+
 	static selectList() {
-		const navButtons = document.querySelectorAll('nav .nav-btn');
-		const removeActiveClass = () => navButtons.forEach((btn) => btn.classList.remove('active'));
+		const listsNodeList = this.getListsNodeList();
+		const removeActiveClass = () => listsNodeList.forEach((list) => list.classList.remove('active'));
 		const addActiveClass = (target) => target.classList.add('active');
 
-		navButtons.forEach((button) => {
-			button.addEventListener('click', (e) => {
+		listsNodeList.forEach((list) => {
+			list.addEventListener('click', (e) => {
 				if (!e.target.classList.contains('active')) {
 					removeActiveClass();
 					addActiveClass(e.target);
@@ -505,45 +525,46 @@ export default class UI {
 
 	static createInputContainer() {
 		const inputDiv = document.createElement('div');
-		inputDiv.className = 'input-container';
-
 		const inputField = document.createElement('input');
+		const inputBtns = document.createElement('div');
+		const addBtn = document.createElement('button');
+		const cancelBtn = document.createElement('button');
+
+		inputDiv.className = 'input-container';
 		inputField.className = 'input-field';
 		inputField.type = 'text';
-		inputDiv.append(inputField);
-
-		const inputBtns = document.createElement('div');
 		inputBtns.className = 'input-btns';
-		inputDiv.append(inputBtns);
-
-		const addBtn = document.createElement('button');
 		addBtn.className = 'add-btn action';
 		addBtn.textContent = 'Add';
-		inputBtns.append(addBtn);
-
-		const cancelBtn = document.createElement('button');
 		cancelBtn.className = 'cancel-btn action';
 		cancelBtn.textContent = 'Cancel';
+
+		inputDiv.append(inputField);
+		inputDiv.append(inputBtns);
+		inputBtns.append(addBtn);
 		inputBtns.append(cancelBtn);
 
 		return inputDiv;
 	}
 
 	static setActiveList(listName) {
-		const navButtons = document.querySelectorAll('nav .nav-btn');
+		const listsNodeList = this.getListsNodeList();
 
-		navButtons.forEach((button) => {
-			if (button.textContent === listName) {
-				button.classList.add('active');
+		listsNodeList.forEach((list) => {
+			if (list.textContent === listName) {
+				list.classList.add('active');
 			} else {
-				button.classList.remove('active');
+				list.classList.remove('active');
 			}
 		});
 	}
 
 	static getActiveList() {
-		const currentList = document.querySelector('nav .nav-btn.active').textContent;
-		return currentList;
+		return document.querySelector('nav .nav-btn.active').textContent;
+	}
+
+	static getInputContainer(whereToAdd) {
+		return whereToAdd ? whereToAdd.querySelector('.input-container') : document.querySelector('.input-container');
 	}
 
 	static handlePopup(state, version, type) {
@@ -584,7 +605,7 @@ export default class UI {
 		}
 
 		if (version === 'two') {
-			const inputContainer = document.querySelector('.input-container');
+			const inputContainer = this.getInputContainer();
 			inputContainer.classList.add(state);
 
 			const handleAnimationEnd = () => {
@@ -603,7 +624,7 @@ export default class UI {
 	}
 
 	static validateName(name, version, type) {
-		if ((version === 'one' || version === 'two') && (name === '' || name.match(/^\s+$/))) {
+		if (name === '' || name.match(/^\s+$/)) {
 			this.handlePopup('empty', version, type);
 			const empty = document.querySelector('.empty');
 			if (empty) {
@@ -615,12 +636,16 @@ export default class UI {
 		return true;
 	}
 
+	static getExists() {
+		return document.querySelector('.exists');
+	}
+
 	static validateListName(listName, version, type = 'List') {
 		const listNameTrim = listName.trim();
 		if (!this.validateName(listNameTrim, version, type)) return false;
 		if (Storage.masterList.findList(listNameTrim)) {
 			this.handlePopup('exists', version, type);
-			const exists = document.querySelector('.exists');
+			const exists = this.getExists();
 			if (exists) {
 				exists.setAttribute('data-before', `List with this name already exists`);
 			}
@@ -635,7 +660,7 @@ export default class UI {
 		if (!this.validateName(taskNameTrim, version, 'Task')) return false;
 		if (Storage.masterList.findTaskInList(this.getActiveList(), taskNameTrim)) {
 			this.handlePopup('exists', version);
-			const exists = document.querySelector('.exists');
+			const exists = this.getExists();
 			if (exists) {
 				exists.setAttribute('data-before', `Task with this name already exists`);
 			}
@@ -680,17 +705,26 @@ export default class UI {
 		Sound.loadAudio().abortSound.play();
 	}
 
+	static getNewTaskBtn() {
+		return document.querySelector('#add-task-btn');
+	}
+
+	static getTasksList() {
+		return document.querySelector('.tasks');
+	}
+
 	static addNewElement(whichBtn, whereToAdd) {
 		whichBtn.addEventListener('click', () => {
-			const newTaskBtn = document.querySelector('#add-task-btn');
+			const newTaskBtn = this.getNewTaskBtn();
 
 			if ((this.getActiveList() !== 'TODAY' && this.getActiveList() !== 'THIS WEEK') || whichBtn !== newTaskBtn) {
-				let inputContainer = whereToAdd.querySelector('.input-container');
+				let inputContainer = this.getInputContainer(whereToAdd);
+
 				if (!inputContainer) {
 					this.closeInputContainer();
 
-					const secondList = document.querySelector('#second-list');
-					const tasksList = document.querySelector('.tasks');
+					const secondList = this.getSecondList();
+					const tasksList = this.getTasksList();
 
 					if (whereToAdd === secondList) {
 						whereToAdd.append(this.createInputContainer());
@@ -700,8 +734,7 @@ export default class UI {
 
 					const inputField = whereToAdd.querySelector('input');
 					inputField.focus();
-					inputContainer = whereToAdd.querySelector('.input-container');
-
+					inputContainer = this.getInputContainer(whereToAdd);
 					const addBtn = whereToAdd.querySelector('.add-btn');
 					const cancelBtn = whereToAdd.querySelector('.cancel-btn');
 
@@ -718,18 +751,18 @@ export default class UI {
 
 	static addNewList() {
 		const newListBtn = document.querySelector('#new-list-btn');
-		const secondList = document.querySelector('#second-list');
+		const secondList = this.getSecondList();
 		this.addNewElement(newListBtn, secondList);
 	}
 
 	static addNewTask() {
-		const newTaskBtn = document.querySelector('#add-task-btn');
-		const tasksList = document.querySelector('.tasks');
+		const newTaskBtn = this.getNewTaskBtn();
+		const tasksList = this.getTasksList();
 		this.addNewElement(newTaskBtn, tasksList);
 	}
 
-	static disableAddTaskBtn() {
-		const newTaskBtn = document.querySelector('#add-task-btn');
+	static disableNewTaskBtn() {
+		const newTaskBtn = this.getNewTaskBtn();
 		if (this.getActiveList() === 'TODAY' || this.getActiveList() === 'THIS WEEK') {
 			newTaskBtn.classList.add('disabled');
 		} else {
@@ -738,7 +771,7 @@ export default class UI {
 	}
 
 	static closeInputContainer() {
-		const inputContainer = document.querySelector('.input-container');
+		const inputContainer = this.getInputContainer();
 		if (inputContainer) {
 			inputContainer.remove();
 		}
@@ -754,7 +787,8 @@ export default class UI {
 	}
 
 	static handleKeyboardAddCancel(e) {
-		const inputContainer = document.querySelector('.input-container');
+		const inputContainer = this.getInputContainer();
+
 		if (inputContainer) {
 			if (e.key === 'Enter') {
 				const addBtn = inputContainer.querySelector('.add-btn');
@@ -839,7 +873,7 @@ export default class UI {
 		const nav = document.querySelector('nav.nav');
 		const loadExampleBtn = document.querySelector('#load-example-btn');
 		const clearAllBtn = document.querySelector('#clear-all-btn');
-		const tasksTitle = document.querySelector('.content .title');
+		const listTitle = this.getListTitle();
 
 		hamburger.addEventListener('click', this.hamburgerManualToggle);
 		nav.addEventListener('click', this.hamburgerManualClose);
@@ -852,9 +886,9 @@ export default class UI {
 		});
 
 		clearAllBtn.addEventListener('click', this.clearAllContent.bind(this));
-		window.addEventListener('keydown', this.handleKeyboardAddCancel);
+		window.addEventListener('keydown', this.handleKeyboardAddCancel.bind(this));
 		window.addEventListener('click', this.closeInputContainerOnClick.bind(this));
-		tasksTitle.addEventListener('click', this.editListName.bind(this));
+		listTitle.addEventListener('click', this.editListName.bind(this));
 	}
 
 	static loadUserInterface() {
