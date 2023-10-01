@@ -618,7 +618,7 @@ h2.title.default:hover {
 #second-list .input-container.exists:before {
 	padding: 0rem 0rem 0rem 0.5rem;
 	border: 0.0625rem solid hsl(0, 0%, 37.5%);
-	max-width: calc(100% - 2.5rem);
+	width: 100vw;
 }
 
 .tasks-list li.lock .task-content,
@@ -767,11 +767,6 @@ button {
 		margin: 0;
 		padding: 2rem 0;
 		width: 320px;
-	}
-
-	#second-list .input-container.empty:before,
-	#second-list .input-container.exists:before {
-		max-width: calc(100% - 0.5rem);
 	}
 
 	.input-container {
