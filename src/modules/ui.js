@@ -80,7 +80,7 @@ export default class UI {
 	}
 
 	static initListsNameArray() {
-		return this.initLists.map((list) => list.name);
+		return this.initLists().map((list) => list.name);
 	}
 
 	static userLists() {
