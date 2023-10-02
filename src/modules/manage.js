@@ -7,6 +7,7 @@ export default class ListsManager {
 		this.lists.push(new List('TASKS'));
 		this.lists.push(new List('TODAY'));
 		this.lists.push(new List('THIS WEEK'));
+		this.lists.push(new List('THIS MONTH'));
 	}
 
 	addList(newList) {
