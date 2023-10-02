@@ -1,4 +1,4 @@
-import { format, parseISO, parse, isThisWeek, isToday, addDays } from 'date-fns';
+import { format, parseISO, parse, isToday, isThisWeek, isThisMonth, addDays } from 'date-fns';
 
 import Storage from './storage';
 import Sound from './sound';
@@ -75,20 +75,32 @@ export default class UI {
 		return document.querySelector('#second-list');
 	}
 
+	static initLists() {
+		return Storage.masterList.getLists().slice(0, 4);
+	}
+
+	static initListsNameArray() {
+		return this.initLists.map((list) => list.name);
+	}
+
+	static userLists() {
+		return Storage.masterList.getLists().slice(4);
+	}
+
 	static displayLists(activeList) {
-		const listOne = Storage.masterList.getLists().slice(0, 3);
-		const listTwo = Storage.masterList.getLists().slice(3);
+		const initLists = this.initLists();
+		const userLists = this.userLists();
 		const firstList = document.querySelector('#first-list');
 		const secondList = this.getSecondList();
 		firstList.textContent = '';
 		secondList.textContent = '';
 
-		listOne.forEach((list) => {
+		initLists.forEach((list) => {
 			const { button } = this.createList(list);
 			firstList.appendChild(button);
 		});
 
-		listTwo.forEach((list) => {
+		userLists.forEach((list) => {
 			const { btnWrap } = this.createList(list);
 			secondList.appendChild(btnWrap);
 		});
@@ -185,7 +197,7 @@ export default class UI {
 	}
 
 	static editListName(e) {
-		if (e.target.textContent !== 'TASKS' && e.target.textContent !== 'TODAY' && e.target.textContent !== 'THIS WEEK') {
+		if (!this.initListsNameArray().includes(e.target.textContent)) {
 			this.editName(e, false);
 		}
 	}
@@ -344,12 +356,14 @@ export default class UI {
 	}
 
 	static disableListNameHover(listTitle) {
-		if (listTitle.textContent === 'TASKS' || listTitle.textContent === 'TODAY' || listTitle.textContent === 'THIS WEEK') {
+		if (this.initListsNameArray().includes(listTitle.textContent)) {
 			listTitle.classList.add('default');
 		} else {
 			listTitle.classList.remove('default');
 		}
 	}
+
+	static listsToFilter = this.initListsNameArray().slice(1);
 
 	static displayTasks() {
 		const listTitle = this.getListTitle();
@@ -360,7 +374,7 @@ export default class UI {
 		listTitle.textContent = currentList;
 		this.disableListNameHover(listTitle);
 
-		if (listTitle.textContent !== 'TODAY' && listTitle.textContent !== 'THIS WEEK') {
+		if (!this.listsToFilter.includes(listTitle.textContent)) {
 			this.displayRegularTasks(tasksList, currentList);
 		} else {
 			this.displaySpecialTasks(tasksList, listTitle);
@@ -380,11 +394,12 @@ export default class UI {
 	}
 
 	static displaySpecialTasks(tasksList, listTitle) {
-		Storage.masterList.findList('TODAY').clearTasks();
-		Storage.masterList.findList('THIS WEEK').clearTasks();
+		this.listsToFilter.forEach((list) => {
+			Storage.masterList.findList(list).clearTasks();
+		});
 
 		Storage.masterList.getLists().forEach((list) => {
-			if (list.name !== 'TODAY' && list.name !== 'THIS WEEK') this.addTasksToSpecialLists(list, listTitle);
+			if (!this.listsToFilter.includes(list.name)) this.addTasksToSpecialLists(list, listTitle);
 		});
 
 		this.displayTasksFromSpecialLists(tasksList);
@@ -395,12 +410,16 @@ export default class UI {
 			if (task.date !== 'set date') {
 				const taskDate = parseISO(format(parse(task.date, 'dd/MM/yyyy', new Date()), 'yyyy-MM-dd'));
 
-				if (listTitle.textContent === 'TODAY' && isToday(taskDate)) {
-					Storage.masterList.findList('TODAY').addTask(task);
+				if (listTitle.textContent === this.listsToFilter[0] && isToday(taskDate)) {
+					Storage.masterList.findList(this.listsToFilter[0]).addTask(task);
 				}
 
-				if (listTitle.textContent === 'THIS WEEK' && isThisWeek(taskDate, { weekStartsOn: 1 })) {
-					Storage.masterList.findList('THIS WEEK').addTask(task);
+				if (listTitle.textContent === this.listsToFilter[1] && isThisWeek(taskDate, { weekStartsOn: 1 })) {
+					Storage.masterList.findList(this.listsToFilter[1]).addTask(task);
+				}
+
+				if (listTitle.textContent === this.listsToFilter[2] && isThisMonth(taskDate)) {
+					Storage.masterList.findList(this.listsToFilter[2]).addTask(task);
 				}
 			}
 		});
@@ -408,24 +427,26 @@ export default class UI {
 
 	static displayTasksFromSpecialLists(tasksList) {
 		Storage.masterList
-			.findList('TODAY')
+			.findList(this.listsToFilter[0])
 			.getTasks()
 			.forEach((task) => {
 				tasksList.append(this.createTask(task));
 			});
 
-		Storage.masterList
-			.findList('THIS WEEK')
-			.getTasks()
-			.sort((a, b) => {
-				const dateA = parse(a.date, 'dd/MM/yyyy', new Date());
-				const dateB = parse(b.date, 'dd/MM/yyyy', new Date());
+		this.listsToFilter.slice(1, 3).forEach((listName) => {
+			Storage.masterList
+				.findList(listName)
+				.getTasks()
+				.sort((a, b) => {
+					const dateA = parse(a.date, 'dd/MM/yyyy', new Date());
+					const dateB = parse(b.date, 'dd/MM/yyyy', new Date());
 
-				return dateA - dateB;
-			})
-			.forEach((task) => {
-				tasksList.append(this.createTask(task));
-			});
+					return dateA - dateB;
+				})
+				.forEach((task) => {
+					tasksList.append(this.createTask(task));
+				});
+		});
 	}
 
 	static toggleIsDone(e) {
@@ -479,10 +500,9 @@ export default class UI {
 		const taskName = this.getTaskName(e);
 		Storage.masterList.deleteTaskFromList(listName, taskName);
 		Storage.saveAll();
-
-		if (listName === 'TODAY' || listName === 'THIS WEEK') {
+		if (this.listsToFilter.includes(listName)) {
 			Storage.masterList.getLists().forEach((list) => {
-				if (list.name !== 'TODAY' && list.name !== 'THIS WEEK') {
+				if (!this.listsToFilter.includes(list.name)) {
 					Storage.masterList.deleteTaskFromList(list.name, taskName);
 					Storage.saveAll();
 				}
@@ -717,7 +737,7 @@ export default class UI {
 		whichBtn.addEventListener('click', () => {
 			const newTaskBtn = this.getNewTaskBtn();
 
-			if ((this.getActiveList() !== 'TODAY' && this.getActiveList() !== 'THIS WEEK') || whichBtn !== newTaskBtn) {
+			if (!this.listsToFilter.includes(this.getActiveList()) || whichBtn !== newTaskBtn) {
 				let inputContainer = this.getInputContainer(whereToAdd);
 
 				if (!inputContainer) {
@@ -763,7 +783,7 @@ export default class UI {
 
 	static disableNewTaskBtn() {
 		const newTaskBtn = this.getNewTaskBtn();
-		if (this.getActiveList() === 'TODAY' || this.getActiveList() === 'THIS WEEK') {
+		if (this.listsToFilter.includes(this.getActiveList())) {
 			newTaskBtn.classList.add('disabled');
 		} else {
 			newTaskBtn.classList.remove('disabled');
