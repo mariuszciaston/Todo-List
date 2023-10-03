@@ -13,7 +13,7 @@ export default class Sound {
 		const confirmSound = new Audio('sound/mixkit-video-game-lock-2851.wav');
 		const abortSound = new Audio('sound/mixkit-video-game-lock-2851-reverse.wav');
 
-		return {
+		const sounds = {
 			toggleSound,
 			reverseToggleSound,
 			doneSound,
@@ -27,5 +27,18 @@ export default class Sound {
 			confirmSound,
 			abortSound,
 		};
+
+		Object.keys(sounds).forEach((key) => {
+			const originalPlay = sounds[key].play;
+
+			sounds[key].play = function () {
+				if (!Sound.mute) {
+					return originalPlay.call(this);
+				}
+				return null;
+			};
+		});
+
+		return sounds;
 	}
 }
