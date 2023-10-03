@@ -820,6 +820,25 @@ export default class UI {
 		}
 	}
 
+	static muteToggle() {
+		const muteElement = document.querySelector('#mute');
+		const muteIcon = document.querySelector('#mute i');
+
+		muteElement.addEventListener('click', () => {
+			if (muteElement.classList.contains('muted')) {
+				muteElement.classList.remove('muted');
+				muteIcon.classList.remove('fa-volume-xmark');
+				muteIcon.classList.add('fa-volume-high');
+				Sound.mute = false;
+			} else {
+				muteElement.classList.add('muted');
+				muteIcon.classList.remove('fa-volume-high');
+				muteIcon.classList.add('fa-volume-xmark');
+				Sound.mute = true;
+			}
+		});
+	}
+
 	static loadExampleContent() {
 		const loadLists = (listsArray) => {
 			listsArray.forEach((list) => {
@@ -912,7 +931,6 @@ export default class UI {
 	}
 
 	static loadUserInterface() {
-		Sound.loadAudio();
 		UI.hamburgerAutoToggle();
 		Storage.recoverAll();
 		UI.displayLists('TASKS');
@@ -920,6 +938,10 @@ export default class UI {
 		UI.selectList();
 		UI.addNewList();
 		UI.addNewTask();
+
 		UI.attachEventListeners();
+		UI.muteToggle();
+
+		Sound.loadAudio();
 	}
 }
