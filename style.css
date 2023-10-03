@@ -709,11 +709,15 @@ button {
 
 .footer {
 	background-color: black;
-	display: flex;
-	justify-content: center;
-	flex-wrap: wrap;
 	font-size: 0.875rem;
 	padding: 1rem 0;
+
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+
+	gap: 2rem;
+
+	margin: 0 2rem;
 }
 
 .footer span {
@@ -721,6 +725,11 @@ button {
 	align-items: center;
 	height: 2.125rem;
 	white-space: nowrap;
+}
+
+.footer #signature {
+	grid-column: 1;
+	justify-content: left;
 }
 
 .fa-github {
@@ -732,6 +741,22 @@ button {
 .fa-github:hover {
 	opacity: 100%;
 	transform: rotate(360deg) scale(1.2);
+}
+
+.footer #speaker {
+	grid-column: 2;
+	justify-content: right;
+}
+
+.footer #mute {
+	width: 2rem;
+	justify-content: left;
+	cursor: pointer;
+}
+
+.fa-volume-high,
+.fa-volume-xmark {
+	scale: 80%;
 }
 
 @media only screen and (min-width: 768px) {
@@ -813,6 +838,20 @@ button {
 
 	.btns .secondary .button {
 		min-width: 152px;
+	}
+
+	.footer {
+		grid-template-columns: 1fr 1fr 1fr;
+		margin: 0;
+	}
+
+	.footer #signature {
+		grid-column: 2;
+		justify-content: center;
+	}
+
+	.footer #speaker {
+		grid-column: 3;
 	}
 }
 
