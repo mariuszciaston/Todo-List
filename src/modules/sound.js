@@ -44,7 +44,7 @@ export default class Sound {
 
 	static loadAudio() {
 		const sounds = this.initSounds();
-		this.modifyPlayMethod(sounds);
+		this.playAudio(sounds);
 		return sounds;
 	}
 }
