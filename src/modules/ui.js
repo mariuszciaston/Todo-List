@@ -819,24 +819,26 @@ export default class UI {
 			}
 		}
 	}
+	
+	static muteElement() {
+		return document.querySelector('#mute');
+	}
 
 	static muteToggle() {
-		const muteElement = document.querySelector('#mute');
+		const muteElement = this.muteElement();
 		const muteIcon = document.querySelector('#mute i');
 
-		muteElement.addEventListener('click', () => {
-			if (muteElement.classList.contains('muted')) {
-				muteElement.classList.remove('muted');
-				muteIcon.classList.remove('fa-volume-xmark');
-				muteIcon.classList.add('fa-volume-high');
-				Sound.mute = false;
-			} else {
-				muteElement.classList.add('muted');
-				muteIcon.classList.remove('fa-volume-high');
-				muteIcon.classList.add('fa-volume-xmark');
-				Sound.mute = true;
-			}
-		});
+		if (muteElement.classList.contains('muted')) {
+			muteElement.classList.remove('muted');
+			muteIcon.classList.remove('fa-volume-xmark');
+			muteIcon.classList.add('fa-volume-high');
+			Sound.mute = false;
+		} else {
+			muteElement.classList.add('muted');
+			muteIcon.classList.remove('fa-volume-high');
+			muteIcon.classList.add('fa-volume-xmark');
+			Sound.mute = true;
+		}
 	}
 
 	static loadExampleContent() {
@@ -913,6 +915,7 @@ export default class UI {
 		const loadExampleBtn = document.querySelector('#load-example-btn');
 		const clearAllBtn = document.querySelector('#clear-all-btn');
 		const listTitle = this.getListTitle();
+		const muteElement = this.muteElement();
 
 		hamburger.addEventListener('click', this.hamburgerManualToggle);
 		nav.addEventListener('click', this.hamburgerManualClose);
@@ -928,6 +931,7 @@ export default class UI {
 		window.addEventListener('keydown', this.handleKeyboardAddCancel.bind(this));
 		window.addEventListener('click', this.closeInputContainerOnClick.bind(this));
 		listTitle.addEventListener('click', this.editListName.bind(this));
+		muteElement.addEventListener('click', this.muteToggle.bind(this));
 	}
 
 	static loadUserInterface() {
@@ -938,10 +942,7 @@ export default class UI {
 		UI.selectList();
 		UI.addNewList();
 		UI.addNewTask();
-
 		UI.attachEventListeners();
-		UI.muteToggle();
-
 		Sound.loadAudio();
 	}
 }
