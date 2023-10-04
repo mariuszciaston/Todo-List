@@ -33,7 +33,7 @@ export default class Sound {
 		Object.keys(sounds).forEach((key) => {
 			const playSound = sounds[key].play;
 			const snd = sounds;
-			snd[key].play = function muteOrNot() {
+			snd[key].play = function soundPlayer() {
 				if (!Sound.mute) {
 					return playSound.call(this);
 				}
