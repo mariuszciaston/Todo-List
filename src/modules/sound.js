@@ -1,5 +1,5 @@
 export default class Sound {
-	static loadAudio() {
+	static initSounds() {
 		const toggleSound = new Audio('sound/mixkit-air-woosh-1489-pitch.wav');
 		const reverseToggleSound = new Audio('sound/mixkit-air-woosh-1489-pitch-reverse.wav');
 		const doneSound = new Audio('sound/mixkit-game-ball-tap-2073.wav');
@@ -13,7 +13,7 @@ export default class Sound {
 		const confirmSound = new Audio('sound/mixkit-video-game-lock-2851.wav');
 		const abortSound = new Audio('sound/mixkit-video-game-lock-2851-reverse.wav');
 
-		const sounds = {
+		return {
 			toggleSound,
 			reverseToggleSound,
 			doneSound,
@@ -27,18 +27,24 @@ export default class Sound {
 			confirmSound,
 			abortSound,
 		};
+	}
 
+	static playAudio(sounds) {
 		Object.keys(sounds).forEach((key) => {
-			const originalPlay = sounds[key].play;
-
-			sounds[key].play = function () {
+			const playSound = sounds[key].play;
+			const snd = sounds;
+			snd[key].play = function muteOrNot() {
 				if (!Sound.mute) {
-					return originalPlay.call(this);
+					return playSound.call(this);
 				}
 				return null;
 			};
 		});
+	}
 
+	static loadAudio() {
+		const sounds = this.initSounds();
+		this.modifyPlayMethod(sounds);
 		return sounds;
 	}
 }
