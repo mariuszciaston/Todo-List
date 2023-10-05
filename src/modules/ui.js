@@ -138,7 +138,7 @@ export default class UI {
 			if (isTask) {
 				if (this.validateTaskName(inputField.value, 'one')) {
 					Storage.masterList.changeTaskName(listName, name, inputField.value);
-					Storage.saveAll();
+					Storage.saveMasterList();
 					this.displayTasks();
 				} else {
 					setTimeout(() => {
@@ -147,7 +147,7 @@ export default class UI {
 				}
 			} else if (this.validateListName(inputField.value, 'one')) {
 				Storage.masterList.changeListName(name, inputField.value);
-				Storage.saveAll();
+				Storage.saveMasterList();
 				this.setActiveList(inputField.value);
 				this.updateListName(inputField);
 				this.selectList();
@@ -231,7 +231,7 @@ export default class UI {
 						if (dateField.value) {
 							const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
 							Storage.masterList.changeTaskDate(currentList, taskName, dateFormatted);
-							Storage.saveAll();
+							Storage.saveMasterList();
 							setTextContent(dateFormatted);
 							this.displayTasks();
 						} else {
@@ -248,12 +248,12 @@ export default class UI {
 						if (dateField.value) {
 							const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
 							Storage.masterList.changeTaskDate(currentList, taskName, dateFormatted);
-							Storage.saveAll();
+							Storage.saveMasterList();
 							setTextContent(dateFormatted);
 							this.displayTasks();
 						} else {
 							Storage.masterList.changeTaskDate(currentList, taskName, 'set date');
-							Storage.saveAll();
+							Storage.saveMasterList();
 							setTextContent('set date');
 						}
 					}
@@ -298,7 +298,7 @@ export default class UI {
 		const nextList = this.getNextList(e);
 		Storage.masterList.deleteList(listName);
 		Storage.clearAll();
-		Storage.saveAll();
+		Storage.saveMasterList();
 		this.displayLists();
 		this.updateActiveList(currentList, listName, nextList);
 		this.displayTasks();
@@ -453,7 +453,7 @@ export default class UI {
 		const listName = this.getActiveList();
 		const taskName = this.getTaskName(e);
 		Storage.masterList.toggleIsDoneInTask(listName, taskName);
-		Storage.saveAll();
+		Storage.saveMasterList();
 		this.displayTasks();
 		(!e.target.parentElement.classList.contains('done') ? Sound.loadAudio().doneSound : Sound.loadAudio().reverseDoneSound).play();
 	}
@@ -490,7 +490,7 @@ export default class UI {
 		const listName = this.getActiveList();
 		const taskName = this.getTaskName(e);
 		Storage.masterList.toggleStarInTask(listName, taskName);
-		Storage.saveAll();
+		Storage.saveMasterList();
 		this.displayTasks();
 		(!e.target.classList.contains('yellow') ? Sound.loadAudio().starSound : Sound.loadAudio().reverseStarSound).play();
 	}
@@ -499,12 +499,12 @@ export default class UI {
 		const listName = this.getActiveList();
 		const taskName = this.getTaskName(e);
 		Storage.masterList.deleteTaskFromList(listName, taskName);
-		Storage.saveAll();
+		Storage.saveMasterList();
 		if (this.listsToFilter.includes(listName)) {
 			Storage.masterList.getLists().forEach((list) => {
 				if (!this.listsToFilter.includes(list.name)) {
 					Storage.masterList.deleteTaskFromList(list.name, taskName);
-					Storage.saveAll();
+					Storage.saveMasterList();
 				}
 			});
 		}
@@ -568,10 +568,11 @@ export default class UI {
 	}
 
 	static setActiveList(listName) {
+		const activeList = Storage.recoverActiveList() ? Storage.recoverActiveList() : listName;
 		const listsNodeList = this.getListsNodeList();
 
 		listsNodeList.forEach((list) => {
-			if (list.textContent === listName) {
+			if (list.textContent === activeList) {
 				list.classList.add('active');
 			} else {
 				list.classList.remove('active');
@@ -580,7 +581,9 @@ export default class UI {
 	}
 
 	static getActiveList() {
-		return document.querySelector('nav .nav-btn.active').textContent;
+		const activeList = document.querySelector('nav .nav-btn.active').textContent;
+		Storage.saveActiveList(activeList);
+		return activeList;
 	}
 
 	static getInputContainer(whereToAdd) {
@@ -698,7 +701,7 @@ export default class UI {
 				inputField.focus();
 			} else {
 				Storage.masterList.addList(name);
-				Storage.saveAll();
+				Storage.saveMasterList();
 				this.closeInputContainer();
 				this.displayLists('TASKS');
 				this.setActiveList(name);
@@ -819,7 +822,7 @@ export default class UI {
 			}
 		}
 	}
-	
+
 	static muteElement() {
 		return document.querySelector('#mute');
 	}
@@ -833,11 +836,13 @@ export default class UI {
 			muteIcon.classList.remove('fa-volume-xmark');
 			muteIcon.classList.add('fa-volume-high');
 			Sound.mute = false;
+			Storage.saveIsMuted(Sound.mute);
 		} else {
 			muteElement.classList.add('muted');
 			muteIcon.classList.remove('fa-volume-high');
 			muteIcon.classList.add('fa-volume-xmark');
 			Sound.mute = true;
+			Storage.saveIsMuted(Sound.mute);
 		}
 	}
 
@@ -894,7 +899,7 @@ export default class UI {
 		loadDates(ContentExample.addDates);
 
 		Storage.clearAll();
-		Storage.saveAll();
+		Storage.saveMasterList();
 		this.displayLists('TASKS');
 		this.displayTasks();
 		this.selectList();
@@ -923,7 +928,7 @@ export default class UI {
 
 		loadExampleBtn.addEventListener('click', () => {
 			this.loadExampleContent();
-			Storage.saveAll();
+			Storage.saveMasterList();
 			Sound.loadAudio().loadExampleSound.play();
 		});
 
@@ -936,7 +941,7 @@ export default class UI {
 
 	static loadUserInterface() {
 		UI.hamburgerAutoToggle();
-		Storage.recoverAll();
+		Storage.recoverMasterList();
 		UI.displayLists('TASKS');
 		UI.displayTasks();
 		UI.selectList();
