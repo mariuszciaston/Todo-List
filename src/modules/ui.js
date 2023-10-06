@@ -44,17 +44,6 @@ export default class UI {
 		}
 	}
 
-	static hamburgerManualClose(e) {
-		const currentList = UI.getActiveList();
-		if (e.target.textContent === currentList) {
-			if (e.target.classList.contains('nav-btn')) {
-				if (window.innerWidth < 800) {
-					Sound.loadAudio().reverseToggleSound.play();
-				}
-			}
-		}
-	}
-
 	static createList(list) {
 		const button = document.createElement('button');
 		const remove = document.createElement('div');
@@ -930,8 +919,7 @@ export default class UI {
 		const muteElement = this.muteElement();
 
 		hamburger.addEventListener('click', this.hamburgerManualToggle);
-		nav.addEventListener('click', this.hamburgerManualClose);
-		window.addEventListener('resize', this.hamburgerAutoToggle);
+		document.addEventListener('resize', this.hamburgerAutoToggle);
 
 		loadExampleBtn.addEventListener('click', () => {
 			this.loadExampleContent();
