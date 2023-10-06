@@ -40,4 +40,8 @@ export default class Storage {
 	static recoverActiveList() {
 		return JSON.parse(localStorage.getItem('activeList'));
 	}
+
+	static recoverIsMuted() {
+		return JSON.parse(localStorage.getItem('isMuted'));
+	}
 }
