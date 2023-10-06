@@ -566,7 +566,7 @@ export default class UI {
 	}
 
 	static setActiveList(listName) {
-		const activeList = Storage.recoverActiveList() ? Storage.recoverActiveList() : listName;
+		const activeList = listName || 'TASKS';
 		const listsNodeList = this.getListsNodeList();
 
 		listsNodeList.forEach((list) => {
@@ -701,7 +701,7 @@ export default class UI {
 				Storage.masterList.addList(name);
 				Storage.saveMasterList();
 				this.closeInputContainer();
-				this.displayLists('TASKS');
+				this.displayLists();
 				this.setActiveList(name);
 				this.displayTasks();
 				this.selectList();
@@ -907,7 +907,7 @@ export default class UI {
 
 		Storage.clearAll();
 		Storage.saveMasterList();
-		this.displayLists('TASKS');
+		this.displayLists();
 		this.displayTasks();
 		this.selectList();
 	}
@@ -915,7 +915,7 @@ export default class UI {
 	static clearAllContent() {
 		Storage.resetMasterList();
 		Storage.clearAll();
-		this.displayLists('TASKS');
+		this.displayLists();
 		this.displayTasks();
 		this.selectList();
 		Sound.loadAudio().removeSound.play();
@@ -949,13 +949,13 @@ export default class UI {
 	static loadUserInterface() {
 		UI.hamburgerAutoToggle();
 		Storage.recoverMasterList();
-		UI.loadMuteStatus();
-		UI.displayLists('TASKS');
+		UI.displayLists(Storage.recoverActiveList());
 		UI.displayTasks();
 		UI.selectList();
 		UI.addNewList();
 		UI.addNewTask();
 		UI.attachEventListeners();
+		UI.loadMuteStatus();
 		Sound.loadAudio();
 	}
 }
