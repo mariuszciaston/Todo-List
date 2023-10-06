@@ -827,23 +827,32 @@ export default class UI {
 		return document.querySelector('#mute');
 	}
 
-	static muteToggle() {
+	static updateMuteStatus(isMuted) {
 		const muteElement = this.muteElement();
 		const muteIcon = document.querySelector('#mute i');
 
-		if (muteElement.classList.contains('muted')) {
-			muteElement.classList.remove('muted');
-			muteIcon.classList.remove('fa-volume-xmark');
-			muteIcon.classList.add('fa-volume-high');
-			Sound.mute = false;
-			Storage.saveIsMuted(Sound.mute);
-		} else {
+		if (isMuted) {
 			muteElement.classList.add('muted');
 			muteIcon.classList.remove('fa-volume-high');
 			muteIcon.classList.add('fa-volume-xmark');
-			Sound.mute = true;
-			Storage.saveIsMuted(Sound.mute);
+		} else {
+			muteElement.classList.remove('muted');
+			muteIcon.classList.remove('fa-volume-xmark');
+			muteIcon.classList.add('fa-volume-high');
 		}
+
+		Sound.mute = isMuted;
+		Storage.saveIsMuted(Sound.mute);
+	}
+
+	static loadMuteStatus() {
+		const isMuted = Storage.recoverIsMuted();
+		this.updateMuteStatus(isMuted);
+	}
+
+	static muteToggle() {
+		const isMuted = !Sound.mute;
+		this.updateMuteStatus(isMuted);
 	}
 
 	static loadExampleContent() {
@@ -942,6 +951,7 @@ export default class UI {
 	static loadUserInterface() {
 		UI.hamburgerAutoToggle();
 		Storage.recoverMasterList();
+		UI.loadMuteStatus();
 		UI.displayLists('TASKS');
 		UI.displayTasks();
 		UI.selectList();
