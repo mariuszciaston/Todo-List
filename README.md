@@ -20,7 +20,7 @@ Features:<br>
 • Keyboard support on adding and changing lists and tasks (Enter, Escape...)<br>
 • Sounds when interacting with UI<br>
 • Speaker icon can be used to mute sounds<br>
-• Local Storage is used to remember all lists, tasks (with it's properties), active list and mute status<br><br>
+• Local Storage is used to remember all lists, tasks (with it's properties), active list and mute status
 
 Known problems:<br>
 • Firefox doesn't support :has pseudo-class as of october 2023 so there are some interface glitches. I could use some javascript to solve that but don't want to. Hopefully Firefox catches up soon.
