@@ -220,23 +220,30 @@ export default class UI {
 			if (element.querySelector('.input-field')) {
 				const currentList = this.getActiveList();
 				const taskName = this.getTaskName(e);
+
 				const setTextContent = (value) => {
 					element.textContent = value;
 					window.removeEventListener('click', clickHandler);
 					window.removeEventListener('keydown', keydownHandler);
 				};
 
+				const handleDateChange = (dateValue, defaultDate) => {
+					if (dateValue) {
+						const dateFormatted = format(parseISO(dateValue), 'dd/MM/yyyy');
+						Storage.masterList.changeTaskDate(currentList, taskName, dateFormatted);
+						setTextContent(dateFormatted);
+					} else {
+						Storage.masterList.changeTaskDate(currentList, taskName, defaultDate);
+						setTextContent(defaultDate);
+					}
+					Storage.saveMasterList();
+					this.displayTasks();
+				};
+
 				const keydownHandler = (k) => {
 					if (k.key === 'Enter') {
-						if (dateField.value) {
-							const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
-							Storage.masterList.changeTaskDate(currentList, taskName, dateFormatted);
-							Storage.saveMasterList();
-							setTextContent(dateFormatted);
-							this.displayTasks();
-						} else {
-							dateField.focus();
-						}
+						handleDateChange(dateField.value, temp);
+						dateField.focus();
 					}
 					if (k.key === 'Escape') {
 						setTextContent(temp);
@@ -245,19 +252,10 @@ export default class UI {
 
 				const clickHandler = (c) => {
 					if (!element.contains(c.target)) {
-						if (dateField.value) {
-							const dateFormatted = format(parseISO(dateField.value), 'dd/MM/yyyy');
-							Storage.masterList.changeTaskDate(currentList, taskName, dateFormatted);
-							Storage.saveMasterList();
-							setTextContent(dateFormatted);
-							this.displayTasks();
-						} else {
-							Storage.masterList.changeTaskDate(currentList, taskName, 'set date');
-							Storage.saveMasterList();
-							setTextContent('set date');
-						}
+						handleDateChange(dateField.value, 'set date');
 					}
 				};
+
 				window.addEventListener('click', clickHandler);
 				window.addEventListener('keydown', keydownHandler);
 			}
