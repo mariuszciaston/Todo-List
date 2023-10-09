@@ -44,6 +44,17 @@ export default class UI {
 		}
 	}
 
+	static hamburgerManualClose(e) {
+		const currentList = UI.getActiveList();
+		if (e.target.textContent === currentList) {
+			if (e.target.classList.contains('nav-btn')) {
+				if (window.innerWidth < 800) {
+					Sound.loadAudio().reverseToggleSound.play();
+				}
+			}
+		}
+	}
+
 	static createList(list) {
 		const button = document.createElement('button');
 		const remove = document.createElement('div');
@@ -912,7 +923,6 @@ export default class UI {
 
 	static attachEventListeners() {
 		const hamburger = document.querySelector('#hamburger');
-		const nav = document.querySelector('nav.nav');
 		const loadExampleBtn = document.querySelector('#load-example-btn');
 		const clearAllBtn = document.querySelector('#clear-all-btn');
 		const listTitle = this.getListTitle();
@@ -920,6 +930,7 @@ export default class UI {
 
 		hamburger.addEventListener('click', this.hamburgerManualToggle);
 		document.addEventListener('resize', this.hamburgerAutoToggle);
+		document.addEventListener('click', this.hamburgerManualClose);
 
 		loadExampleBtn.addEventListener('click', () => {
 			this.loadExampleContent();
