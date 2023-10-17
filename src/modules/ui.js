@@ -566,10 +566,11 @@ export default class UI {
 	}
 
 	static setActiveList(listName) {
-		const activeList = listName || 'TASKS';
-		const listsNodeList = this.getListsNodeList();
+		const listsArray = Array.from(this.getListsNodeList());
+		const activeList = listsArray.some((list) => list.textContent === listName) ? listName : 'TASKS';
+		Storage.saveActiveList(activeList);
 
-		listsNodeList.forEach((list) => {
+		listsArray.forEach((list) => {
 			if (list.textContent === activeList) {
 				list.classList.add('active');
 			} else {
