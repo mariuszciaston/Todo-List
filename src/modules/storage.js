@@ -10,7 +10,8 @@ export default class Storage {
 	}
 
 	static clearAll() {
-		localStorage.clear();
+		localStorage.removeItem('masterList');
+		localStorage.removeItem('activeList');
 	}
 
 	static saveMasterList() {
