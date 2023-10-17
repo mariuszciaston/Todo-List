@@ -15,7 +15,7 @@ Features:<br>
 • Notification when list or task name in input field is empty or already exists<br>
 • 'Load Example' button loads example lists and tasks<br>
 • 'Clear All' button removes all user created lists and tasks<br>
-• 'TODAY', 'THIS WEEK', 'THIS MONTH' lists filter tasks by date (using date-fns library) and sort them from from the earliest<br>
+• 'TODAY', 'THIS WEEK', 'THIS MONTH' lists filter tasks by date (using date-fns library) and sort them from the earliest<br>
 • UI is responsive and width of tasks area can be altered using hamburger menu icon<br>
 • Keyboard support on adding and changing lists and tasks (Enter, Escape...)<br>
 • Sounds when interacting with UI<br>
