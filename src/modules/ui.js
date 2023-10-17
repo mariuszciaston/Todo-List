@@ -938,11 +938,11 @@ export default class UI {
 			Sound.loadAudio().loadExampleSound.play();
 		});
 
-		clearAllBtn.addEventListener('click', this.clearAllContent.bind(this));
+		clearAllBtn.addEventListener('click', () => this.clearAllContent());
 		window.addEventListener('keydown', this.handleKeyboardAddCancel.bind(this));
 		window.addEventListener('click', this.closeInputContainerOnClick.bind(this));
 		listTitle.addEventListener('click', this.editListName.bind(this));
-		muteElement.addEventListener('click', this.muteToggle.bind(this));
+		muteElement.addEventListener('click', () => this.muteToggle());
 	}
 
 	static loadUserInterface() {
