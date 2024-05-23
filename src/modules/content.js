@@ -4,7 +4,6 @@ export default class ContentExample {
 	static tasks = [
 		'Bake Neapolitan pizza',
 		'Go swimming on Tuesday',
-		'Get hired as a Front End Developer',
 		'Conquer the Crown of Polish Mountains',
 		'Finish The Odin Project',
 	];
