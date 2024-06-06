@@ -25,4 +25,6 @@ Features:<br>
 Known problems:<br>
 • Firefox doesn't support :has pseudo-class as of october 2023 so there are some interface glitches. I could use some javascript to solve that but don't want to. Hopefully Firefox catches up soon.
 
-[Live Demo](https://mariuszciaston.github.io/minimaLIST/) :point_left:
+[Live Demo](https://mariuszciaston.github.io/minimaLIST/) :point_left: <br><br>
+
+![minimaList.png](minimaList.png)
